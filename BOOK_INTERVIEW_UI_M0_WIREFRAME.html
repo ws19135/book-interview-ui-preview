@@ -35,6 +35,9 @@ body{
 .banner b{font-weight:600}
 
 .wrap{max-width:1080px;margin:0 auto;padding:26px 20px 96px}
+/* ⚠️ 換頁時會把這一區捲到視窗頂端，但頂端有固定橫幅（約 35px）——
+      不留這段空隙，導覽列會被橫幅蓋住（手機 390px 實測當場踩到）。 */
+#secA{scroll-margin-top:48px}
 
 /* ── 版頭 ── */
 .eyebrow{font-family:var(--sans);font-size:11.5px;font-weight:400;
