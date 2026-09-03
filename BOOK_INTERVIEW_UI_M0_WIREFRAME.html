@@ -40,6 +40,9 @@ body{margin:0;background:var(--bg);color:var(--ink);
   padding:9px 16px;text-align:center}
 .banner b{font-weight:600}
 
+.disclose{margin:0;padding:10px 16px;text-align:center;background:var(--card);
+  border-bottom:1px solid var(--line);font-family:var(--sans);
+  font-size:var(--font-xs);color:var(--body)}
 .wrap{max-width:940px;margin:0 auto;padding:26px 20px 96px}
 #stage{scroll-margin-top:56px}
 
@@ -163,7 +166,7 @@ button.link.q{color:var(--body)}
 .panel label{display:block;font-family:var(--sans);font-size:var(--font-xs);letter-spacing:.04em;
   color:var(--taupe);margin:12px 0 4px}
 .panel input[type=text],.panel select,.panel textarea{width:100%;font-family:var(--sans);
-  font-size:var(--font-sm);padding:9px 11px;border:1px solid var(--line);
+  font-size:var(--font-md);padding:9px 11px;border:1px solid var(--line);
   background:#FFFDF9;color:var(--ink)}
 .panel textarea{min-height:72px;resize:vertical}
 .panel .chk{display:flex;gap:9px;align-items:flex-start;margin:14px 0 2px;
@@ -212,8 +215,9 @@ button.link.q{color:var(--body)}
 .fb .grid{display:grid;gap:14px}
 .fb label{display:block;font-family:var(--sans);font-size:var(--font-xs);letter-spacing:.04em;
   color:var(--taupe);margin:0 0 4px}
+/* ⚠️ 輸入框一律 16px：iOS 上小於 16px 會在點進欄位時自動放大整頁，很難用。 */
 .fb select,.fb textarea,.fb input[type=text]{width:100%;font-family:var(--sans);
-  font-size:var(--font-sm);padding:9px 11px;border:1px solid var(--line);
+  font-size:var(--font-md);padding:9px 11px;border:1px solid var(--line);
   background:#FFFDF9;color:var(--ink)}
 .fb textarea{min-height:64px;resize:vertical}
 .fb .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -255,6 +259,7 @@ details.notes .inner li{margin:0 0 4px}
 <body>
 
 <div class="banner">互動示意稿｜<b>全部為假資料</b>｜不連資料庫</div>
+<p class="disclose">本案例中的人物、書名、出版社、節目與聯絡資料全部為虛構。</p>
 
 <div class="wrap">
   <p class="eyebrow">SDH</p>
@@ -323,7 +328,7 @@ function lab(d,c){ var m=L[d]; return (m&&m[c])||c; }
 var STORY={
   author:'林以安老師',
   book:'《在變動裡，找到自己的節奏》',
-  publisher:'明日文化',
+  publisher:'遠方學堂出版（虛構）',
   contact:'yian.lin@example.invalid',
   progA:'《慢慢說》', progB:'《上班的事》'
 };
@@ -1508,13 +1513,19 @@ function buildFeedback(){
 
   g.appendChild(field('step','這則是關於哪一步',
     sel(SCENARIO.map(function(x,i){ return (i+1)+'. '+x.title; }))));
+  /* ⭐ 每一步的判斷題一律「是／不確定／否」三選一，⛔ 不用各自不同的字眼。 */
+  var YN=['是','不確定','否'];
   var row=el('div',null,'row2');
-  row.appendChild(field('know','我知道下一步要做什麼嗎？',sel(['知道','猶豫了一下','完全不知道'])));
-  row.appendChild(field('fit','這個步驟符合平常工作方式嗎？',sel(['符合','部分符合','實際上不是這樣做'])));
+  row.appendChild(field('know','我知道下一步要做什麼嗎？',sel(YN)));
+  row.appendChild(field('fit','這個步驟符合平常工作方式嗎？',sel(YN)));
   g.appendChild(row);
+  var row1b=el('div',null,'row2');
+  row1b.appendChild(field('clear','按鈕名稱是否容易理解？',sel(YN)));
+  row1b.appendChild(field('seq','流程順序是否合理？',sel(YN)));
+  g.appendChild(row1b);
   g.appendChild(field('missing','目前畫面缺少哪些資訊？',ta('例：這裡看不到出版社的窗口是誰。')));
-  g.appendChild(field('label','按鈕名稱是否容易理解？',ta('例：「主管代為確認」我看不懂，建議改成⋯⋯')));
-  g.appendChild(field('order','流程順序是否合理？',ta('例：我們實際上會先確認素材才排錄音，這裡順序相反。')));
+  g.appendChild(field('label','按鈕名稱哪裡不好懂？（選填）',ta('例：「主管代為確認」我看不懂，建議改成⋯⋯')));
+  g.appendChild(field('order','流程順序哪裡跟實際不同？（選填）',ta('例：我們實際上會先確認素材才排錄音，這裡順序相反。')));
   g.appendChild(field('slow','哪個步驟讓我停下來思考太久？',ta('例：候選節目那一列三個按鈕，我不知道該按哪個。')));
   var row2=el('div',null,'row2');
   row2.appendChild(field('sev','嚴重度',sel(['建議','重要','卡住了，做不下去'])));
@@ -1524,20 +1535,46 @@ function buildFeedback(){
   g.appendChild(field('note','其他想說的',ta('')));
   box.appendChild(g);
 
+  /* ── 最後的總體回饋（走完 15 步再填一次）── */
+  var ov=el('div',null,'grid'); ov.style.marginTop='20px';
+  ov.appendChild(el('h3','走完之後的總體回饋'));
+  ov.appendChild(field('ov_overall','整體來說，這個系統符合你平常的工作方式嗎？',
+    sel(['是','不確定','否'])));
+  ov.appendChild(field('ov_biggest','最卡的一件事是什麼？',ta('')));
+  ov.appendChild(field('ov_missing','有沒有哪個工作情境，在系統裡完全找不到入口？',ta('')));
+  ov.appendChild(field('ov_note','其他建議',ta('')));
+  var ovbar=el('div',null,'actions');
+  ovbar.appendChild(btn('存下總體回饋','act',function(){
+    var l=fbLoad();
+    l=l.filter(function(x){ return x.step!=='＊總體回饋'; });   /* 只留最新一份 */
+    l.push({step:'＊總體回饋',overall:F.ov_overall.value,biggest:F.ov_biggest.value,
+      missingEntry:F.ov_missing.value,note:F.ov_note.value,sev:'建議',
+      who:F.who.value,at:stamp()});
+    if(!fbSave(l)) alert('你的瀏覽器不允許儲存（可能是無痕視窗）。請先按「下載」把內容存下來。');
+    refreshFb();
+  }));
+  ov.appendChild(ovbar);
+  box.appendChild(ov);
+
   var bar=el('div',null,'actions');
   bar.appendChild(btn('加入這則回饋','act go',function(){
-    var r={step:F.step.value,know:F.know.value,fit:F.fit.value,missing:F.missing.value,
+    var r={step:F.step.value,know:F.know.value,fit:F.fit.value,
+      clear:F.clear.value,seq:F.seq.value,missing:F.missing.value,
       label:F.label.value,order:F.order.value,slow:F.slow.value,
       sev:F.sev.value,who:F.who.value,note:F.note.value,at:stamp()};
-    if(!r.missing&&!r.label&&!r.order&&!r.slow&&!r.note&&r.know==='知道'&&r.fit==='符合'){
+    if(!r.missing&&!r.label&&!r.order&&!r.slow&&!r.note
+       &&r.know==='是'&&r.fit==='是'&&r.clear==='是'&&r.seq==='是'){
       alert('這則沒有寫任何內容。如果這一步沒問題，寫一句「沒問題」也可以，我們才知道你看過了。'); return; }
     var l=fbLoad(); l.push(r);
     if(!fbSave(l)) alert('你的瀏覽器不允許儲存（可能是無痕視窗）。請先按「匯出」把內容存下來。');
     ['missing','label','order','slow','note'].forEach(function(k){ F[k].value=''; });
+    ['know','fit','clear','seq'].forEach(function(k){ F[k].value='是'; });
     refreshFb();
   }));
-  bar.appendChild(btn('匯出（給專案負責人）','act',function(){ showOut(toMd(fbLoad())); }));
-  bar.appendChild(btn('匯出成 JSON','act',function(){ showOut(JSON.stringify(fbLoad(),null,2)); }));
+  bar.appendChild(btn('下載 Markdown','act go',function(){
+    var t=toMd(fbLoad()); download('新書訪談邀約-試用回饋.md','text/markdown',t); showOut(t); }));
+  bar.appendChild(btn('下載 JSON','act',function(){
+    var t=JSON.stringify(fbLoad(),null,2); download('新書訪談邀約-試用回饋.json','application/json',t); showOut(t); }));
   bar.appendChild(btn('複製摘要','act',function(){
     var t=toMd(fbLoad());
     if(navigator.clipboard&&navigator.clipboard.writeText)
@@ -1571,6 +1608,20 @@ function refreshFb(){
   });
   n.appendChild(ul);
 }
+/* ⭐ 純本機下載：用 Blob 造一個檔案再點自己造的連結。
+      ⛔ 不送出任何請求、⛔ 不經過任何伺服器。 */
+function download(name,mime,text){
+  try{
+    var blob=new Blob(['\ufeff'+text],{type:mime+';charset=utf-8'});  /* BOM 讓 Excel 也讀得出中文 */
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url; a.download=name; document.body.appendChild(a); a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); },1000);
+  }catch(e){
+    alert('這個瀏覽器擋住了下載。內容已經顯示在下面，請自行全選複製。');
+  }
+}
 function showOut(t){
   var n=document.getElementById('fbout'); if(!n) return; clear(n);
   if(!t) return;
@@ -1581,10 +1632,21 @@ function toMd(l){
   if(!l.length) return '（目前沒有任何回饋）';
   var o='# 新書訪談邀約 · 情境操作體驗回饋\n\n共 '+l.length+' 則。\n\n';
   l.forEach(function(r,i){
-    o+='## '+(i+1)+'. '+r.step+'（'+r.sev+'）\n\n';
+    if(r.step==='＊總體回饋'){
+      o+='## 總體回饋\n\n';
+      o+='- 時間：'+r.at+(r.who?'　填寫者：'+r.who:'')+'\n';
+      o+='- 整體符合平常工作方式嗎：'+(r.overall||'')+'\n';
+      if(r.biggest)      o+='- 最卡的一件事：'+r.biggest+'\n';
+      if(r.missingEntry) o+='- 找不到入口的工作情境：'+r.missingEntry+'\n';
+      if(r.note)         o+='- 其他建議：'+r.note+'\n';
+      o+='\n'; return;
+    }
+    o+='## '+r.step+'（'+r.sev+'）\n\n';
     o+='- 時間：'+r.at+(r.who?'　填寫者：'+r.who:'')+'\n';
-    o+='- 知道下一步要做什麼嗎：'+r.know+'\n';
-    o+='- 符合平常工作方式嗎：'+r.fit+'\n';
+    o+='- 我知道下一步要做什麼嗎：'+r.know+'\n';
+    o+='- 這個步驟符合平常工作方式嗎：'+r.fit+'\n';
+    if(r.clear) o+='- 按鈕名稱是否容易理解：'+r.clear+'\n';
+    if(r.seq)   o+='- 流程順序是否合理：'+r.seq+'\n';
     if(r.missing) o+='- 缺少的資訊：'+r.missing+'\n';
     if(r.label)   o+='- 按鈕名稱：'+r.label+'\n';
     if(r.order)   o+='- 流程順序：'+r.order+'\n';
@@ -1704,10 +1766,28 @@ function setMode(m){
 document.getElementById('mS').onclick=function(){ setMode('S'); };
 document.getElementById('mF').onclick=function(){ setMode('F'); };
 document.getElementById('mB').onclick=function(){ setMode('B'); };
+/* ⭐ 重新開始＝把 Demo 的每一樣東西都倒回種子狀態，
+      ⛔ 不是只重畫畫面。回饋是使用者自己的東西，另外問他要不要留。 */
+var DEMO_STATE_KEYS=['book_interview_demo_state','book_interview_ui_demo'];
 document.getElementById('btnReset').onclick=function(){
-  resetDemo(); SEEN={}; INTAKE_DIR='AUTHOR_INITIATED';
+  var n=fbLoad().length;
+  var keepFb=true;
+  if(n>0){
+    keepFb=!confirm('要一起清掉你填的 ' + n + ' 則回饋嗎？\n\n'
+      + '按「確定」＝連回饋一起清掉（無法復原，建議先下載）。\n'
+      + '按「取消」＝只重置 Demo，回饋保留。');
+  }
+  resetDemo();                       /* 需求／候選／名單／案件／素材／人物／歷程／遮罩全部回種子 */
+  SEEN={};                           /* 重送保護的記錄 */
+  INTAKE_DIR='AUTHOR_INITIATED';
   PHASE='landing'; MODE='S'; STEP=0; PAGE='home'; CTX={}; OPEN_PANEL=null; MSG=null;
+  /* ⛔ Demo 狀態本來就不寫本機儲存；這裡仍主動清掉任何舊版可能留下的殘值。 */
+  try{ DEMO_STATE_KEYS.forEach(function(k){ localStorage.removeItem(k); }); }catch(e){}
+  if(!keepFb){ try{ localStorage.removeItem(FB_KEY); }catch(e){} }
+  buildFeedback();
   render();
+  say('ok', keepFb ? '已經回到最初的狀態' : '已經回到最初的狀態，回饋也清掉了',
+      keepFb ? '假資料全部倒回原樣。你填的回饋沒有被清掉。' : '假資料與回饋都清空了。');
 };
 
 buildFeedback();
