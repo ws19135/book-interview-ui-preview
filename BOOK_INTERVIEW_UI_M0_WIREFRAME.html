@@ -130,10 +130,13 @@ button.link.q{color:var(--report-body)}
 .panel .chk input{margin-top:3px;flex:none}
 
 /* ── 訊息 ── */
-.msg{font-family:var(--sans);font-size:13px;padding:10px 13px;margin:12px 0;
-  border-left:3px solid var(--report-line);background:var(--report-card)}
-.msg.ok{border-left-color:var(--report-ink)}
-.msg.bad{border-left-color:var(--report-accent)}
+/* ⭐ 逐字對齊實機公開表單的 .msg：**完整 1px 外框**，狀態靠整個框與文字上色。
+      ⛔ 不用單邊粗色條——實機一條都沒有，那也是很典型的 AI 生成味。 */
+.msg{font-family:var(--sans);font-size:13px;padding:11px 14px;margin:12px 0;
+  border:1px solid var(--report-line);background:var(--report-card)}
+.msg.ok{border-color:var(--report-ink)}
+.msg.bad{border-color:var(--report-accent);color:var(--report-accent)}
+.msg.bad .d{color:var(--report-accent)}
 .msg .t{font-weight:600}
 .msg .d{color:var(--report-body);margin-top:2px}
 
@@ -172,7 +175,6 @@ button.link.q{color:var(--report-body)}
 .stage .desc{font-family:var(--sans);font-size:12.5px;color:var(--report-body);margin:6px 0 0}
 .stage .states{margin:8px 0 0;display:flex;flex-wrap:wrap;gap:5px}
 .arrow{text-align:center;color:var(--report-line);font-size:17px;line-height:1;margin:5px 0}
-.branch{border-left:2px solid var(--report-accent);padding-left:13px;margin:9px 0 0}
 
 /* ── 對照表 ── */
 .matrix td:first-child{font-weight:600}
