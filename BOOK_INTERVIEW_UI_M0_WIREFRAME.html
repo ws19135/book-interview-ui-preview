@@ -28,6 +28,9 @@
   --font-display: 28px;
 }
 *{box-sizing:border-box}
+/* ⚠️ .modes 用 display:flex，會蓋掉瀏覽器預設的 [hidden]{display:none}——
+      沒有這一行，落地頁上模式列還看得到，同事沒點入口就能跳過去（實測當場踩到）。 */
+[hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);
   font-family:var(--serif);font-size:var(--font-base);line-height:1.8}
@@ -1305,6 +1308,10 @@ function render(){
   }
   modes.hidden=false; hint.hidden=false; fb.hidden=(MODE==='B');
   lede.textContent='你是公司內部負責新書宣傳與訪談邀約的企劃。';
+  /* ⚠️ 這一行以前只在點模式按鈕時才寫，所以剛從入口進來時是空白的。 */
+  hint.textContent=(typeof HINT!=='undefined'&&HINT[MODE])||'';
+  ['S','F','B'].forEach(function(k){
+    document.getElementById('m'+k).setAttribute('aria-pressed',String(k===MODE)); });
   if(MODE==='S') renderScenario(st);
   else if(MODE==='F') renderFree(st);
   else renderFlow(st);
