@@ -1,0 +1,1497 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>新書訪談邀約系統｜畫面與完整流程互動預覽</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   設計 token —— 逐字取自實機 80_WebUi.html 的 DESIGN.md Report 模式（②知性編輯）
+   ⛔ 不引入任何外部資源：無 CDN、無字型 CDN、無追蹤碼。
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  color-scheme: light;
+  --report-bg:#ECE6DB; --report-card:#F5F1E8; --report-ink:#1A1A1A;
+  --report-body:#5A5A5A; --report-taupe:#8A8178; --report-line:#B8B0A4;
+  --report-accent:#B5451F;
+  --serif:'Noto Serif TC','Songti TC',Georgia,'Times New Roman',serif;
+  --sans:'Noto Sans TC','PingFang TC','Helvetica Neue',Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--report-bg); color:var(--report-ink);
+  font-family:var(--serif); font-size:14.5px; line-height:1.75;
+}
+
+/* ── 全站固定橫幅 ── */
+.banner{
+  position:sticky; top:0; z-index:50;
+  background:var(--report-accent); color:#FFF8F2;
+  font-family:var(--sans); font-size:12px; letter-spacing:.08em;
+  padding:7px 16px; text-align:center;
+}
+.banner b{font-weight:600}
+
+.wrap{max-width:1080px;margin:0 auto;padding:26px 20px 96px}
+
+/* ── 版頭 ── */
+.eyebrow{font-family:var(--sans);font-size:11.5px;font-weight:400;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--report-taupe);margin:0}
+h1{font-size:24px;font-weight:700;margin:5px 0 3px;letter-spacing:.01em;text-wrap:balance}
+h2{font-size:17px;font-weight:700;margin:28px 0 10px;text-wrap:balance}
+h3{font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--report-taupe);margin:22px 0 8px}
+h4{font-family:var(--sans);font-size:13px;font-weight:600;margin:16px 0 6px}
+.sub{font-size:15px;font-weight:400;color:var(--report-body);margin:0 0 20px}
+.rule{border:0;border-top:1px solid var(--report-line);margin:20px 0}
+p{margin:0 0 10px}
+
+/* ── 模式切換 ── */
+.modes{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}
+.modes button{
+  font-family:var(--sans);font-size:13px;padding:8px 15px;cursor:pointer;
+  background:transparent;border:1px solid var(--report-line);color:var(--report-body);
+  ;
+}
+.modes button[aria-pressed="true"]{
+  background:var(--report-ink);border-color:var(--report-ink);color:var(--report-card);font-weight:600;
+}
+.modehint{font-family:var(--sans);font-size:12.5px;color:var(--report-taupe);margin:0 0 18px}
+
+/* ── 實機導覽（模式 A）── */
+nav{display:flex;flex-wrap:wrap;gap:18px;margin:0 0 6px;
+  border-bottom:1px solid var(--report-line);padding-bottom:9px}
+nav button{background:none;border:0;padding:0 0 3px;cursor:pointer;
+  font-family:var(--serif);font-size:14.5px;color:var(--report-body);
+  border-bottom:1px solid transparent}
+nav button:hover,nav button:focus-visible{color:var(--report-ink);border-bottom-color:var(--report-line)}
+nav button[aria-current="page"]{color:var(--report-ink);border-bottom-color:var(--report-accent);font-weight:600}
+.navnote{font-family:var(--sans);font-size:11.5px;color:var(--report-taupe);margin:7px 0 20px}
+
+/* ── 麵包屑 ── */
+.crumb{font-family:var(--sans);font-size:12px;color:var(--report-taupe);margin:0 0 14px}
+.crumb button{background:none;border:0;padding:0;cursor:pointer;font:inherit;
+  color:var(--report-body);text-decoration:underline;text-underline-offset:2px}
+.crumb span{margin:0 7px}
+
+/* ── 表格 ── */
+.tablewrap{overflow-x:auto;margin:0 0 12px;border-top:1px solid var(--report-line)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums;min-width:520px}
+th{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--report-taupe);text-align:left;
+  padding:9px 10px 8px;border-bottom:1px solid var(--report-line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid rgba(184,176,164,.45);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.empty{padding:18px 10px;color:var(--report-taupe);font-family:var(--sans);font-size:12.5px}
+
+/* ── KPI ── */
+.figs{display:flex;flex-wrap:wrap;gap:0;margin:6px 0 18px;
+  border-top:1px solid var(--report-line);border-bottom:1px solid var(--report-line)}
+.fig{flex:1;min-width:150px;padding:14px 18px 14px 0}
+.fig .n{font-family:Georgia,'Songti TC',serif;font-size:17px;color:var(--report-ink);font-variant-numeric:tabular-nums}
+.fig .l{font-family:var(--sans);font-size:11.5px;letter-spacing:.06em;color:var(--report-taupe);margin-top:2px}
+
+/* ── 名稱值對照 ── */
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 20px;margin:0 0 16px;font-size:13.5px}
+.kv dt{font-family:var(--sans);font-size:11.5px;letter-spacing:.06em;color:var(--report-taupe);
+  text-transform:uppercase;padding-top:3px}
+.kv dd{margin:0}
+
+/* ── 按鈕 ── */
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+button.act{
+  font-family:var(--sans);font-size:13px;padding:7px 14px;cursor:pointer;
+  background:var(--report-card);border:1px solid var(--report-line);color:var(--report-ink);
+}
+button.act:hover,button.act:focus-visible{border-color:var(--report-ink)}
+button.act.risk{border-color:var(--report-accent);color:var(--report-accent)}
+button.link{background:none;border:0;padding:0;cursor:pointer;font-family:var(--sans);font-size:12.5px;
+  color:var(--report-accent);text-decoration:underline;text-underline-offset:2px}
+button.link.q{color:var(--report-body)}
+:focus-visible{outline:2px solid var(--report-accent);outline-offset:2px}
+
+/* ── 面板（模擬 actionButton 展開）── */
+.panel{border:1px solid var(--report-line);background:var(--report-card);
+  padding:16px 16px 14px;margin:10px 0 14px}
+.panel .note{font-family:var(--sans);font-size:12px;color:var(--report-body);margin:0 0 12px}
+.panel label{display:block;font-family:var(--sans);font-size:11.5px;letter-spacing:.05em;
+  color:var(--report-taupe);text-transform:uppercase;margin:10px 0 3px}
+.panel input[type=text],.panel select,.panel textarea{
+  width:100%;font-family:var(--sans);font-size:13.5px;padding:7px 9px;
+  border:1px solid var(--report-line);background:#FFFDF9;color:var(--report-ink)}
+.panel textarea{min-height:64px;resize:vertical}
+.panel .chk{display:flex;gap:8px;align-items:flex-start;margin:12px 0 2px;
+  font-family:var(--sans);font-size:12.5px;color:var(--report-ink)}
+.panel .chk input{margin-top:3px;flex:none}
+
+/* ── 訊息 ── */
+.msg{font-family:var(--sans);font-size:13px;padding:10px 13px;margin:12px 0;
+  border-left:3px solid var(--report-line);background:var(--report-card)}
+.msg.ok{border-left-color:var(--report-ink)}
+.msg.bad{border-left-color:var(--report-accent)}
+.msg .t{font-weight:600}
+.msg .d{color:var(--report-body);margin-top:2px}
+
+.legacy{font-family:var(--sans);font-size:12px;color:var(--report-taupe);margin:8px 0 14px}
+.mask{font-family:var(--sans);letter-spacing:.14em;color:var(--report-taupe)}
+.denied{border:1px solid var(--report-line);background:var(--report-card);
+  padding:34px 22px;text-align:center;margin:14px 0}
+.denied p{margin:0 0 6px;font-size:16px}
+.denied .d{font-family:var(--sans);font-size:12.5px;color:var(--report-body)}
+
+/* ── 狀態晶片 ── */
+/* ⭐ 只用既有 token ＋ 邊框樣式區分證據強度——⛔ 不另外發明配色，
+      實機那份 CSS 一共只有 7 個顏色，這裡不擴張。
+      實線＝有證據　虛線＝還沒有　赭紅＝要留意 */
+.chip{display:inline-block;font-family:var(--sans);font-size:10.5px;letter-spacing:.05em;
+  padding:2px 7px;border:1px solid var(--report-line);
+  color:var(--report-body);white-space:nowrap;background:rgba(255,253,249,.6)}
+.chip.live{border-color:var(--report-ink);color:var(--report-ink);font-weight:600}
+.chip.r2{border-color:var(--report-body);color:var(--report-body)}
+.chip.harness{border-style:dashed;border-color:var(--report-body);color:var(--report-body)}
+.chip.nomulti{border-color:var(--report-accent);color:var(--report-accent)}
+.chip.phase2{border-style:dashed;color:var(--report-taupe)}
+.chip.out{border-style:dashed;color:var(--report-taupe);opacity:.75}
+.chip.known{border-color:var(--report-accent);color:var(--report-accent)}
+
+/* ── 流程藍圖（模式 B）── */
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:10px 0 22px;
+  padding:14px;border:1px solid var(--report-line);background:var(--report-card)}
+.legend div{font-family:var(--sans);font-size:12px;color:var(--report-body)}
+.flow{display:grid;gap:0;margin:0 0 24px}
+.stage{border:1px solid var(--report-line);background:var(--report-card);
+  padding:13px 15px;position:relative}
+.stage .hd{display:flex;flex-wrap:wrap;gap:8px;align-items:baseline;justify-content:space-between}
+.stage .nm{font-weight:700;font-size:15px}
+.stage .idx{font-family:var(--sans);font-size:11px;color:var(--report-taupe);letter-spacing:.1em}
+.stage .desc{font-family:var(--sans);font-size:12.5px;color:var(--report-body);margin:6px 0 0}
+.stage .states{margin:8px 0 0;display:flex;flex-wrap:wrap;gap:5px}
+.arrow{text-align:center;color:var(--report-line);font-size:17px;line-height:1;margin:5px 0}
+.branch{border-left:2px solid var(--report-accent);padding-left:13px;margin:9px 0 0}
+
+/* ── 對照表 ── */
+.matrix td:first-child{font-weight:600}
+.matrix td{font-size:13px}
+
+/* ── 回饋工具 ── */
+.fb{border:1px solid var(--report-line);background:var(--report-card);
+  padding:18px;margin:22px 0 0}
+.fb .grid{display:grid;gap:12px}
+.fb label{display:block;font-family:var(--sans);font-size:11.5px;letter-spacing:.05em;
+  color:var(--report-taupe);text-transform:uppercase;margin:0 0 3px}
+.fb select,.fb textarea,.fb input[type=text]{
+  width:100%;font-family:var(--sans);font-size:13.5px;padding:7px 9px;
+  border:1px solid var(--report-line);background:#FFFDF9;color:var(--report-ink)}
+.fb textarea{min-height:56px;resize:vertical}
+.fb .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fbnote{font-family:var(--sans);font-size:12px;color:var(--report-accent);margin:12px 0 0;font-weight:600}
+.fblist{margin:14px 0 0;font-family:var(--sans);font-size:12.5px;color:var(--report-body)}
+.fblist li{margin:0 0 4px}
+/* 匯出內容是要整段複製走的原始文字，等寬才對得齊；用泛型關鍵字，⛔ 不指定具體字型 */
+.out{white-space:pre-wrap;font-family:ui-monospace,monospace;font-size:11.5px;
+  background:#FFFDF9;border:1px solid var(--report-line);padding:12px;
+  max-height:260px;overflow:auto;margin:12px 0 0}
+
+/* ── 手機 ── */
+@media (max-width:640px){
+  .wrap{padding:20px 14px 88px}
+  h1{font-size:20px}
+  .fb .row2{grid-template-columns:1fr}
+  .kv{grid-template-columns:1fr;gap:2px 0}
+  .kv dd{margin:0 0 8px}
+  nav{gap:13px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="banner">互動示意稿｜<b>全部為假資料</b>｜不連資料庫</div>
+
+<div class="wrap">
+  <p class="eyebrow">SDH · Editorial</p>
+  <h1>新書訪談邀約系統｜畫面與完整流程互動預覽</h1>
+  <p class="sub">給 Owner 與同事查看、點擊、留回饋用。所有操作只在你的瀏覽器記憶體中模擬，重新整理即可重置。</p>
+
+  <div class="modes" role="group" aria-label="預覽模式">
+    <button id="mA" aria-pressed="true">模式 A · 目前已完成</button>
+    <button id="mB" aria-pressed="false">模式 B · 完整流程藍圖</button>
+    <button id="mM" aria-pressed="false">現況／Roadmap 對照</button>
+    <button class="act" id="btnReset" style="margin-left:auto">重置 Demo</button>
+  </div>
+  <p class="modehint" id="modehint"></p>
+
+  <hr class="rule">
+
+  <!-- ══════════ 模式 A ══════════ -->
+  <section id="secA">
+    <nav id="nav" aria-label="系統主導覽"></nav>
+    <p class="navnote">⚠️ 實機頂端只有這 4 個入口。需求詳情、名單確認、訪談案件、素材完整性都是<b>從需求清單往下鑽</b>，靠麵包屑回上一層。</p>
+    <div id="main"></div>
+
+    <hr class="rule">
+    <h3>不在主導覽裡的畫面</h3>
+    <div class="actions">
+      <button class="act" data-goto="denied">找不到項目／拒絕頁</button>
+      <button class="act" data-goto="intake">公開收件表單</button>
+      <button class="act" data-goto="idor">模擬猜 ID 越權</button>
+    </div>
+    <p class="legacy">公開收件表單是<b>另一個獨立部署</b>的匿名頁面，不在內部系統的導覽列裡。</p>
+  </section>
+
+  <!-- ══════════ 模式 B ══════════ -->
+  <section id="secB" hidden></section>
+
+  <!-- ══════════ 對照表 ══════════ -->
+  <section id="secM" hidden></section>
+
+  <hr class="rule">
+
+  <!-- ══════════ 回饋 ══════════ -->
+  <section id="feedback"></section>
+
+  <hr class="rule">
+  <p class="legacy" style="margin-top:18px">
+    本輪是 <b>UI／流程驗收</b>，不是權限、安全、資料正確性或正式上線驗收。<br>
+    這份預覽不含任何真實資料、識別碼或連線設定。
+  </p>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   ⛔ 這份預覽的硬規則
+     1. ⛔ 完全沒有任何對外呼叫：沒有 Apps Script 遠端呼叫、沒有非同步請求、
+        沒有長連線。⚠️ 連「這些名字的字面值」都不出現在本檔，
+        這樣公開安全掃描才不需要為任何例外開後門。
+     2. 不連任何資料庫。所有狀態只在 DEMO 這個記憶體物件裡。
+     3. 只有回饋會寫 localStorage，且永不上傳。
+     4. 一律 textContent，不用 innerHTML（對齊實機 80_WebUi.html 的第一條硬規則）。
+   ══════════════════════════════════════════════════════════════ */
+
+/* ─────────── 顯示標籤（逐字取自實機 01_Constants.gs）─────────── */
+var L = {
+  DIRECTION:{AUTHOR_INITIATED:'作者端發起',PROGRAM_INITIATED:'節目端發起'},
+  SR09:{RECEIVED:'已收件',UNDER_REVIEW:'審核中',SHORTLISTING:'名單研擬',
+        AWAITING_REQUESTER:'待需求方確認',INVITING:'邀約中',IN_PROGRESS:'執行中',
+        REQUEST_DECLINED:'婉拒需求',REQUEST_CANCELLED:'已取消',REQUEST_CLOSED:'已結案'},
+  SR10:{AWAITING_OWNERSHIP:'待歸屬確認',PENDING_PITCH:'待提案',PITCHED:'已提案',
+        NO_REPLY:'未回覆（追蹤中）',ACCEPTED:'已接受',REJECTED:'已婉拒',
+        NO_RESPONSE:'無回覆結案',EXCLUDED:'已排除'},
+  SR01:{ESTABLISHED:'已成立',ON_HOLD:'暫緩',CANCELLED:'取消',ABORTED:'中止',CLOSED:'結案'},
+  SR07:{NOT_STARTED:'未開始',OUTLINE_READY:'訪綱就緒',RECORDED:'已錄音',EDITED:'已剪輯',
+        AWAITING_COUNTERPARTY:'待對方上架',PUBLISHED:'已上架',NOT_AIRED:'不予上架'},
+  LINK_STATE:{ACTIVE:'有效',USED:'已完成確認',EXPIRED:'已過期',
+              REVOKED:'已撤銷',SUPERSEDED:'已被新連結取代'},
+  MATERIAL_KIND:{PHYSICAL_BOOK:'實體樣書',EBOOK_PDF:'電子書／PDF',COVER_VISUAL:'書封與視覺素材',
+                 AUTHOR_BIO:'作者簡介與照片',PRESS_KIT:'新聞稿／書籍介紹',OTHER:'其他訪談資料'},
+  NECESSITY:{REQUIRED:'必要',REFERENCE:'參考'},
+  DELIVERY:{NOT_PROVIDED:'尚未提供',PROVIDED:'已提供',SHIPPED:'已寄出'},
+  RECEIPT:{NOT_RECEIVED:'未收到',RECEIVED:'已收到',CONFIRMED:'已確認'},
+  PRODUCER:{COMPANY:'公司製作',COUNTERPARTY:'對方製作'},
+  INTAKE_CHANNEL:{PUBLIC_FORM:'對外表單',INTERNAL_PROXY:'內部代填'},
+  REQUESTER_ROLE:{AUTHOR:'作者本人',PUBLISHER_EDITOR:'出版社編輯',AGENT:'經紀人',
+                  PROGRAM_PRODUCER:'節目製作人',HOST:'主持人',OTHER:'其他'},
+  INTERVIEW_FORMAT:{ONSITE:'實體錄音',REMOTE:'線上錄音',EITHER:'皆可'},
+  DEAL_EXPECTATION:{RECIPROCAL:'互訪（彼此上對方節目）',ONE_WAY_FREE:'單向免費',
+                    PUBLISHER_PAID:'出版社付費',UNDECIDED:'再討論'}
+};
+var MASK = '***';
+function lab(dom,code){ var m=L[dom]; return (m && m[code]) || code; }
+
+/* ─────────── Demo 狀態（全部 synthetic）─────────── */
+var SEED, DEMO;
+function seed(){
+  return {
+    seq:{req:3,cand:2,cas:1,mat:3,per:3,evt:0},
+    intakeOpen:false,
+    staleArmed:false,
+    requests:[
+      {id:'REQ-DEMO-001',direction:'AUTHOR_INITIATED',status:'RECEIVED',
+       book:'BOOK-DEMO-001',program:'',listV:0,v:1,
+       name:'林晚晴',contact:'wan.ching@example.invalid',channel:'PUBLIC_FORM',
+       window:'2026 年 11 月中下旬',expected:'《清晨讀本》、《慢城手記》'},
+      {id:'REQ-DEMO-002',direction:'PROGRAM_INITIATED',status:'SHORTLISTING',
+       book:'',program:'PRG-DEMO-001',listV:1,v:4,
+       name:'鄭牧言',contact:'muyen@example.invalid',channel:'INTERNAL_PROXY',
+       window:'不限',expected:''},
+      {id:'REQ-DEMO-003',direction:'AUTHOR_INITIATED',status:'REQUEST_CLOSED',
+       book:'BOOK-DEMO-002',program:'',listV:2,v:9,
+       name:'高栩',contact:'hsu.kao@example.invalid',channel:'PUBLIC_FORM',
+       window:'已完成',expected:''}
+    ],
+    candidates:[
+      {id:'CND-DEMO-001',req:'REQ-DEMO-002',program:'PRG-DEMO-002',status:'AWAITING_OWNERSHIP',v:1},
+      {id:'CND-DEMO-002',req:'REQ-DEMO-002',program:'PRG-DEMO-003',status:'PITCHED',v:3}
+    ],
+    links:[
+      {req:'REQ-DEMO-002',listV:1,state:'ACTIVE',created:'2026-08-28 10:12',
+       expires:'2026-09-11 10:12',used:'',revoke:''},
+      {req:'REQ-DEMO-002',listV:0,state:'SUPERSEDED',created:'2026-08-21 16:40',
+       expires:'2026-09-04 16:40',used:'',revoke:''}
+    ],
+    cases:[
+      {id:'CAS-DEMO-001',req:'REQ-DEMO-002',engagement:'ESTABLISHED',production:'RECORDED',
+       producer:'COMPANY',amount:'0',terminal:'',v:5}
+    ],
+    materials:[
+      {id:'MAT-DEMO-001',cas:'CAS-DEMO-001',kind:'PHYSICAL_BOOK',req:'REQUIRED',
+       delivery:'SHIPPED',receipt:'RECEIVED',v:2},
+      {id:'MAT-DEMO-002',cas:'CAS-DEMO-001',kind:'AUTHOR_BIO',req:'REQUIRED',
+       delivery:'PROVIDED',receipt:'NOT_RECEIVED',v:1},
+      {id:'MAT-DEMO-003',cas:'CAS-DEMO-001',kind:'COVER_VISUAL',req:'REFERENCE',
+       delivery:'NOT_PROVIDED',receipt:'NOT_RECEIVED',v:1}
+    ],
+    people:[
+      {id:'PER-DEMO-001',name:'林晚晴',email:'wan.ching@example.invalid',active:true,v:2},
+      {id:'PER-DEMO-002',name:'鄭牧言',email:'muyen@example.invalid',active:true,v:1},
+      {id:'PER-DEMO-003',name:'高栩',email:'hsu.kao@example.invalid',active:false,v:3}
+    ],
+    audit:[
+      {at:'2026-08-28 10:12',actor:'R2-DEMO',action:'FR-42',label:'簽發推薦名單確認連結',target:'ConfirmationLinks'},
+      {at:'2026-08-27 15:04',actor:'R2-DEMO',action:'FR-41',label:'審核需求',target:'Requests'},
+      {at:'2026-08-27 09:31',actor:'R1-DEMO',action:'FR-39',label:'登記需求',target:'Requests'},
+      {at:'2026-07-02 22:18',actor:'TEST_HARNESS_07',action:'',label:'',target:''}
+    ],
+    unmasked:{}
+  };
+}
+function resetDemo(){ DEMO = JSON.parse(JSON.stringify(SEED)); }
+SEED = seed(); resetDemo();
+
+/* 已知問題名冊 —— 只有真的還沒修的才寫在這裡 */
+var KNOWN_ISSUES = [];   /* F-1／F-2 已於 build 011 修復，⛔ 不在 Demo 裡假裝有問題 */
+
+/* ─────────── DOM 小工具（一律 textContent）─────────── */
+function el(tag,text,cls){ var e=document.createElement(tag);
+  if(text!==null&&text!==undefined&&text!=='') e.textContent=text;
+  if(cls) e.className=cls; return e; }
+function clear(n){ while(n.firstChild) n.removeChild(n.firstChild); }
+function btn(label,cls,fn){ var b=el('button',label,cls); b.type='button'; b.onclick=fn; return b; }
+
+function table(cols,rows,opts){
+  var o=opts||{}, w=el('div',null,'tablewrap'), t=document.createElement('table');
+  var thead=document.createElement('thead'), hr=document.createElement('tr');
+  cols.forEach(function(c){ hr.appendChild(el('th',c.label)); });
+  if(o.rowActions) hr.appendChild(el('th','動作'));
+  thead.appendChild(hr); t.appendChild(thead);
+  var tb=document.createElement('tbody');
+  if(!rows.length){
+    var tr=document.createElement('tr'), td=document.createElement('td');
+    td.colSpan=cols.length+(o.rowActions?1:0);
+    td.appendChild(el('div','目前沒有資料。','empty')); tr.appendChild(td); tb.appendChild(tr);
+  }
+  rows.forEach(function(r){
+    var tr=document.createElement('tr');
+    cols.forEach(function(c){
+      var td=document.createElement('td');
+      if(c.render){ c.render(td,r); } else {
+        var v=r[c.key];
+        if(v===MASK && o.unmask && o.unmask.indexOf(c.key)>=0){
+          td.appendChild(el('span',MASK,'mask'));
+          td.appendChild(document.createTextNode(' '));
+          td.appendChild(btn('查看','link q',function(){ doUnmask(o.pkTable,r[o.pk],c.key); }));
+        } else { td.textContent=(v===''||v===undefined||v===null)?'—':String(v); }
+      }
+      tr.appendChild(td);
+    });
+    if(o.rowActions){ var ta=document.createElement('td'); o.rowActions(ta,r); tr.appendChild(ta); }
+    tb.appendChild(tr);
+  });
+  t.appendChild(tb); w.appendChild(t); return w;
+}
+function kv(pairs){
+  var d=document.createElement('dl'); d.className='kv';
+  pairs.forEach(function(p){
+    d.appendChild(el('dt',p[0]));
+    d.appendChild(el('dd',(p[1]===''||p[1]===undefined||p[1]===null)?'—':String(p[1])));
+  });
+  return d;
+}
+function crumb(items){
+  var c=el('div',null,'crumb');
+  items.forEach(function(it,i){
+    if(i) c.appendChild(el('span','›'));
+    if(it[1]) c.appendChild(btn(it[0],null,it[1]));
+    else c.appendChild(el('span',it[0]));
+  });
+  return c;
+}
+function say(kind,title,detail){
+  var m=el('div',null,'msg '+kind);
+  m.appendChild(el('div',title,'t'));
+  if(detail) m.appendChild(el('div',detail,'d'));
+  MSG=m; render();
+  var n=document.getElementById('msganchor'); if(n) n.scrollIntoView({block:'nearest'});
+}
+var MSG=null;
+function chip(text,cls){ return el('span',text,'chip '+(cls||'')); }
+
+/* ─────────── 展開式操作面板（對齊實機 actionButton）─────────── */
+var OPEN_PANEL=null;
+function actionButton(spec){
+  var b=btn(spec.label,'act'+(spec.risk?' risk':''),function(){
+    OPEN_PANEL = (OPEN_PANEL && OPEN_PANEL.key===spec.label) ? null : {key:spec.label,spec:spec};
+    render();
+  });
+  return b;
+}
+function panelFor(spec){
+  var p=el('div',null,'panel'), vals={};
+  /* ⚠️ 面板每次重繪都會整個重建。驗證失敗時如果不把使用者打好的字帶回來，
+        他剛寫的原因就會被清空——實測時當場踩到。所以一律先存再還原。 */
+  var keep = (OPEN_PANEL && OPEN_PANEL.vals) || {};
+  function remember(){
+    Object.keys(vals).forEach(function(k){
+      keep[k] = vals[k].type==='checkbox' ? vals[k].checked : vals[k].value; });
+    if(OPEN_PANEL) OPEN_PANEL.vals=keep;
+  }
+  function restore(name,node){
+    if(Object.prototype.hasOwnProperty.call(keep,name)){
+      if(node.type==='checkbox') node.checked=!!keep[name]; else node.value=keep[name];
+    }
+    node.addEventListener('input',remember);
+    node.addEventListener('change',remember);
+  }
+  if(spec.note) p.appendChild(el('p',spec.note,'note'));
+  (spec.fields||[]).forEach(function(f){
+    var id='f_'+f.name;
+    var lb=el('label',f.label); lb.setAttribute('for',id); p.appendChild(lb);
+    var inp;
+    if(f.type==='select'){
+      inp=document.createElement('select');
+      f.options.forEach(function(o){ var op=document.createElement('option');
+        op.value=o[0]; op.textContent=o[1]; inp.appendChild(op); });
+    } else if(f.type==='textarea'){ inp=document.createElement('textarea'); }
+    else { inp=document.createElement('input'); inp.type='text'; }
+    inp.id=id; if(f.placeholder) inp.placeholder=f.placeholder;
+    p.appendChild(inp); vals[f.name]=inp; restore(f.name,inp);
+  });
+  if(spec.reason){
+    var rl=el('label','原因'); rl.setAttribute('for','f_reason'); p.appendChild(rl);
+    var rt=document.createElement('textarea'); rt.id='f_reason';
+    rt.placeholder='請寫具體原因，這段會留在稽核紀錄裡';
+    p.appendChild(rt); vals.reason=rt; restore('reason',rt);
+  }
+  if(spec.confirm){
+    var wrapc=el('div',null,'chk');
+    var cb=document.createElement('input'); cb.type='checkbox'; cb.id='f_confirm';
+    var cl=el('label',spec.confirm); cl.setAttribute('for','f_confirm');
+    cl.style.textTransform='none'; cl.style.letterSpacing='0';
+    cl.style.color='var(--report-ink)'; cl.style.fontSize='12.5px'; cl.style.margin='0';
+    wrapc.appendChild(cb); wrapc.appendChild(cl); p.appendChild(wrapc);
+    vals.confirmed=cb; restore('confirmed',cb);
+  }
+  var bar=el('div',null,'actions');
+  bar.appendChild(btn('送出','act',function(){
+    remember();                       /* ⭐ 先把使用者打的字存起來再驗證 */
+    var v={};
+    Object.keys(vals).forEach(function(k){
+      v[k]= vals[k].type==='checkbox' ? vals[k].checked : vals[k].value;
+    });
+    if(spec.confirm && !v.confirmed){ say('bad','請先勾選確認','這是高風險操作，需要你明確確認。'); return; }
+    if(spec.reason && !String(v.reason||'').trim()){ say('bad','請填寫原因','這段會寫進稽核紀錄。'); return; }
+    OPEN_PANEL=null;
+    spec.run(v);
+  }));
+  bar.appendChild(btn('取消','act',function(){ OPEN_PANEL=null; render(); }));
+  p.appendChild(bar);
+  return p;
+}
+
+/* ─────────── 模擬寫入的共用路徑 ─────────── */
+var SEEN_KEYS = {};                     /* 模擬冪等鍵 */
+function submit(key,expectedV,currentV,okText,apply){
+  /* ① 冪等重送：同一把鍵只生效一次 */
+  if(SEEN_KEYS[key]){
+    say('ok','這筆已經處理過了','系統沒有再寫一次，畫面已帶到目前結果。');
+    return;
+  }
+  /* ② 版本過期（stale update）拒絕 */
+  if(expectedV!==null && expectedV!==currentV){
+    say('bad','這筆資料在你操作期間被別人改過了',
+        '為了不覆蓋別人的修改，這次沒有寫入。請重新整理後再試一次。（E_CONCURRENT_MODIFICATION）');
+    DEMO.staleArmed=false;
+    return;
+  }
+  SEEN_KEYS[key]=true;
+  apply();
+  DEMO.seq.evt++;
+  say('ok',okText,'');
+}
+function audit(action,label,target){
+  DEMO.audit.unshift({at:nowStamp(),actor:'R2-DEMO',action:action,label:label,target:target});
+}
+function nowStamp(){
+  var d=new Date(), p=function(n){ return (n<10?'0':'')+n; };
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function expectedVersionFor(realV){ return DEMO.staleArmed ? realV-1 : realV; }
+
+function doUnmask(tbl,id,field){
+  DEMO.unmasked[tbl+':'+id+':'+field]=true;
+  audit('FR-46','查看個資欄位',tbl);
+  say('ok','已解遮罩一筆一欄','這次查看已留下稽核紀錄（誰、什麼時候、看了哪一筆哪一欄）。到「稽核查閱」可以看到。');
+}
+function isUnmasked(tbl,id,field){ return !!DEMO.unmasked[tbl+':'+id+':'+field]; }
+function pii(tbl,id,field,value){ return isUnmasked(tbl,id,field)?value:MASK; }
+
+/* ─────────── 路由 ─────────── */
+var PAGE='home', CTX={};
+function go(p,ctx){ PAGE=p; CTX=ctx||{}; OPEN_PANEL=null; MSG=null; render();
+  var w=document.getElementById('secA'); if(w) w.scrollIntoView({block:'start',behavior:'auto'}); }
+
+var NAV=[['home','工作總覽'],['requests','需求清單'],['masters','主檔'],['audit','稽核查閱']];
+var DRILL={request:'requests',shortlist:'requests',case:'requests',materials:'requests'};
+
+/* ═══════════════ 各頁 ═══════════════ */
+var VIEWS={};
+
+VIEWS.home=function(main){
+  var pending=DEMO.requests.filter(function(r){
+    return ['RECEIVED','UNDER_REVIEW'].indexOf(r.status)>=0; }).length;
+  var pcand=DEMO.candidates.filter(function(c){ return c.status==='PITCHED'; }).length;
+  var figs=el('div',null,'figs');
+  [['待審核的需求',pending],['待回覆的候選節目',pcand],['我最近的操作',DEMO.seq.evt]]
+    .forEach(function(f){
+      var d=el('div',null,'fig');
+      d.appendChild(el('div',String(f[1]),'n'));
+      d.appendChild(el('div',f[0],'l'));
+      figs.appendChild(d);
+    });
+  main.appendChild(figs);
+  main.appendChild(el('p','你可以查閱全部稽核紀錄。'));
+  var bar=el('div',null,'actions');
+  bar.appendChild(btn('前往需求清單','act',function(){ go('requests'); }));
+  main.appendChild(bar);
+  main.appendChild(el('p','⚠️ 這三個數字會隨你在 Demo 裡的操作即時變動——建立需求後「待審核」會 +1，審核通過後會 -1。','legacy'));
+};
+
+VIEWS.requests=function(main){
+  main.appendChild(el('h2','需求清單'));
+  var rows=DEMO.requests.map(function(r){
+    return {id:r.id,dir:lab('DIRECTION',r.direction),st:lab('SR09',r.status),
+            book:r.book||r.program,contact:pii('Requests',r.id,'contact',r.contact),
+            ch:lab('INTAKE_CHANNEL',r.channel),_r:r};
+  });
+  main.appendChild(table([
+    {key:'id',label:'編號'},{key:'dir',label:'方向'},{key:'st',label:'狀態'},
+    {key:'book',label:'書／節目'},{key:'ch',label:'來源'},{key:'contact',label:'需求方聯絡'}
+  ],rows,{pk:'id',pkTable:'Requests',unmask:['contact'],
+    rowActions:function(td,r){ td.appendChild(btn('開啟','link',function(){ go('request',{req:r.id}); })); }}));
+  main.appendChild(el('p','聯絡方式預設遮罩。需要查看時按該欄的「查看」，一次只解一筆一欄，每次都會留下紀錄。','legacy'));
+
+  var bar=el('div',null,'actions');
+  bar.appendChild(actionButton({
+    label:'建立需求',
+    note:'作者端＝有書找節目；節目端＝有節目找來賓。方向決定哪個標的必填。',
+    fields:[
+      {name:'direction',label:'方向',type:'select',options:[
+        ['AUTHOR_INITIATED','作者端發起'],['PROGRAM_INITIATED','節目端發起']]},
+      {name:'requester_name',label:'需求方姓名',placeholder:'例：陳語安'},
+      {name:'requester_contact',label:'需求方聯絡方式',placeholder:'例：yuan@example.invalid'},
+      {name:'book_id',label:'書籍編號（作者端必填）',placeholder:'BOOK-DEMO-003'},
+      {name:'program_id',label:'節目編號（節目端必填）',placeholder:'PRG-DEMO-004'},
+      {name:'desired_window',label:'希望時段（選填）'},
+      {name:'expected_list_raw',label:'預期邀約的節目名單（選填）',type:'textarea'}
+    ],
+    run:function(v){
+      if(!String(v.requester_name||'').trim()){ say('bad','請填需求方姓名',''); return; }
+      var n=++DEMO.seq.req;
+      var id='REQ-DEMO-'+String(n).padStart(3,'0');
+      submit('create:'+v.requester_contact+':'+v.requester_name,null,null,'需求已建立',function(){
+        DEMO.requests.unshift({id:id,direction:v.direction,status:'RECEIVED',
+          book:v.book_id||'',program:v.program_id||'',listV:0,v:1,
+          name:v.requester_name,contact:v.requester_contact||'demo@example.invalid',
+          channel:'INTERNAL_PROXY',window:v.desired_window||'',expected:v.expected_list_raw||''});
+        audit('FR-39','登記需求','Requests');
+      });
+    }
+  }));
+  bar.appendChild(actionButton({
+    label:'再送出一次同一筆（測冪等）',
+    note:'用同一個需求方姓名與聯絡方式再送一次——系統應該告訴你「已經處理過了」，而且清單不會多一筆。',
+    fields:[
+      {name:'requester_name',label:'需求方姓名（填剛剛那一筆）'},
+      {name:'requester_contact',label:'需求方聯絡方式（填剛剛那一筆）'}
+    ],
+    run:function(v){
+      submit('create:'+v.requester_contact+':'+v.requester_name,null,null,'需求已建立',function(){
+        var n=++DEMO.seq.req;
+        DEMO.requests.unshift({id:'REQ-DEMO-'+String(n).padStart(3,'0'),
+          direction:'AUTHOR_INITIATED',status:'RECEIVED',book:'',program:'',listV:0,v:1,
+          name:v.requester_name,contact:v.requester_contact,channel:'INTERNAL_PROXY',
+          window:'',expected:''});
+        audit('FR-39','登記需求','Requests');
+      });
+    }
+  }));
+  main.appendChild(bar);
+};
+
+VIEWS.request=function(main){
+  var r=DEMO.requests.filter(function(x){ return x.id===CTX.req; })[0];
+  if(!r){ VIEWS.denied(main); return; }
+  main.appendChild(crumb([['需求清單',function(){ go('requests'); }],['需求詳情',null]]));
+  main.appendChild(el('h2','需求 '+r.id));
+  main.appendChild(kv([
+    ['方向',lab('DIRECTION',r.direction)],['狀態',lab('SR09',r.status)],
+    ['書',r.book],['節目',r.program],['來源',lab('INTAKE_CHANNEL',r.channel)],
+    ['希望時段',r.window],['預期邀約名單',r.expected],
+    ['名單版本',r.listV],['資料版本',r.v]
+  ]));
+
+  var bar=el('div',null,'actions');
+  bar.appendChild(actionButton({
+    label:'審核',
+    note:'接受＝進入名單研擬；婉拒必須填原因。',
+    fields:[{name:'outcome',label:'結果',type:'select',
+             options:[['ACCEPT','接受'],['DECLINE','婉拒（必填原因）']]}],
+    reason:true,
+    run:function(v){
+      submit('triage:'+r.id,expectedVersionFor(r.v),r.v,'審核已登錄',function(){
+        r.status = v.outcome==='ACCEPT' ? 'SHORTLISTING' : 'REQUEST_DECLINED';
+        r.v++; audit('FR-41','審核需求','Requests');
+      });
+    }
+  }));
+  bar.appendChild(actionButton({
+    label:'加入候選節目',
+    fields:[{name:'programId',label:'節目編號',placeholder:'PRG-DEMO-005'}],
+    run:function(v){
+      if(!String(v.programId||'').trim()){ say('bad','請填節目編號',''); return; }
+      submit('cand:'+r.id+':'+v.programId,null,null,'候選節目已加入',function(){
+        var n=++DEMO.seq.cand;
+        DEMO.candidates.push({id:'CND-DEMO-'+String(n).padStart(3,'0'),req:r.id,
+          program:v.programId,status:'AWAITING_OWNERSHIP',v:1});
+        audit('FR-09','加入候選節目','CandidatePrograms');
+      });
+    }
+  }));
+  bar.appendChild(btn('推薦名單與確認連結','act',function(){ go('shortlist',{req:r.id}); }));
+  bar.appendChild(actionButton({
+    label:'建立訪談案件',
+    note:'候選節目回覆「接受」之後，才會由該筆候選產生訪談案件。',
+    run:function(){
+      var ok=DEMO.candidates.filter(function(c){ return c.req===r.id && c.status==='ACCEPTED'; });
+      if(!ok.length){ say('bad','還沒有接受的候選節目',
+        '請先在下方候選節目列「登錄回覆」選「接受」，才會有可成案的對象。'); return; }
+      submit('case:'+r.id,null,null,'訪談案件已成立',function(){
+        var n=++DEMO.seq.cas;
+        DEMO.cases.push({id:'CAS-DEMO-'+String(n).padStart(3,'0'),req:r.id,
+          engagement:'ESTABLISHED',production:'NOT_STARTED',producer:'COMPANY',
+          amount:'0',terminal:'',v:1});
+        r.status='IN_PROGRESS'; r.v++;
+        audit('FR-15','成立訪談案件','Cases');
+      });
+    }
+  }));
+  bar.appendChild(actionButton({
+    label:'取消需求',
+    risk:true, reason:true,
+    confirm:'我了解取消後需求無法重新開啟',
+    run:function(v){
+      submit('cancel:'+r.id,expectedVersionFor(r.v),r.v,'需求已取消',function(){
+        r.status='REQUEST_CANCELLED'; r.v++;
+        audit('FR-45','取消需求','Requests');
+      });
+    }
+  }));
+  main.appendChild(bar);
+
+  main.appendChild(el('h3','候選節目'));
+  var cands=DEMO.candidates.filter(function(c){ return c.req===r.id; });
+  main.appendChild(table([
+    {key:'id',label:'編號'},{key:'program',label:'節目'},
+    {key:'st',label:'狀態'},{key:'v',label:'版本'}
+  ],cands.map(function(c){ return {id:c.id,program:c.program,st:lab('SR10',c.status),v:c.v,_c:c}; }),{
+    rowActions:function(td,row){ candidateActions(td,row._c); }
+  }));
+
+  main.appendChild(el('h3','由此需求產生的訪談案件'));
+  var cs=DEMO.cases.filter(function(c){ return c.req===r.id; });
+  main.appendChild(table([
+    {key:'id',label:'編號'},{key:'eng',label:'接洽'},{key:'prod',label:'製作'}
+  ],cs.map(function(c){ return {id:c.id,eng:lab('SR01',c.engagement),prod:lab('SR07',c.production),_c:c}; }),{
+    rowActions:function(td,row){
+      td.appendChild(btn('開啟','link',function(){ go('case',{cas:row.id,req:r.id}); })); }
+  }));
+};
+
+function candidateActions(td,c){
+  var box=el('div',null,'actions');
+  box.appendChild(actionButton({
+    label:'確認歸屬',
+    note:'勾選代表你已與節目歸屬人確認過。',
+    confirm:'我已與該節目的歸屬人確認過',
+    run:function(){
+      submit('ack:'+c.id,expectedVersionFor(c.v),c.v,'歸屬已確認',function(){
+        c.status='PENDING_PITCH'; c.v++; audit('FR-08','確認節目歸屬','CandidatePrograms'); });
+    }
+  }));
+  box.appendChild(actionButton({
+    label:'提案',
+    note:'⛔ 名單未經需求方確認前無法提案。',
+    run:function(){
+      submit('pitch:'+c.id,expectedVersionFor(c.v),c.v,'已提案',function(){
+        c.status='PITCHED'; c.v++; audit('FR-11','向節目提案','CandidatePrograms'); });
+    }
+  }));
+  box.appendChild(actionButton({
+    label:'登錄回覆',
+    fields:[{name:'outcome',label:'結果',type:'select',
+             options:[['ACCEPT','接受'],['REJECT','婉拒（必填原因）']]}],
+    reason:true,
+    run:function(v){
+      submit('reply:'+c.id,expectedVersionFor(c.v),c.v,'回覆已登錄',function(){
+        c.status = v.outcome==='ACCEPT' ? 'ACCEPTED' : 'REJECTED'; c.v++;
+        audit('FR-12','登錄節目回覆','CandidatePrograms'); });
+    }
+  }));
+  box.appendChild(actionButton({
+    label:'無回覆結案',
+    reason:true, confirm:'已完成跟進程序',
+    note:'⚠️ 「無回覆結案」與「婉拒」是兩件事，⛔ 不計入婉拒率。',
+    run:function(){
+      submit('noresp:'+c.id,expectedVersionFor(c.v),c.v,'已結案為無回覆',function(){
+        c.status='NO_RESPONSE'; c.v++; audit('FR-10','標記無回覆','CandidatePrograms'); });
+    }
+  }));
+  td.appendChild(box);
+}
+
+VIEWS.shortlist=function(main){
+  var r=DEMO.requests.filter(function(x){ return x.id===CTX.req; })[0];
+  if(!r){ VIEWS.denied(main); return; }
+  main.appendChild(crumb([
+    ['需求清單',function(){ go('requests'); }],
+    ['需求詳情',function(){ go('request',{req:r.id}); }],
+    ['名單確認狀態',null]]));
+  main.appendChild(el('h2','推薦名單確認狀態'));
+  var rows=DEMO.links.filter(function(l){ return l.req===r.id; });
+  main.appendChild(table([
+    {key:'listV',label:'名單版本'},{key:'st',label:'連結狀態'},
+    {key:'created',label:'簽發'},{key:'expires',label:'到期'},
+    {key:'used',label:'使用'},{key:'revoke',label:'撤銷原因'}
+  ],rows.map(function(l){ return {listV:l.listV,st:lab('LINK_STATE',l.state),
+    created:l.created,expires:l.expires,used:l.used,revoke:l.revoke}; }),{}));
+  main.appendChild(el('p','⛔ 這裡不顯示可點的真實連結，也不顯示 token。需要傳給需求方時請向系統管理者取得。','legacy'));
+
+  var bar=el('div',null,'actions');
+  bar.appendChild(actionButton({label:'產生確認連結',run:function(){
+    submit('issue:'+r.id+':'+r.listV,null,null,'連結已產生',function(){
+      DEMO.links.forEach(function(l){ if(l.req===r.id && l.state==='ACTIVE') l.state='SUPERSEDED'; });
+      DEMO.links.unshift({req:r.id,listV:r.listV,state:'ACTIVE',created:nowStamp(),
+        expires:'（14 個日曆日後）',used:'',revoke:''});
+      if(r.status==='SHORTLISTING'){ r.status='AWAITING_REQUESTER'; r.v++; }
+      audit('FR-42','簽發推薦名單確認連結','ConfirmationLinks');
+    });
+  }}));
+  bar.appendChild(actionButton({label:'撤銷連結',reason:true,
+    note:'⛔ 撤銷不會改動需求狀態，也不會改名單版本。',
+    run:function(v){
+      submit('revoke:'+r.id,null,null,'連結已撤銷',function(){
+        DEMO.links.forEach(function(l){ if(l.req===r.id && l.state==='ACTIVE'){
+          l.state='REVOKED'; l.revoke=v.reason; } });
+        audit('FR-44','撤銷確認連結','ConfirmationLinks');
+      });
+    }}));
+  bar.appendChild(actionButton({label:'修訂名單',reason:true,
+    note:'⚠️ 這是唯一會讓名單進版的路徑，舊確認會失效。',
+    run:function(v){
+      submit('revise:'+r.id,expectedVersionFor(r.v),r.v,'名單已進版',function(){
+        r.listV++; r.v++;
+        DEMO.links.forEach(function(l){ if(l.req===r.id && l.state==='ACTIVE') l.state='SUPERSEDED'; });
+        audit('FR-43','修訂推薦名單','Requests');
+      });
+    }}));
+  bar.appendChild(actionButton({label:'人工推進',risk:true,reason:true,
+    confirm:'我了解這會跳過需求方確認，並留下高風險紀錄',
+    run:function(){
+      submit('override:'+r.id,expectedVersionFor(r.v),r.v,'已人工推進',function(){
+        r.status='INVITING'; r.v++;
+        audit('FR-47','人工推進（跳過需求方確認）','Requests');
+      });
+    }}));
+  main.appendChild(bar);
+};
+
+VIEWS.case=function(main){
+  var c=DEMO.cases.filter(function(x){ return x.id===CTX.cas; })[0];
+  if(!c){ VIEWS.denied(main); return; }
+  main.appendChild(crumb([
+    ['需求清單',function(){ go('requests'); }],
+    ['需求詳情',function(){ go('request',{req:c.req}); }],
+    ['訪談案件',null]]));
+  main.appendChild(el('h2','訪談 '+c.id));
+  main.appendChild(kv([
+    ['接洽狀態',lab('SR01',c.engagement)],['製作狀態',lab('SR07',c.production)],
+    ['製作方',lab('PRODUCER',c.producer)],['談定金額',c.amount],
+    ['終止原因',c.terminal],['資料版本',c.v]
+  ]));
+
+  /* SR-07 依製作方分兩條（D13）—— 公司製作才有「已剪輯／不予上架」 */
+  var NEXT = c.producer==='COMPANY'
+    ? {NOT_STARTED:['OUTLINE_READY'],OUTLINE_READY:['RECORDED'],RECORDED:['EDITED'],
+       EDITED:['PUBLISHED','NOT_AIRED'],PUBLISHED:[],NOT_AIRED:[]}
+    : {NOT_STARTED:['OUTLINE_READY'],OUTLINE_READY:['RECORDED'],
+       RECORDED:['AWAITING_COUNTERPARTY'],AWAITING_COUNTERPARTY:['PUBLISHED'],PUBLISHED:[]};
+  var nexts=NEXT[c.production]||[];
+
+  var bar=el('div',null,'actions');
+  bar.appendChild(actionButton({
+    label:'設定製作方',
+    note:'⚠️ 製作方決定製作流程走哪一條：公司製作有「已剪輯」與「不予上架」；對方製作改成「待對方上架」。',
+    fields:[{name:'side',label:'製作方',type:'select',
+             options:[['COMPANY','公司製作'],['COUNTERPARTY','對方製作']]}],
+    run:function(v){
+      submit('producer:'+c.id+':'+v.side,expectedVersionFor(c.v),c.v,'製作方已設定',function(){
+        c.producer=v.side; c.v++; audit('FR-19','設定製作方','Cases'); });
+    }
+  }));
+  if(nexts.length){
+    bar.appendChild(actionButton({
+      label:'更新製作進度',
+      note:'目前是「'+lab('SR07',c.production)+'」，下一步只能選底下這些。⛔ 不能跳步。',
+      fields:[{name:'to',label:'推進到',type:'select',
+               options:nexts.map(function(s){ return [s,lab('SR07',s)]; })}],
+      run:function(v){
+        submit('prod:'+c.id+':'+v.to,expectedVersionFor(c.v),c.v,'製作狀態已更新',function(){
+          c.production=v.to; c.v++; audit('FR-22','更新製作狀態','Cases'); });
+      }
+    }));
+  } else {
+    var t=el('span','製作狀態已到終點（'+lab('SR07',c.production)+'），⛔ 不能再推進。','legacy');
+    t.style.alignSelf='center'; bar.appendChild(t);
+  }
+  bar.appendChild(actionButton({
+    label:'暫緩／回復',
+    run:function(){
+      submit('hold:'+c.id+':'+c.engagement,expectedVersionFor(c.v),c.v,'狀態已更新',function(){
+        c.engagement = c.engagement==='ON_HOLD' ? 'ESTABLISHED' : 'ON_HOLD'; c.v++;
+        audit('FR-17','暫緩或回復訪談案件','Cases'); });
+    }
+  }));
+  bar.appendChild(btn('素材完整性','act',function(){ go('materials',{cas:c.id,req:c.req}); }));
+  main.appendChild(bar);
+};
+
+VIEWS.materials=function(main){
+  var c=DEMO.cases.filter(function(x){ return x.id===CTX.cas; })[0];
+  if(!c){ VIEWS.denied(main); return; }
+  main.appendChild(crumb([
+    ['需求清單',function(){ go('requests'); }],
+    ['訪談案件',function(){ go('case',{cas:c.id,req:c.req}); }],
+    ['素材完整性',null]]));
+  main.appendChild(el('h2','素材完整性'));
+
+  var mats=DEMO.materials.filter(function(m){ return m.cas===c.id; });
+  var need=mats.filter(function(m){ return m.req==='REQUIRED'; });
+  var got=need.filter(function(m){ return m.receipt!=='NOT_RECEIVED'; });
+  var summary = !need.length ? '待收'
+    : (got.length===need.length ? '已收齊' : (got.length ? '已收到' : '待收'));
+  main.appendChild(el('p','必要素材彙總：'+summary+'（'+got.length+' / '+need.length+'）'));
+  main.appendChild(el('p','⚠️ 「記了異常」不等於素材完整——必要素材要收到，或明確豁免。','legacy'));
+
+  main.appendChild(table([
+    {key:'id',label:'編號'},{key:'kind',label:'類別'},{key:'need',label:'必要性'},
+    {key:'del',label:'交付'},{key:'rec',label:'收訖'},{key:'v',label:'版本'}
+  ],mats.map(function(m){ return {id:m.id,kind:lab('MATERIAL_KIND',m.kind),
+    need:lab('NECESSITY',m.req),del:lab('DELIVERY',m.delivery),
+    rec:lab('RECEIPT',m.receipt),v:m.v,_m:m}; }),{
+    rowActions:function(td,row){
+      var m=row._m, box=el('div',null,'actions');
+      box.appendChild(actionButton({
+        label:'更新素材狀態',
+        fields:[
+          {name:'delivery',label:'對方交付到哪',type:'select',options:[
+            ['NOT_PROVIDED','尚未提供'],['PROVIDED','已提供'],['SHIPPED','已寄出']]},
+          {name:'receipt',label:'我方收到沒有',type:'select',options:[
+            ['NOT_RECEIVED','未收到'],['RECEIVED','已收到'],['CONFIRMED','已確認']]}
+        ],
+        note:'⚠️ 「對方交付」與「我方收訖」是兩件獨立的事，⛔ 不會互相帶動。',
+        run:function(v){
+          submit('mat:'+m.id+':'+v.delivery+':'+v.receipt,expectedVersionFor(m.v),m.v,'素材狀態已更新',function(){
+            m.delivery=v.delivery; m.receipt=v.receipt; m.v++;
+            audit('FR-26','更新素材狀態','Materials'); });
+        }
+      }));
+      td.appendChild(box);
+    }}));
+
+  var bar=el('div',null,'actions');
+  bar.appendChild(actionButton({
+    label:'新增必要素材',
+    fields:[
+      {name:'material_kind',label:'類別',type:'select',options:[
+        ['PHYSICAL_BOOK','實體樣書'],['EBOOK_PDF','電子書／PDF'],
+        ['COVER_VISUAL','書封與視覺素材'],['AUTHOR_BIO','作者簡介與照片'],
+        ['PRESS_KIT','新聞稿／書籍介紹'],['OTHER','其他訪談資料']]},
+      {name:'kind_note',label:'說明（選「其他」必填）'},
+      {name:'is_required',label:'必要性',type:'select',options:[
+        ['REQUIRED','必要'],['REFERENCE','參考']]}
+    ],
+    run:function(v){
+      if(v.material_kind==='OTHER' && !String(v.kind_note||'').trim()){
+        say('bad','選「其他訪談資料」時必須填說明',''); return; }
+      submit('matnew:'+c.id+':'+v.material_kind,null,null,'素材需求已建立',function(){
+        var n=++DEMO.seq.mat;
+        DEMO.materials.push({id:'MAT-DEMO-'+String(n).padStart(3,'0'),cas:c.id,
+          kind:v.material_kind,req:v.is_required,delivery:'NOT_PROVIDED',
+          receipt:'NOT_RECEIVED',v:1});
+        audit('FR-25','建立必要素材','Materials');
+      });
+    }
+  }));
+  main.appendChild(bar);
+};
+
+VIEWS.masters=function(main){
+  main.appendChild(el('h2','人物'));
+  main.appendChild(table([
+    {key:'id',label:'編號'},{key:'name',label:'顯示名'},
+    {key:'email',label:'主要 Email'},{key:'active',label:'啟用'},{key:'v',label:'版本'}
+  ],DEMO.people.map(function(p){
+    return {id:p.id,name:pii('People',p.id,'name',p.name),
+            email:pii('People',p.id,'email',p.email),
+            active:p.active?'啟用':'停用',v:p.v};
+  }),{pk:'id',pkTable:'People',unmask:['name','email']}));
+  main.appendChild(el('p','個資預設遮罩。按「查看」一次只解一筆一欄，每次都會留下紀錄。','legacy'));
+
+  var bar=el('div',null,'actions');
+  bar.appendChild(actionButton({
+    label:'建立人物',
+    note:'⛔ 同名不會自動合併，系統只會提示疑似重複。',
+    fields:[{name:'display_name',label:'顯示名'},
+            {name:'primary_email',label:'主要 Email（選填）'},
+            {name:'notes',label:'備註（選填）'}],
+    run:function(v){
+      if(!String(v.display_name||'').trim()){ say('bad','請填顯示名',''); return; }
+      var dup=DEMO.people.filter(function(p){ return p.name===v.display_name; }).length;
+      submit('per:'+v.display_name,null,null,'人物已建立'+(dup?'（⚠️ 疑似與既有同名）':''),function(){
+        var n=++DEMO.seq.per;
+        DEMO.people.push({id:'PER-DEMO-'+String(n).padStart(3,'0'),name:v.display_name,
+          email:v.primary_email||'',active:true,v:1});
+        audit('FR-02','建立人物主檔','Persons');
+      });
+    }
+  }));
+  bar.appendChild(actionButton({
+    label:'建立或沿用主檔',
+    note:'⚠️ 同名會沿用既有那一筆，⛔ 不會建第二筆；系統只會提示疑似重複。',
+    fields:[{name:'table',label:'主檔',type:'select',options:[
+      ['Publishers','出版社'],['Books','書籍'],['Programs','節目']]},
+      {name:'name',label:'名稱'}],
+    run:function(v){
+      submit('mst:'+v.table+':'+v.name,null,null,'主檔已建立或沿用',function(){
+        audit('FR-04','維護主檔',v.table); });
+    }
+  }));
+  main.appendChild(bar);
+  main.appendChild(el('p','⚠️ 主檔頁還有「維護書籍作者關聯」「維護節目主持人關聯」兩個動作，這份 Demo 只做到提示層級。','legacy'));
+};
+
+VIEWS.audit=function(main){
+  main.appendChild(el('h2','稽核查閱'));
+  main.appendChild(table([
+    {key:'at',label:'時間'},{key:'actor',label:'操作者'},
+    {key:'act',label:'動作',render:function(td,r){
+      if(r._e.action){
+        td.appendChild(el('span',r._e.label||'未知動作'));
+        td.appendChild(el('div','原始值：'+r._e.action,'legacy'));
+      } else {
+        var syn = String(r._e.actor||'').indexOf('TEST_')===0;
+        td.appendChild(el('span',syn?'歷史測試資料／未分類':'未知 action_type','legacy'));
+        td.appendChild(el('div','原始值：(空)','legacy'));
+      }
+    }},
+    {key:'target',label:'對象',render:function(td,r){
+      if(r._e.target) td.textContent=r._e.target;
+      else { td.appendChild(el('span','未知對象','legacy'));
+             td.appendChild(el('div','原始值：(空)','legacy')); }
+    }}
+  ],DEMO.audit.map(function(e){ return {at:e.at,actor:e.actor,_e:e}; }),{}));
+  main.appendChild(el('p','⚠️ 標示為「歷史測試資料／未分類」的列是早期測試 harness 寫入的無效值，⛔ 未被改寫，也⛔ 不代表任何真實動作。','legacy'));
+  main.appendChild(el('p','⚠️ 這條時間線會記下你在 Demo 裡做的每一個動作，包含每一次「查看」個資。','legacy'));
+};
+
+VIEWS.denied=function(main){
+  var d=el('div',null,'denied');
+  d.appendChild(el('p','找不到這個項目'));
+  d.appendChild(el('p','請以公司帳號登入後再試。如果你認為這是錯的，請聯絡系統管理者。','d'));
+  main.appendChild(d);
+  main.appendChild(el('p','⚠️ 不論是「編號不存在」「你沒有權限」還是「網址參數被亂改」，一律顯示同一頁、同一句話——⛔ 不告訴對方哪一筆存在、哪一筆不存在。','legacy'));
+};
+
+VIEWS.idor=function(main){
+  main.appendChild(el('h2','模擬猜 ID 越權'));
+  main.appendChild(el('p','把網址裡的需求編號改成別人的、或隨便打一個，看看系統怎麼回應。'));
+  var bar=el('div',null,'actions');
+  ['REQ-DEMO-001','REQ-9999-XXX','REQ-DEMO-001 OR 1=1'].forEach(function(id){
+    bar.appendChild(btn('試 '+id,'act',function(){ go('request',{req:id}); }));
+  });
+  main.appendChild(bar);
+  main.appendChild(el('p','⚠️ 第一個會開得起來（它本來就在你的清單裡）；後兩個都會落到同一個「找不到這個項目」——⛔ 沒有任何差別可以拿來探測。','legacy'));
+};
+
+/* ─────────── 公開收件表單（另一個獨立部署）─────────── */
+var INTAKE_SPEC=[
+  {q:1,f:'direction',label:'這次是哪一種需求',type:'select',req:true,
+   opts:[['AUTHOR_INITIATED','我有一本書，想找節目專訪'],['PROGRAM_INITIATED','我有一個節目，想邀作者當來賓']]},
+  {q:2,f:'requester_name',label:'您的姓名',type:'text',req:true},
+  {q:3,f:'requester_role',label:'您的身分',type:'select',req:true,
+   opts:[['AUTHOR','作者本人'],['PUBLISHER_EDITOR','出版社編輯'],['AGENT','經紀人'],
+         ['PROGRAM_PRODUCER','節目製作人'],['HOST','主持人'],['OTHER','其他']]},
+  {q:4,f:'requester_contact',label:'聯絡方式（Email 或電話）',type:'text',req:true,
+   hint:'我們只用來回覆這次的需求。'},
+  {q:5,f:'book_title_raw',label:'書名',type:'text',req:'AUTHOR_INITIATED'},
+  {q:6,f:'program_title_raw',label:'節目名稱',type:'text',req:'PROGRAM_INITIATED'},
+  {q:7,f:'topic_tag',label:'主題分類',type:'select',req:true,
+   opts:[['商業','商業'],['職場','職場'],['理財','理財'],['自我成長','自我成長'],['心理','心理'],
+         ['教育','教育'],['健康','健康'],['親子','親子'],['科技','科技'],['文學','文學'],['其他','其他']]},
+  {q:8,f:'book_summary_raw',label:'書籍簡介與核心內容',type:'textarea',req:true},
+  {q:9,f:'target_audience_raw',label:'目標讀者／聽眾',type:'textarea',req:true},
+  {q:10,f:'author_profile_raw',label:'作者背景與亮點',type:'textarea',req:true},
+  {q:11,f:'topic_proposal_raw',label:'希望談的主題與方向',type:'textarea',req:true,
+   hint:'寫 2–3 個具體方向會比一句「談這本書」更容易被排進節目。'},
+  {q:12,f:'interview_format',label:'希望的訪談形式',type:'select',req:true,
+   opts:[['ONSITE','實體錄音'],['REMOTE','線上錄音'],['EITHER','皆可']]},
+  {q:13,f:'desired_window',label:'希望的檔期',type:'text',req:true},
+  {q:14,f:'deal_mode_expectation',label:'合作模式期待',type:'select',req:true,
+   opts:[['RECIPROCAL','互訪（彼此上對方節目）'],['ONE_WAY_FREE','單向免費'],
+         ['PUBLISHER_PAID','出版社付費'],['UNDECIDED','再討論']]},
+  {q:15,f:'expected_list_raw',label:'預期邀約的節目名單',type:'textarea',req:false,
+   link:'看看公司合作過的節目名錄'},
+  {q:16,f:'offered_materials_raw',label:'可提供的素材與資源',type:'textarea',req:false},
+  {q:17,f:'additional_notes_raw',label:'聯絡窗口或備註',type:'textarea',req:false}
+];
+var INTAKE_DIR='AUTHOR_INITIATED', INTAKE_DONE=null;
+
+VIEWS.intake=function(main){
+  main.appendChild(el('h2','公開收件表單'));
+  var bar=el('div',null,'actions');
+  bar.appendChild(btn(DEMO.intakeOpen?'▣ 目前展示：開放收件':'▢ 目前展示：暫停收件','act',function(){
+    DEMO.intakeOpen=!DEMO.intakeOpen; INTAKE_DONE=null; render();
+  }));
+  main.appendChild(bar);
+  main.appendChild(el('p','⚠️ 這個開關只切換這份 Demo 的畫面。真實系統目前是「暫停收件」，⛔ 這裡按不動它。','legacy'));
+  main.appendChild(el('hr',null,'rule'));
+
+  if(!DEMO.intakeOpen){
+    var d=el('div',null,'denied');
+    d.appendChild(el('p','目前暫停收件'));
+    d.appendChild(el('p','感謝您的來訪。這個表單目前沒有開放，請改由既有的聯絡窗口與我們聯繫。','d'));
+    main.appendChild(d);
+    main.appendChild(el('p','⚠️ 暫停時整份表單不會出現——⛔ 不是送出後才被拒絕，是根本填不到。','legacy'));
+    return;
+  }
+  if(INTAKE_DONE){
+    var k=el('div',null,'denied');
+    k.appendChild(el('p','我們收到您的需求了'));
+    k.appendChild(el('p','受理編號 '+INTAKE_DONE+'。我們會在確認方向後與您聯繫。','d'));
+    main.appendChild(k);
+    var b2=el('div',null,'actions');
+    b2.appendChild(btn('再填一次（測冪等）','act',function(){ INTAKE_DONE=null; render(); }));
+    main.appendChild(b2);
+    return;
+  }
+
+  main.appendChild(el('p','新書訪談邀約 · 需求登記'));
+  main.appendChild(el('p','以下 17 題，標「必填」的請務必填寫。','legacy'));
+  var form=el('div',null,'panel'), inputs={};
+  INTAKE_SPEC.forEach(function(f){
+    if(f.f==='book_title_raw' && INTAKE_DIR!=='AUTHOR_INITIATED') return;
+    if(f.f==='program_title_raw' && INTAKE_DIR!=='PROGRAM_INITIATED') return;
+    var required = (f.req===true) || (f.req===INTAKE_DIR);
+    var id='i_'+f.f;
+    var lb=el('label',f.q+'. '+f.label+(required?'（必填）':'（選填）'));
+    lb.setAttribute('for',id); form.appendChild(lb);
+    var inp;
+    if(f.type==='select'){
+      inp=document.createElement('select');
+      var ph=document.createElement('option'); ph.value=''; ph.textContent='請選擇'; inp.appendChild(ph);
+      f.opts.forEach(function(o){ var op=document.createElement('option');
+        op.value=o[0]; op.textContent=o[1]; inp.appendChild(op); });
+      if(f.f==='direction'){ inp.value=INTAKE_DIR;
+        inp.onchange=function(){ INTAKE_DIR=inp.value||'AUTHOR_INITIATED'; render(); }; }
+    } else if(f.type==='textarea'){ inp=document.createElement('textarea'); }
+    else { inp=document.createElement('input'); inp.type='text'; }
+    inp.id=id; form.appendChild(inp); inputs[f.f]=inp;
+    if(f.hint) form.appendChild(el('p',f.hint,'legacy'));
+    if(f.link) form.appendChild(el('p','↗ '+f.link+'（實機是外連按鈕）','legacy'));
+  });
+  var sb=el('div',null,'actions');
+  sb.appendChild(btn('送出需求','act',function(){
+    var missing=[];
+    INTAKE_SPEC.forEach(function(f){
+      var required=(f.req===true)||(f.req===INTAKE_DIR);
+      if(!required) return;
+      var inp=inputs[f.f]; if(!inp) return;
+      if(!String(inp.value||'').trim()) missing.push(f.q+'. '+f.label);
+    });
+    if(missing.length){
+      say('bad','還有 '+missing.length+' 題必填沒有填', missing.slice(0,4).join('、')+(missing.length>4?' …':''));
+      return;
+    }
+    INTAKE_DONE='REQ-DEMO-'+String(++DEMO.seq.req).padStart(3,'0');
+    DEMO.requests.unshift({id:INTAKE_DONE,direction:INTAKE_DIR,status:'RECEIVED',
+      book:inputs.book_title_raw?inputs.book_title_raw.value:'',
+      program:inputs.program_title_raw?inputs.program_title_raw.value:'',
+      listV:0,v:1,name:inputs.requester_name.value,
+      contact:inputs.requester_contact.value,channel:'PUBLIC_FORM',
+      window:inputs.desired_window.value,
+      expected:inputs.expected_list_raw?inputs.expected_list_raw.value:''});
+    audit('FR-39','登記需求（對外表單）','Requests');
+    render();
+  }));
+  form.appendChild(sb);
+  main.appendChild(form);
+  main.appendChild(el('p','⚠️ 送出後這筆會出現在內部「需求清單」，來源標成「對外表單」——你可以切回去看。','legacy'));
+};
+
+/* ═══════════════ 渲染 ═══════════════ */
+function render(){
+  /* nav */
+  var nav=document.getElementById('nav'); clear(nav);
+  NAV.forEach(function(n){
+    var b=btn(n[1],null,function(){ go(n[0]); });
+    var cur = (PAGE===n[0]) || (DRILL[PAGE]===n[0]);
+    if(cur) b.setAttribute('aria-current','page');
+    nav.appendChild(b);
+  });
+  /* main */
+  var main=document.getElementById('main'); clear(main);
+  main.appendChild(el('div',null,null)).id='msganchor';
+  if(MSG) main.appendChild(MSG);
+
+  (VIEWS[PAGE]||VIEWS.home)(main);
+
+  if(OPEN_PANEL) main.appendChild(panelFor(OPEN_PANEL.spec));
+
+  /* Demo 工具：⛔ 實機沒有這一區，放在畫面內容之後，不擠壓上面的忠實呈現 */
+  main.appendChild(el('hr',null,'rule'));
+  main.appendChild(el('h3','Demo 工具（實機沒有這一區）'));
+  var tools=el('div',null,'actions');
+  tools.appendChild(btn(DEMO.staleArmed?'▣ 已預約版本衝突：下一次寫入會被拒絕':'▢ 模擬版本衝突（別人先改了）','act'+(DEMO.staleArmed?' risk':''),function(){
+    DEMO.staleArmed=!DEMO.staleArmed; MSG=null; render();
+  }));
+  main.appendChild(tools);
+  main.appendChild(el('p','打開它以後，下一個「審核／更新／取消」會被系統擋下並要你重新整理——這正是實機防止兩個人同時改壞同一筆的機制。','legacy'));
+  renderFeedbackScreen();
+}
+
+/* ═══════════════ 模式 B：完整流程藍圖 ═══════════════ */
+var STATUS={
+  LIVE:['已實作且 live 驗證','live'],
+  R2:['已實作但僅 R2 驗證','r2'],
+  HARNESS:['已由本機 harness 驗證','harness'],
+  NOMULTI:['尚未多角色驗證','nomulti'],
+  PHASE2:['Phase 2／後續規劃','phase2'],
+  OUT:['不在目前範圍','out']
+};
+var FLOW=[
+  {n:'公開／內部收件',d:'需求方自己從對外表單填 17 題送進來，或由內部同事代填。兩條路都寫進同一張需求表，只是「來源」欄不同。',
+   s:['LIVE','NOMULTI'],st:['對外表單','內部代填'],
+   note:'⚠️ 對外表單目前是「暫停收件」狀態——已驗過可以正常收件，但現在關著。'},
+  {n:'需求建立',d:'系統給編號、記下方向（作者端／節目端），狀態設為「已收件」。',
+   s:['LIVE'],st:['已收件']},
+  {n:'需求審核',d:'承辦人看過內容決定接受或婉拒。婉拒必須填原因，會寫進稽核。',
+   s:['LIVE','NOMULTI'],st:['審核中','名單研擬','婉拒需求']},
+  {n:'候選節目',d:'把可能適合的節目一個一個加進來，每個候選各自跑自己的狀態，互不影響。',
+   s:['LIVE'],st:['待歸屬確認','待提案']},
+  {n:'推薦名單',d:'整理成一份推薦名單，簽發一次性確認連結給需求方。修訂名單會讓舊連結全部失效。',
+   s:['R2','NOMULTI'],st:['待需求方確認','有效','已被新連結取代'],
+   note:'⚠️ 需求方實際點連結確認的那一段（對外關卡），還沒有真人走過。'},
+  {n:'回覆結果',d:'節目那邊接受或婉拒，逐筆登錄。「無回覆結案」是獨立結果，不算婉拒。',
+   s:['LIVE'],st:['已提案','已接受','已婉拒','無回覆結案']},
+  {n:'建立訪談案件',d:'有節目接受之後，才由那一筆候選成立訪談案件。',
+   s:['LIVE'],st:['已成立']},
+  {n:'製作準備',d:'決定製作方是公司還是對方——這一步決定後面走哪一條路。',
+   s:['HARNESS','NOMULTI'],st:['公司製作','對方製作']},
+  {n:'訪綱／排程',d:'訪綱寫好、錄音時間跟雙方敲定。',
+   s:['HARNESS','NOMULTI'],st:['訪綱就緒','已提議','已確認','已改期']},
+  {n:'錄音',d:'錄完標記為已錄音。',s:['HARNESS','NOMULTI'],st:['已錄音']},
+  {n:'剪輯',d:'只有「公司製作」才有這一步；對方製作會改成「待對方上架」。',
+   s:['HARNESS','NOMULTI'],st:['已剪輯','待對方上架']},
+  {n:'上架或不予上架',d:'節目上線；或決定不上架並記錄原因。兩個都是終點。',
+   s:['HARNESS','NOMULTI'],st:['已上架','不予上架']},
+  {n:'素材完整性',d:'實體樣書、電子書、書封、作者簡介這些必要素材有沒有收齊。「對方交付」與「我方收訖」分開記。',
+   s:['HARNESS','NOMULTI'],st:['待收','已收到','已收齊','已豁免']},
+  {n:'結案／取消／主管例外處理',d:'正常結案；或中途取消；或由主管人工推進跳過需求方確認（高風險，一定留紀錄）。',
+   s:['LIVE','NOMULTI'],st:['已結案','已取消','中止']},
+  {n:'稽核查閱',d:'誰在什麼時候做了什麼、看了哪一筆個資，全部留下。一般人只看得到自己的，稽核角色看得到全部。',
+   s:['LIVE'],st:['全部操作紀錄']}
+];
+var OUTSCOPE=[
+  ['外包剪輯銜接','把剪輯工單丟到既有的外包管理系統，回頭同步進度。','PHASE2'],
+  ['KOL 主檔整合','與公司既有 93 位 KOL 主檔對接，⛔ 目前只留了接口沒有接上。','PHASE2'],
+  ['財務與請款','談定金額之後的請款、對帳、分潤。','OUT'],
+  ['節目上架後的成效追蹤','播放數、留言、轉換。','OUT'],
+  ['需求方自助查詢進度','讓需求方自己登入看到哪一步。','PHASE2']
+];
+
+function buildB(){
+  var s=document.getElementById('secB'); clear(s);
+  s.appendChild(el('h2','完整流程藍圖'));
+  s.appendChild(el('p','這是系統預定的完整生命週期。每一段標了「驗到什麼程度」——⛔ 標籤不是「做得好不好」，是「證據到哪裡」。','sub'));
+
+  var lg=el('div',null,'legend');
+  Object.keys(STATUS).forEach(function(k){
+    var d=document.createElement('div');
+    d.appendChild(chip(STATUS[k][0],STATUS[k][1]));
+    lg.appendChild(d);
+  });
+  s.appendChild(lg);
+
+  var flow=el('div',null,'flow');
+  FLOW.forEach(function(f,i){
+    if(i) flow.appendChild(el('div','↓','arrow'));
+    var st=el('div',null,'stage');
+    var hd=el('div',null,'hd');
+    hd.appendChild(el('span',f.n,'nm'));
+    hd.appendChild(el('span','階段 '+String(i+1).padStart(2,'0'),'idx'));
+    st.appendChild(hd);
+    st.appendChild(el('p',f.d,'desc'));
+    var cs=el('div',null,'states');
+    f.s.forEach(function(k){ cs.appendChild(chip(STATUS[k][0],STATUS[k][1])); });
+    st.appendChild(cs);
+    if(f.st){
+      var ss=el('div',null,'states');
+      f.st.forEach(function(x){ ss.appendChild(chip(x)); });
+      st.appendChild(ss);
+    }
+    if(f.note) st.appendChild(el('p',f.note,'legacy'));
+    flow.appendChild(st);
+  });
+  s.appendChild(flow);
+
+  s.appendChild(el('h2','不在這一輪範圍的事'));
+  s.appendChild(el('p','列出來是為了讓你知道「找不到入口」是預期的，不是漏掉。','sub'));
+  /* ⛔ 這一區沒有先後順序，所以⛔ 不畫箭頭——只是並列的待辦 */
+  var ow=el('div',null,'flow');
+  ow.style.gap='10px';
+  OUTSCOPE.forEach(function(o){
+    var st=el('div',null,'stage');
+    var hd=el('div',null,'hd');
+    hd.appendChild(el('span',o[0],'nm'));
+    hd.appendChild(chip(STATUS[o[2]][0],STATUS[o[2]][1]));
+    st.appendChild(hd);
+    st.appendChild(el('p',o[1],'desc'));
+    ow.appendChild(st);
+  });
+  s.appendChild(ow);
+}
+
+/* ═══════════════ 現況／Roadmap 對照 ═══════════════ */
+var MATRIX=[
+  ['工作總覽','是','live','是（版本 5 起）','三個數字 ＋ 前往需求清單','—'],
+  ['需求清單','是','live','是（6 筆、聯絡欄遮罩）','表格 ＋ 建立需求 ＋ 冪等重送','—'],
+  ['建立需求','是','live','是（含 G-2 預期名單、G-3 節目名錄外連）','完整表單','—'],
+  ['需求詳情','是','live','是','審核／加候選／取消／成案','—'],
+  ['候選節目與推薦名單','是','r2','部分（連結頁 R2 讀取）','逐筆四個動作 ＋ 連結生命週期','需求方真人點連結確認'],
+  ['訪談案件','是','harness','否','製作方分流 ＋ 逐步推進','多角色 UAT'],
+  ['素材完整性','是','harness','否','交付／收訖分開更新','多角色 UAT'],
+  ['主檔管理','是','live','是（顯示名遮罩）','人物 ＋ 建立或沿用','關聯維護只到提示層級'],
+  ['稽核查閱','是','live','是（R2 看全部）','完整時間線 ＋ 歷史無效值顯示','非稽核角色的實機視野'],
+  ['找不到項目／拒絕頁','是','live','是（含亂改參數）','固定拒絕頁','—'],
+  ['公開收件表單','是','live','是（匿名 E2E 一筆）','17 題完整表單','⚠️ 現場為「暫停收件」'],
+  ['公開收件暫停狀態','是','live','是','暫停畫面','—']
+];
+function buildM(){
+  var s=document.getElementById('secM'); clear(s);
+  s.appendChild(el('h2','現況／Roadmap 對照'));
+  s.appendChild(el('p','左邊三欄是「實際部署的東西」，右邊兩欄是「這份 Demo 做了什麼」與「還沒證到的部分」。⛔ 文件寫了但沒部署的，不算現況。','sub'));
+  s.appendChild(table([
+    {key:'a',label:'畫面／流程'},
+    {key:'b',label:'現行 runtime 已實作'},
+    {key:'c',label:'曾 live 驗證',render:function(td,r){
+      var m={live:['live','已 live 驗證'],r2:['r2','僅 R2 讀取'],harness:['harness','僅本機 harness']};
+      td.appendChild(chip(m[r._k][1],m[r._k][0]));
+    }},
+    {key:'d',label:'live 實際看到什麼'},
+    {key:'e',label:'靜態預覽要呈現'},
+    {key:'f',label:'後續規劃'}
+  ],MATRIX.map(function(m){
+    return {a:m[0],b:m[1],_k:m[2],d:m[3],e:m[4],f:m[5]};
+  }),{}));
+
+  s.appendChild(el('h3','已知問題'));
+  if(!KNOWN_ISSUES.length){
+    s.appendChild(el('p','目前沒有「已知但尚未修復」的 UI 缺陷。','legacy'));
+    s.appendChild(el('p','⭐ 先前實機審閱抓到的兩個問題都已在 build 011 修好，現行版本 10 已生效：'));
+    var ul=document.createElement('ul'); ul.className='fblist';
+    [['F-1 「待審核的需求」永遠是 0','已修：儀表板與審核命令改用同一份狀態清單，改一邊兩邊一起變。'],
+     ['F-2 狀態顯示成英文代碼','已修：全系統唯一一份「代碼 → 中文」對照表已接上，本 Demo 用的就是那份中文。']]
+      .forEach(function(x){ var li=document.createElement('li');
+        li.appendChild(el('b',x[0])); li.appendChild(document.createTextNode('　'+x[1])); ul.appendChild(li); });
+    s.appendChild(ul);
+  }
+  s.appendChild(el('h3','⚠️ 這份 Demo 證明不了的事'));
+  var ul2=document.createElement('ul'); ul2.className='fblist';
+  ['靜態 Demo 全部通過 ⛔ 不等於產品 runtime 通過——這裡沒有伺服器、沒有資料庫、沒有權限檢查。',
+   '多角色（R1／R3／R4）真人操作 ⛔ 尚未執行。',
+   '需求方點確認連結的對外關卡 ⛔ 尚未有真人走過。',
+   '正式環境 ⛔ 未授權、⛔ 未部署。']
+    .forEach(function(t){ var li=document.createElement('li'); li.textContent=t; ul2.appendChild(li); });
+  s.appendChild(ul2);
+}
+
+/* ═══════════════ 回饋工具 ═══════════════ */
+var FB_KEY='book_interview_ui_feedback_v1';
+var SCREEN_NAMES={home:'工作總覽',requests:'需求清單',request:'需求詳情',
+  shortlist:'推薦名單確認狀態',case:'訪談案件',materials:'素材完整性',
+  masters:'主檔',audit:'稽核查閱',denied:'找不到項目／拒絕頁',
+  intake:'公開收件表單',idor:'猜 ID 越權'};
+
+function fbLoad(){ try{ var s=localStorage.getItem(FB_KEY); return s?JSON.parse(s):[]; }
+  catch(e){ return []; } }
+function fbSave(list){ try{ localStorage.setItem(FB_KEY,JSON.stringify(list)); return true; }
+  catch(e){ return false; } }
+
+function buildFeedback(){
+  var s=document.getElementById('feedback'); clear(s);
+  s.appendChild(el('h2','測試回饋'));
+  s.appendChild(el('p','每看完一個畫面就填一則。填完可以匯出成檔案傳回來。','sub'));
+
+  var box=el('div',null,'fb'), g=el('div',null,'grid'), F={};
+  function field(name,label,node){ var d=document.createElement('div');
+    var lb=el('label',label); lb.setAttribute('for','fb_'+name); node.id='fb_'+name;
+    d.appendChild(lb); d.appendChild(node); F[name]=node; return d; }
+  function sel(opts){ var x=document.createElement('select');
+    opts.forEach(function(o){ var op=document.createElement('option');
+      op.value=o; op.textContent=o; x.appendChild(op); }); return x; }
+  function ta(ph){ var x=document.createElement('textarea'); x.placeholder=ph||''; return x; }
+
+  var screenSel=sel(Object.keys(SCREEN_NAMES).map(function(k){ return SCREEN_NAMES[k]; }));
+  g.appendChild(field('screen','這則回饋是關於哪個畫面',screenSel));
+
+  var row=el('div',null,'row2');
+  row.appendChild(field('understand','看得懂嗎',sel(['看得懂','大致懂，有幾個字不確定','看不懂'])));
+  row.appendChild(field('smooth','操作順不順',sel(['順暢','有點猶豫','卡住了'])));
+  g.appendChild(row);
+
+  g.appendChild(field('missing','缺少什麼資訊',ta('例：這裡看不到需求方原本寫的希望檔期。')));
+  g.appendChild(field('button','按鈕名稱建議',ta('例：「人工推進」看不懂，建議改成「主管代為確認」。')));
+  g.appendChild(field('order','流程順序建議',ta('例：實務上會先確認素材才排錄音，這裡順序相反。')));
+
+  var row2=el('div',null,'row2');
+  row2.appendChild(field('severity','嚴重度',sel(['建議','重要','阻擋'])));
+  var who=document.createElement('input'); who.type='text'; who.placeholder='選填，方便回問';
+  row2.appendChild(field('who','你的名字',who));
+  g.appendChild(row2);
+
+  g.appendChild(field('note','自由備註',ta('')));
+  box.appendChild(g);
+
+  var bar=el('div',null,'actions');
+  bar.appendChild(btn('加入這則回饋','act',function(){
+    var rec={screen:F.screen.value,understand:F.understand.value,smooth:F.smooth.value,
+      missing:F.missing.value,button:F.button.value,order:F.order.value,
+      severity:F.severity.value,who:F.who.value,note:F.note.value,at:nowStamp()};
+    if(!rec.missing && !rec.button && !rec.order && !rec.note && rec.understand==='看得懂' && rec.smooth==='順暢'){
+      alert('這則沒有寫任何內容。如果這個畫面沒問題，寫一句「沒問題」也可以，方便我們知道你看過了。'); return;
+    }
+    var list=fbLoad(); list.push(rec);
+    if(!fbSave(list)){ alert('你的瀏覽器不允許儲存（可能是無痕視窗）。請先用「匯出 Markdown」把內容存下來。'); }
+    F.missing.value=''; F.button.value=''; F.order.value=''; F.note.value='';
+    refreshFbList();
+  }));
+  bar.appendChild(btn('匯出 Markdown','act',function(){ showOut(toMd(fbLoad())); }));
+  bar.appendChild(btn('匯出 JSON','act',function(){ showOut(JSON.stringify(fbLoad(),null,2)); }));
+  bar.appendChild(btn('複製回饋摘要','act',function(){
+    var t=toMd(fbLoad());
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(function(){ alert('已複製到剪貼簿。'); },
+        function(){ showOut(t); alert('複製失敗，已改成顯示在下方，請自行全選複製。'); });
+    } else { showOut(t); alert('這個瀏覽器不支援自動複製，已顯示在下方，請自行全選複製。'); }
+  }));
+  bar.appendChild(btn('清除本機回饋','act risk',function(){
+    if(confirm('這會刪掉你在這台電腦上填的全部回饋，無法復原。確定嗎？')){
+      try{ localStorage.removeItem(FB_KEY); }catch(e){}
+      refreshFbList(); showOut('');
+    }
+  }));
+  box.appendChild(bar);
+
+  box.appendChild(el('p','本頁不會自動上傳回饋；請將匯出的檔案傳回專案負責人。','fbnote'));
+  var listBox=document.createElement('div'); listBox.id='fblist'; box.appendChild(listBox);
+  var out=document.createElement('div'); out.id='fbout'; box.appendChild(out);
+  s.appendChild(box);
+  refreshFbList();
+}
+function refreshFbList(){
+  var n=document.getElementById('fblist'); if(!n) return; clear(n);
+  var list=fbLoad();
+  n.appendChild(el('p','目前存了 '+list.length+' 則回饋（只在這台電腦的瀏覽器裡）。','legacy'));
+  if(!list.length) return;
+  var ul=document.createElement('ul'); ul.className='fblist';
+  list.slice(-6).reverse().forEach(function(r){
+    var li=document.createElement('li');
+    li.textContent='['+r.severity+'] '+r.screen+' — '+(r.note||r.missing||r.button||r.order||r.understand);
+    ul.appendChild(li);
+  });
+  n.appendChild(ul);
+}
+function showOut(text){
+  var n=document.getElementById('fbout'); if(!n) return; clear(n);
+  if(!text) return;
+  var pre=el('div',text,'out'); n.appendChild(pre);
+  pre.setAttribute('tabindex','0');
+  pre.scrollIntoView({block:'nearest'});
+}
+function toMd(list){
+  if(!list.length) return '（目前沒有任何回饋）';
+  var out='# 新書訪談邀約系統 · UI 測試回饋\n\n共 '+list.length+' 則。\n\n';
+  list.forEach(function(r,i){
+    out+='## '+(i+1)+'. '+r.screen+'（'+r.severity+'）\n\n';
+    out+='- 時間：'+r.at+(r.who?'　填寫者：'+r.who:'')+'\n';
+    out+='- 看得懂嗎：'+r.understand+'\n';
+    out+='- 操作順不順：'+r.smooth+'\n';
+    if(r.missing) out+='- 缺少的資訊：'+r.missing+'\n';
+    if(r.button)  out+='- 按鈕名稱建議：'+r.button+'\n';
+    if(r.order)   out+='- 流程順序建議：'+r.order+'\n';
+    if(r.note)    out+='- 備註：'+r.note+'\n';
+    out+='\n';
+  });
+  return out;
+}
+function renderFeedbackScreen(){
+  var s=document.getElementById('fb_screen');
+  if(s && SCREEN_NAMES[PAGE]) s.value=SCREEN_NAMES[PAGE];
+}
+
+/* ═══════════════ 啟動 ═══════════════ */
+var HINTS={
+  A:'忠實呈現目前版本已經存在的畫面。⛔ 沒做的東西不會出現在這裡。',
+  B:'系統預定的完整生命週期，每一段標了驗到什麼程度。⛔ 這裡的東西不代表已經做好。',
+  M:'左邊是實際部署的現況，右邊是這份 Demo 與尚未證實的部分。'
+};
+function setMode(m){
+  ['A','B','M'].forEach(function(k){
+    document.getElementById('sec'+k).hidden = (k!==m);
+    document.getElementById('m'+k).setAttribute('aria-pressed',String(k===m));
+  });
+  document.getElementById('modehint').textContent=HINTS[m];
+  if(m==='B') buildB();
+  if(m==='M') buildM();
+  if(m==='A') render();
+}
+document.getElementById('mA').onclick=function(){ setMode('A'); };
+document.getElementById('mB').onclick=function(){ setMode('B'); };
+document.getElementById('mM').onclick=function(){ setMode('M'); };
+document.getElementById('btnReset').onclick=function(){
+  resetDemo(); SEEN_KEYS={}; INTAKE_DONE=null; INTAKE_DIR='AUTHOR_INITIATED';
+  PAGE='home'; CTX={}; OPEN_PANEL=null; MSG=null;
+  setMode('A');
+  say('ok','Demo 已重置','假資料回到初始狀態。⛔ 你填的回饋沒有被清掉。');
+};
+document.querySelectorAll('[data-goto]').forEach(function(b){
+  b.onclick=function(){ go(b.getAttribute('data-goto')); };
+});
+
+buildFeedback();
+setMode('A');
+</script>
+</body>
+</html>
