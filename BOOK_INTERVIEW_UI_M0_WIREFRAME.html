@@ -951,6 +951,14 @@ var TRACKS={
 
 /* ═══════════════ 回饋 ═══════════════ */
 var FB_KEY='book_interview_feedback_stage3';
+/* ⚠️ 改版時換過幾次儲存 key，舊的那幾份現在的頁面讀不到也清不掉，
+      會一直留在測試者的瀏覽器裡。開頁就清掉——它們對誰都沒有用了。 */
+var LEGACY_KEYS=['book_interview_ui_feedback_v1','book_interview_ui_feedback_scenario',
+                 'book_interview_feedback_stage2','book_interview_demo_state',
+                 'book_interview_ui_demo'];
+function clearLegacy(){ try{ LEGACY_KEYS.forEach(function(k){ localStorage.removeItem(k); }); }catch(e){} }
+function fbCount(){ var d=fbLoad();
+  return (d.notes?Object.keys(d.notes).length:0)+(d.final?1:0); }
 function fbLoad(){ try{var s=localStorage.getItem(FB_KEY); return s?JSON.parse(s):{notes:{},final:null};}
   catch(e){ return {notes:{},final:null}; } }
 function fbSave(o){ try{ localStorage.setItem(FB_KEY,JSON.stringify(o)); return true; }catch(e){ return false; } }
@@ -1014,24 +1022,33 @@ function renderFinal(host){
   host.appendChild(box);
 
   host.appendChild(el('h3','把回饋傳回來'));
+  host.appendChild(el('p','⚠️ 這一頁不會自動送出。按下面的按鈕複製，'
+    +'再貼到你平常跟 Winnie 聯絡的地方（Email、LINE、訊息都可以）就完成了。','fbnote'));
   var b2=el('div',null,'actions');
-  b2.appendChild(btn('下載 Markdown','act'+(saved?' go':''),function(){
-    var t=toMd(); download('新書訪談邀約-試用回饋.md','text/markdown',t); showOut(t); }));
-  b2.appendChild(btn('下載 JSON','act',function(){
-    var t=JSON.stringify(fbLoad(),null,2);
-    download('新書訪談邀約-試用回饋.json','application/json',t); showOut(t); }));
-  b2.appendChild(btn('複製摘要','act',function(){
+  b2.appendChild(btn('複製我的回饋','act'+(saved?' go':''),function(){
     var t=toMd();
     if(navigator.clipboard&&navigator.clipboard.writeText)
-      navigator.clipboard.writeText(t).then(function(){ alert('已複製到剪貼簿。'); },
-        function(){ showOut(t); alert('複製失敗，已顯示在下面，請自行全選複製。'); });
-    else { showOut(t); alert('這個瀏覽器不支援自動複製，已顯示在下面，請自行全選複製。'); } }));
-  b2.appendChild(btn('清除我填過的回饋','act',function(){
+      navigator.clipboard.writeText(t).then(function(){
+        say('ok','已經複製好了','貼到你平常跟 Winnie 聯絡的地方就可以了。'); },
+        function(){ showOut(t); alert('自動複製失敗，內容已顯示在下面，請自行全選複製。'); });
+    else { showOut(t); alert('這個瀏覽器不支援自動複製，內容已顯示在下面，請自行全選複製。'); } }));
+  b2.appendChild(btn('改成下載檔案','act',function(){
+    var t=toMd(); download('新書訪談邀約-試用回饋.md','text/markdown',t); showOut(t); }));
+  host.appendChild(b2);
+  var b3=el('div',null,'actions');
+  b3.appendChild(btn('先看看我填了什麼','link',function(){ showOut(toMd()); }));
+  b3.appendChild(el('span','　','note'));
+  b3.appendChild(btn('下載 JSON','link',function(){
+    var t=JSON.stringify(fbLoad(),null,2);
+    download('新書訪談邀約-試用回饋.json','application/json',t); showOut(t); }));
+  b3.appendChild(el('span','　','note'));
+  b3.appendChild(btn('清除我填過的回饋','link',function(){
     if(confirm('這會刪掉你填的全部回饋，沒辦法復原。確定嗎？')){
       try{ localStorage.removeItem(FB_KEY); }catch(e){}
-      showOut(''); render(); } }));
-  host.appendChild(b2);
-  host.appendChild(el('p','本頁不會自動上傳回饋；請將下載的檔案傳回給 Winnie。','fbnote'));
+      clearLegacy(); showOut(''); render(); } }));
+  host.appendChild(b3);
+  host.appendChild(el('p','目前這台電腦存了 '+fbCount()+' 則意見（只在你的瀏覽器裡，'
+    +'⛔ 不會自己傳出去）。','note'));
   var o=document.createElement('div'); o.id='fbout'; host.appendChild(o);
 
   var back=el('div',null,'actions');
@@ -1084,8 +1101,7 @@ function doReset(){
   if(n>0) wipe=confirm('要一起清掉你填的回饋嗎？\n\n'
     +'按「確定」＝連回饋一起清掉（無法復原，建議先下載）。\n按「取消」＝只重置，回饋保留。');
   resetDemo(); PHASE='landing'; TRACK=''; STAGE=0; MSG=null;
-  try{ ['book_interview_demo_state','book_interview_ui_demo'].forEach(function(k){
-    localStorage.removeItem(k); }); }catch(e){}
+  clearLegacy();
   if(wipe){ try{ localStorage.removeItem(FB_KEY); }catch(e){} }
   render();
 }
@@ -1304,6 +1320,7 @@ function buildNotes(){
   n.appendChild(u2);
 }
 
+clearLegacy();
 buildNotes();
 render();
 </script>
