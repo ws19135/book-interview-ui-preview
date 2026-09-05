@@ -374,9 +374,8 @@ var INVITE=[
     var a=[];
     if(DEMO.request.from) a.push('這一筆是從「即將出版新書」轉過來的：'+DEMO.request.from
       +'。書名、檔期、聯絡窗口都已經帶過來，⛔ 不用重打。');
-    else a.push(STORY.author+'剛出版'+STORY.book+'。'+STORY.publisher+'的編輯'+STORY.editor
-      +'把資料寄給了公司，現在由你接手這件事。');
     a.push('資料都已經幫你填好了，你只要確認內容、按下接手。');
+    a.push('接手之後，需求方會收到「已經有人在處理」的通知，也才看得到聯絡方式。');
     return a; },
   ask:'請確認下面的需求內容，然後按「建立需求並由我接手」。',
   body:function(host){
@@ -747,9 +746,8 @@ var PREVIEW=[
 {
   key:'p_form', name:'登記即將出版的新書',
   intro:function(){ return [
-    '你現在換一個身分：'+STORY.publisher+'的行銷或編輯。',
-    '書還沒出，但已經在排了。先登記起來，經紀人和節目端就會提前看到，'
-      +'不用等你一個一個去問。']; },
+    '登記的內容很短：書名、預計上市、簡介，還有兩個檔期。',
+    '⚠️ 訪問和上架是分開的兩個檔期——訪問要提前，上架通常要卡新書上市日。']; },
   ask:'請按「一鍵帶入範例」看看要填什麼，然後按「登記這本新書」。',
   body:function(host){
     if(DEMO.myBook){ host.appendChild(rec('已登記',[
@@ -925,11 +923,30 @@ function renderBoard(host){
 
 var TRACKS={
   invite:{name:'新書訪談邀約',steps:INVITE,
-    desc:'替新書作者建立訪談需求、推薦適合的節目，並追蹤邀約與訪談進度。'},
+    desc:'替新書作者建立訪談需求、推薦適合的節目，並追蹤邀約與訪談進度。',
+    brief:{
+      who:'公司內部負責新書宣傳與訪談邀約的企劃。',
+      sit:STORY.author+'剛出版'+STORY.book+'。'+STORY.publisher+'的編輯'+STORY.editor
+        +'把資料寄給了公司，現在由你接手。',
+      goal:'替老師建立訪談需求，推薦適合的節目，記錄邀約回覆，'
+        +'安排訪談與所需素材，最後完成案件。',
+      scale:'8 個階段，大約 10 分鐘。資料都幫你填好了，多數步驟按一下就完成。'}},
   preview:{name:'新書預告登記',steps:PREVIEW,
-    desc:'出版社或老師先登記即將出版的新書與希望檔期，讓經紀人和節目端提前知道。'},
+    desc:'出版社或老師先登記即將出版的新書與希望檔期，讓經紀人和節目端提前知道。',
+    brief:{
+      who:'⚠️ 這一段你換一個身分：'+STORY.publisher+'的行銷或編輯。',
+      sit:'書還沒出，但已經在排了。你想先讓公司這邊知道，不用等到出版前才一個一個聯絡。',
+      goal:'先把書登記起來，讓經紀人和節目端提前看到；'
+        +'之後如果上市延後或這本書不出了，通知已經在等的人。',
+      scale:'4 個階段，大約 5 分鐘。'}},
   board:{name:'即將出版新書',steps:null,
-    desc:'看有哪些老師即將出書，直接把適合的轉成訪談需求。'}
+    desc:'看有哪些老師即將出書，直接把適合的轉成訪談需求。',
+    brief:{
+      who:'回到公司內部企劃的身分。',
+      sit:'有節目跟你說最近缺來賓，問有沒有剛出書、適合上節目的老師。',
+      goal:'從即將出版的新書裡挑一本適合的，一鍵轉成訪談需求——'
+        +'書名、檔期、聯絡窗口都會直接帶過去，⛔ 不用重打。',
+      scale:'一頁就看完，大約 2 分鐘。'}}
 };
 
 /* ═══════════════ 回饋 ═══════════════ */
@@ -1079,17 +1096,18 @@ function render(){
   var lede=document.getElementById('lede');
 
   if(PHASE==='landing'){
-    lede.textContent='給公司同事試用的示意稿。全部是假資料，按什麼都不會壞。';
+    lede.textContent='給公司同事試用的示意稿。';
     var h=el('div',null,'hero');
-    h.appendChild(el('h2','你要扮演的角色'));
-    h.appendChild(el('p','公司內部負責新書宣傳與訪談邀約的企劃。'));
+    h.appendChild(el('h2','這是什麼'));
+    h.appendChild(el('p','這是「新書訪談邀約」的操作示意稿，給公司同事試用、留回饋用。'));
+    h.appendChild(el('p','下一頁可以選三個功能。'
+      +'每個功能開始之前，都會先告訴你要扮演誰、現在是什麼狀況、要完成什麼。'));
     var dl=document.createElement('dl');
-    [['這次的作者',STORY.author],
-     ['這次的新書',STORY.book+'（'+STORY.publisher+'）'],
-     ['你要完成的事','替老師建立新書訪談需求，推薦適合的節目，記錄邀約回覆，'
-       +'安排訪談與所需素材，最後完成案件。'],
-     ['另外還會試','出版社怎麼先登記即將出版的新書，以及書況有變的時候怎麼通知已經在等的人。'],
-     ['大概要多久','主要流程 8 個階段，加上新書預告 4 個階段，15–20 分鐘。資料都幫你填好了。']]
+    [['先知道一','這是示意稿，不是真的系統。'
+      +'本案例中的人物、書名、出版社、節目與聯絡資料全部為虛構。'],
+     ['先知道二','按什麼都不會壞。沒有連任何資料庫，隨時可以按「重新開始」回到原樣。'],
+     ['先知道三','回饋不會自動上傳。填完要自己下載，把檔案傳給 Winnie。'],
+     ['大概要多久','三個功能全部走完 15–20 分鐘。資料都幫你填好了，多數步驟按一下就完成。']]
      .forEach(function(x){ dl.appendChild(el('dt',x[0])); dl.appendChild(el('dd',x[1])); });
     h.appendChild(dl); st.appendChild(h);
     var bar=el('div',null,'actions');
@@ -1109,7 +1127,7 @@ function render(){
       b.appendChild(el('div',t.desc,'td'));
       if(DEMO.doneTracks[k]) b.appendChild(el('div','✓ 已經走過','tdone'));
       else b.appendChild(el('div','點這裡進入 →','tgo'));
-      b.onclick=function(){ TRACK=k; STAGE=0; PHASE='run'; MSG=null; render(); focusTop(); };
+      b.onclick=function(){ TRACK=k; STAGE=0; PHASE='brief'; MSG=null; render(); focusTop(); };
       st.appendChild(b);
     });
     st.appendChild(el('p','這一頁只是示意，⛔ 還沒有跟公司其他系統串接。','note'));
@@ -1122,13 +1140,32 @@ function render(){
     return;
   }
 
+  if(PHASE==='brief'){
+    var TB=TRACKS[TRACK], br=TB.brief;
+    lede.textContent='接下來要做的是：'+TB.name+'。';
+    var hb=el('div',null,'hero');
+    hb.appendChild(el('h2',TB.name));
+    hb.appendChild(el('p',br.sit));
+    var dlb=document.createElement('dl');
+    [['你扮演的身分',br.who],['你要完成的事',br.goal],['大概要多久',br.scale]]
+      .forEach(function(x){ dlb.appendChild(el('dt',x[0])); dlb.appendChild(el('dd',x[1])); });
+    hb.appendChild(dlb); st.appendChild(hb);
+    var bb=el('div',null,'actions');
+    bb.appendChild(btn(DEMO.doneTracks[TRACK]?'再走一次':'開始','act go',function(){
+      PHASE='run'; STAGE=0; MSG=null; render(); focusTop(); }));
+    bb.appendChild(btn('← 回入口','act small',function(){
+      PHASE='entry'; TRACK=''; MSG=null; render(); focusTop(); }));
+    st.appendChild(bb);
+    return;
+  }
+
   if(PHASE==='final'){
     lede.textContent='你是公司內部負責新書宣傳與訪談邀約的企劃。';
     renderFinal(st); return;
   }
 
-  lede.textContent='你是公司內部負責新書宣傳與訪談邀約的企劃。';
   var T=TRACKS[TRACK];
+  lede.textContent=T.brief.who;
 
   if(!T.steps){
     var p0=el('div',null,'prog'); p0.appendChild(el('span',T.name,'n')); st.appendChild(p0);
