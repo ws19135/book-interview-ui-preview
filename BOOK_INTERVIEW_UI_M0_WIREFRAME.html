@@ -764,6 +764,7 @@ function stepNote(host){
 
 function renderFinal(host){
   host.appendChild(el('h2','最後四題'));
+  if(MSG) host.appendChild(MSG);
   host.appendChild(el('p','你已經走完全部 '+TOTAL+' 個階段。請回答這四題，然後把回饋下載傳給 Winnie。','sub'));
   var box=el('div',null,'final'), F={};
   var d=fbLoad(), prev=d.final||{};
@@ -784,8 +785,10 @@ function renderFinal(host){
   var who=document.createElement('input'); who.type='text'; who.placeholder='選填，方便回問';
   row('who','你的名字',who,prev.who);
 
+  /* ⚠️ 一個畫面只能有一個主要按鈕：存好之前主要是「存下」，存好之後主要是「下載」。 */
+  var saved=!!d.final;
   var bar=el('div',null,'actions');
-  bar.appendChild(btn('存下最後四題','act go',function(){
+  bar.appendChild(btn(saved?'重新存一次':'存下最後四題','act'+(saved?'':' go'),function(){
     var d2=fbLoad();
     d2.final={q1:F.q1.value,q2:F.q2.value,q3:F.q3.value,q4:F.q4.value,
       who:F.who.value,at:stamp()};
@@ -797,7 +800,7 @@ function renderFinal(host){
 
   host.appendChild(el('h3','把回饋傳回來'));
   var bar2=el('div',null,'actions');
-  bar2.appendChild(btn('下載 Markdown','act go',function(){
+  bar2.appendChild(btn('下載 Markdown','act'+(saved?' go':''),function(){
     var t=toMd(); download('新書訪談邀約-試用回饋.md','text/markdown',t); showOut(t); }));
   bar2.appendChild(btn('下載 JSON','act',function(){
     var t=JSON.stringify(fbLoad(),null,2);
