@@ -7,9 +7,10 @@
 <title>新書訪談邀約｜情境操作體驗</title>
 <style>
 /* ══════════════════════════════════════════════════════════════
-   色彩取自實機（DESIGN.md Report 模式）。
+   ⭐ 版面回到實機那一版：頂端四個入口的導覽列、細線分隔、少色塊。
+      色彩與字體逐項對齊 DESIGN.md Report 模式。
    ⭐ 所有看得到的字 ≥13px、輸入欄 ≥16px，全部走 token。
-   ⛔ 無外部資源、⛔ 無卡片陰影、⛔ 無裝飾性元件。
+   ⛔ 無外部資源、⛔ 無卡片陰影、⛔ 無圓角、⛔ 無裝飾性元件。
    ══════════════════════════════════════════════════════════════ */
 :root{
   color-scheme: light;
@@ -31,11 +32,11 @@ body{margin:0;background:var(--bg);color:var(--ink);
   font-family:var(--sans);font-size:var(--font-xs);letter-spacing:.06em;
   padding:9px 16px;text-align:center}
 .banner b{font-weight:600}
-.disclose{margin:0;padding:10px 16px;text-align:center;background:var(--card);
+.disclose{margin:0;padding:10px 16px;text-align:center;
   border-bottom:1px solid var(--line);font-family:var(--sans);
   font-size:var(--font-xs);color:var(--body)}
 
-.wrap{max-width:820px;margin:0 auto;padding:26px 20px 96px}
+.wrap{max-width:860px;margin:0 auto;padding:26px 20px 96px}
 #stage{scroll-margin-top:60px}
 
 .eyebrow{font-family:var(--sans);font-size:var(--font-xs);letter-spacing:.2em;
@@ -43,49 +44,69 @@ body{margin:0;background:var(--bg);color:var(--ink);
 h1{font-size:var(--font-display);font-weight:700;margin:6px 0 4px;
   line-height:1.35;text-wrap:balance}
 h2{font-size:var(--font-lg);font-weight:700;margin:26px 0 10px;text-wrap:balance}
-h3{font-family:var(--sans);font-size:var(--font-xs);font-weight:600;letter-spacing:.08em;
-  color:var(--taupe);margin:22px 0 8px}
+h3{font-family:var(--sans);font-size:var(--font-xs);font-weight:600;letter-spacing:.1em;
+  color:var(--taupe);margin:24px 0 8px}
 .sub{font-size:var(--font-md);color:var(--body);margin:0 0 22px}
 .rule{border:0;border-top:1px solid var(--line);margin:22px 0}
 p{margin:0 0 10px}
 
-.hero{border:1px solid var(--line);background:var(--card);padding:30px 26px;margin:0 0 20px}
-.hero h2{font-size:var(--font-xl);margin:0 0 14px}
-.hero p{font-size:var(--font-md);margin:0 0 12px}
-.hero dl{border-top:1px solid var(--line);margin:18px 0 0;padding:16px 0 0}
-.hero dt{font-family:var(--sans);font-size:var(--font-xs);color:var(--taupe);margin:0 0 2px}
-.hero dd{margin:0 0 12px;font-size:var(--font-base)}
+/* ── 頂端四個入口（逐項對齊實機）── */
+nav{display:flex;flex-wrap:wrap;gap:18px;margin:0 0 6px;
+  font-family:var(--sans);font-size:var(--font-xs)}
+nav button{background:none;border:0;padding:0 0 3px;cursor:pointer;
+  font:inherit;color:var(--body);border-bottom:1px solid transparent}
+nav button:hover,nav button:focus-visible{color:var(--ink);border-bottom-color:var(--line)}
+nav button[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+.navrule{border:0;border-top:1px solid var(--line);margin:0 0 20px}
+
+/* ── 開場／前情提要：細線，⛔ 不用色塊 ── */
+.brief{border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:22px 0;margin:0 0 20px}
+.brief h2{font-size:var(--font-xl);margin:0 0 12px}
+.brief p{font-size:var(--font-md);margin:0 0 10px}
+.brief dl{margin:16px 0 0;display:grid;grid-template-columns:auto 1fr;gap:8px 22px}
+.brief dt{font-family:var(--sans);font-size:var(--font-xs);color:var(--taupe);padding-top:3px}
+.brief dd{margin:0;font-size:var(--font-base)}
 
 .tile{display:block;width:100%;text-align:left;cursor:pointer;font-family:inherit;color:inherit;
-  border:1px solid var(--line);background:var(--card);padding:20px 22px;margin:0 0 12px}
-.tile:hover,.tile:focus-visible{border-color:var(--ink)}
+  border:0;border-top:1px solid var(--line);background:none;padding:18px 0}
+.tile:last-of-type{border-bottom:1px solid var(--line)}
+.tile:hover .tn,.tile:focus-visible .tn{color:var(--accent)}
 .tile .tn{font-size:var(--font-lg);font-weight:700;margin:0 0 6px}
 .tile .td{font-family:var(--sans);font-size:var(--font-sm);color:var(--body);margin:0}
-.tile .tgo{font-family:var(--sans);font-size:var(--font-xs);color:var(--accent);margin:10px 0 0}
-.tile .tdone{font-family:var(--sans);font-size:var(--font-xs);color:var(--ink);margin:10px 0 0}
+.tile .tgo{font-family:var(--sans);font-size:var(--font-xs);color:var(--accent);margin:8px 0 0}
+.tile .tdone{font-family:var(--sans);font-size:var(--font-xs);color:var(--ink);margin:8px 0 0}
 
-.prog{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
-  border-bottom:1px solid var(--line);padding:0 0 10px;margin:0 0 18px}
+/* ── 進度與階段標題 ── */
+.prog{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 16px}
 .prog .n{font-family:var(--sans);font-size:var(--font-xs);letter-spacing:.1em;color:var(--taupe)}
-.prog .bar{flex:1;min-width:110px;height:3px;background:var(--line);position:relative}
+.prog .bar{flex:1;min-width:110px;height:2px;background:var(--line);position:relative}
 .prog .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);display:block}
 
-.task{border:1px solid var(--line);background:var(--card);padding:22px 24px;margin:0 0 18px}
-.task h2{font-size:var(--font-xl);margin:0 0 4px}
+.task{border-bottom:1px solid var(--line);padding:0 0 18px;margin:0 0 20px}
+.task h2{font-size:var(--font-xl);margin:0 0 6px}
 .task .why{font-family:var(--sans);font-size:var(--font-xs);color:var(--taupe);margin:0 0 12px}
 .task p{font-size:var(--font-md);margin:0 0 10px}
-.task .ask{margin:16px 0 0;padding:14px 0 0;border-top:1px solid var(--line);
-  font-family:var(--sans);font-size:var(--font-md);color:var(--ink);font-weight:600}
+.task .ask{margin:14px 0 0;font-family:var(--sans);font-size:var(--font-md);
+  color:var(--ink);font-weight:600}
 
-.rec{border:1px solid var(--line);margin:0 0 16px}
-.rec .rh{font-family:var(--sans);font-size:var(--font-xs);letter-spacing:.06em;color:var(--taupe);
-  padding:10px 14px;border-bottom:1px solid var(--line);background:var(--card)}
-.rec dl{display:grid;grid-template-columns:auto 1fr;gap:8px 20px;margin:0;padding:14px}
+/* ── 資料區：只有細線，⛔ 不包框 ── */
+.rec{margin:0 0 20px}
+.rec .rl{font-family:var(--sans);font-size:var(--font-xs);font-weight:600;letter-spacing:.1em;
+  color:var(--taupe);padding:0 0 8px;border-bottom:1px solid var(--line);margin:0 0 12px}
+.rec dl{display:grid;grid-template-columns:auto 1fr;gap:8px 22px;margin:0}
 .rec dt{font-family:var(--sans);font-size:var(--font-xs);color:var(--taupe);padding-top:3px}
 .rec dd{margin:0;font-size:var(--font-base)}
 
+/* ── 逐節目區塊 ── */
+.ep{border-top:1px solid var(--line);padding:18px 0 4px;margin:0}
+.ep:last-of-type{border-bottom:1px solid var(--line);margin:0 0 16px}
+.ep .en{font-size:var(--font-md);font-weight:700;margin:0 0 8px}
+.ep .es{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+
+/* ── 可選項目（是按鈕，保留邊框當可點提示）── */
 .opt{display:block;width:100%;text-align:left;font-family:inherit;color:inherit;cursor:pointer;
-  border:1px solid var(--line);background:var(--card);padding:14px 16px;margin:0 0 10px}
+  border:1px solid var(--line);background:none;padding:13px 15px;margin:0 0 8px}
 .opt:hover,.opt:focus-visible{border-color:var(--ink)}
 .opt[aria-pressed="true"]{border-color:var(--accent)}
 .opt .on{font-size:var(--font-md);font-weight:700;margin:0 0 4px}
@@ -95,11 +116,11 @@ p{margin:0 0 10px}
   margin:8px 0 0;font-weight:600}
 
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0;align-items:center}
-button.act{font-family:var(--sans);font-size:var(--font-md);padding:12px 22px;cursor:pointer;
-  background:var(--card);border:1px solid var(--line);color:var(--ink)}
+button.act{font-family:var(--sans);font-size:var(--font-md);padding:11px 20px;cursor:pointer;
+  background:none;border:1px solid var(--line);color:var(--ink)}
 button.act:hover,button.act:focus-visible{border-color:var(--ink)}
 button.act.go{background:var(--ink);border-color:var(--ink);color:var(--card);font-weight:600}
-button.act.small{font-size:var(--font-sm);padding:8px 14px}
+button.act.small{font-size:var(--font-sm);padding:7px 13px}
 button.act:disabled{opacity:.45;cursor:not-allowed}
 button.link{background:none;border:0;padding:0;cursor:pointer;font-family:var(--sans);
   font-size:var(--font-sm);color:var(--accent);text-decoration:underline;text-underline-offset:3px}
@@ -108,15 +129,15 @@ button.link{background:none;border:0;padding:0;cursor:pointer;font-family:var(--
 label.fld{display:block;font-family:var(--sans);font-size:var(--font-xs);color:var(--taupe);
   margin:14px 0 4px}
 input[type=text],select,textarea{width:100%;font-family:var(--sans);font-size:var(--font-md);
-  padding:10px 12px;border:1px solid var(--line);background:#FFFDF9;color:var(--ink)}
-textarea{min-height:70px;resize:vertical}
-.chkline{display:flex;gap:10px;align-items:flex-start;margin:14px 0 0;
+  padding:9px 11px;border:1px solid var(--line);background:#FFFDF9;color:var(--ink)}
+textarea{min-height:68px;resize:vertical}
+.chkline{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;
   font-family:var(--sans);font-size:var(--font-md)}
 .chkline input{width:18px;height:18px;flex:none;margin-top:5px;font-size:var(--font-md)}
 .chkline label{margin:0;color:var(--ink);font-size:var(--font-md)}
 
 .msg{font-family:var(--sans);font-size:var(--font-sm);padding:12px 15px;margin:14px 0;
-  border:1px solid var(--line);background:var(--card)}
+  border:1px solid var(--line)}
 .msg.ok{border-color:var(--ink)}
 .msg.bad{border-color:var(--accent);color:var(--accent)}
 .msg .t{font-weight:600}
@@ -127,39 +148,45 @@ textarea{min-height:70px;resize:vertical}
 .note{font-family:var(--sans);font-size:var(--font-sm);color:var(--taupe);margin:10px 0 14px}
 .mask{font-family:var(--sans);letter-spacing:.14em;color:var(--taupe)}
 
+.figs{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);margin:0 0 20px}
+.fig{flex:1;min-width:150px;padding:14px 18px 14px 0}
+.fig .n{font-family:Georgia,'Songti TC',serif;font-size:var(--font-xl);color:var(--ink);
+  font-variant-numeric:tabular-nums;line-height:1.3}
+.fig .l{font-family:var(--sans);font-size:var(--font-xs);color:var(--taupe);margin-top:2px}
+
 .tablewrap{overflow-x:auto;margin:0 0 12px;border-top:1px solid var(--line)}
 table{width:100%;border-collapse:collapse;font-size:var(--font-sm);
-  font-variant-numeric:tabular-nums;min-width:480px}
-th{font-family:var(--sans);font-size:var(--font-xs);font-weight:600;letter-spacing:.06em;
+  font-variant-numeric:tabular-nums;min-width:460px}
+th{font-family:var(--sans);font-size:var(--font-xs);font-weight:600;letter-spacing:.08em;
   color:var(--taupe);text-align:left;padding:10px 11px 9px;
   border-bottom:1px solid var(--line);white-space:nowrap}
 td{padding:11px;border-bottom:1px solid rgba(184,176,164,.45);vertical-align:top}
 tr:last-child td{border-bottom:0}
 
 .chip{display:inline-block;font-family:var(--sans);font-size:var(--font-xs);
-  padding:3px 9px;border:1px solid var(--line);color:var(--body);
-  white-space:nowrap;background:rgba(255,253,249,.6)}
+  padding:2px 8px;border:1px solid var(--line);color:var(--body);white-space:nowrap}
 .chip.now{border-color:var(--ink);color:var(--ink)}
 .chip.prop{border-color:var(--accent);color:var(--accent)}
 .chip.ok{border-color:var(--ink);color:var(--ink);font-weight:600}
 .chip.wait{border-style:dashed;color:var(--taupe)}
 
-.book{border:1px solid var(--line);background:var(--card);padding:16px 18px;margin:0 0 12px}
+.book{border-top:1px solid var(--line);padding:18px 0}
+.book:last-of-type{border-bottom:1px solid var(--line);margin:0 0 16px}
 .book .bt{font-size:var(--font-md);font-weight:700;margin:0 0 4px}
 .book .bm{font-family:var(--sans);font-size:var(--font-sm);color:var(--body);margin:0 0 8px}
 .book .bs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
 
-.matline{display:flex;flex-wrap:wrap;gap:10px;align-items:center;
-  padding:11px 0;border-bottom:1px solid rgba(184,176,164,.45)}
-.matline .mn{flex:1;min-width:150px}
+.matline{display:flex;flex-wrap:wrap;gap:9px;align-items:center;
+  padding:9px 0;border-bottom:1px solid rgba(184,176,164,.45);font-size:var(--font-sm)}
+.matline .mn{flex:1;min-width:140px}
 
-.stepnote{border-top:1px solid var(--line);margin:22px 0 0;padding:16px 0 0}
+.stepnote{border-top:1px solid var(--line);margin:24px 0 0;padding:16px 0 0}
 .stepnote label{font-family:var(--sans);font-size:var(--font-sm);color:var(--body);
   display:block;margin:0 0 6px}
 .saved{font-family:var(--sans);font-size:var(--font-xs);color:var(--accent);margin:8px 0 0}
 
-.final{border:1px solid var(--line);background:var(--card);padding:22px 24px;margin:0 0 18px}
-.final h2{margin:0 0 14px}
+.final{border-top:1px solid var(--line);padding:20px 0 0;margin:0 0 18px}
 .final .row{margin:0 0 16px}
 .fbnote{font-family:var(--sans);font-size:var(--font-sm);color:var(--accent);
   margin:14px 0 0;font-weight:600}
@@ -177,17 +204,16 @@ details.notes .inner{margin:16px 0 0;font-family:var(--sans);font-size:var(--fon
 details.notes .inner h4{font-size:var(--font-sm);font-weight:600;color:var(--ink);margin:18px 0 6px}
 details.notes .inner ul{margin:0 0 10px;padding-left:20px}
 details.notes .inner li{margin:0 0 4px}
-details.notes .inner table{min-width:560px;font-size:var(--font-xs)}
+details.notes .inner table{min-width:520px;font-size:var(--font-xs)}
 
 @media (max-width:640px){
   .wrap{padding:20px 15px 88px}
   h1{font-size:var(--font-xl)}
-  .hero,.task,.final{padding:18px 16px}
-  .task h2{font-size:var(--font-lg)}
-  .rec dl{grid-template-columns:1fr;gap:2px 0}
-  .rec dd{margin:0 0 10px}
+  .brief dl,.rec dl{grid-template-columns:1fr;gap:2px 0}
+  .brief dd,.rec dd{margin:0 0 10px}
   button.act{width:100%}
   .actions{gap:8px}
+  nav{gap:14px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -212,11 +238,10 @@ details.notes .inner table{min-width:560px;font-size:var(--font-xs)}
 <script>
 /* ══════════════════════════════════════════════════════════════
    ⛔ 完全沒有對外呼叫：沒有遠端請求、沒有長連線、沒有 CDN、沒有外部字型。
-      ⚠️ 連這些名字的字面值都不出現在本檔。
    ⛔ 不連任何資料庫。狀態只在 DEMO 這個記憶體物件裡。
    ⭐ 只有回饋會寫瀏覽器本機儲存，且永不上傳。
    ⭐ 一律 textContent，⛔ 不用 innerHTML。
-   ⭐ 主要流程不出現工程詞彙；技術細節一律收進頁尾摺疊區。
+   ⚠️ 表單值一律放狀態，⛔ 不要放 DOM——重繪會把 DOM 上的值洗掉（已踩過三次）。
    ══════════════════════════════════════════════════════════════ */
 
 var STORY={
@@ -228,16 +253,14 @@ var STORY={
   pubMonth:'2026-12', topic:'自我成長',
   summary:'寫給在變動裡失去節奏的人。作者用二十年的觀察，談怎麼在不確定裡重新找回自己的步調。'
 };
-
 var FEE_LABEL={NONE:'不需要宣傳費',MAYBE:'可能需要宣傳費（待確認）',YES:'需要宣傳費'};
 var BOOK_STATUS={PLANNING:'籌備中',CONFIRMED:'已確認上市日',DELAYED:'上市延後',CANCELLED:'不出版了'};
-var DEP_LEVEL={
-  INTEREST:{label:'表達訪問意願',depth:1},
-  REQUESTED:{label:'已轉成訪談需求',depth:2},
-  SCHEDULED:{label:'已排定訪談時間',depth:3},
-  RECORDED:{label:'已經錄音',depth:4}
-};
+var DEP_LEVEL={INTEREST:{label:'表達訪問意願',depth:1},REQUESTED:{label:'已轉成訪談需求',depth:2},
+  SCHEDULED:{label:'已排定訪談時間',depth:3},RECORDED:{label:'已經錄音',depth:4}};
 var HANDOFF={PENDING:'待處理',ACKNOWLEDGED:'對方已收到',IN_PROGRESS:'處理中',FULFILLED:'已完成'};
+var PROD={NOT_STARTED:'還沒開始',RECORDED:'已錄音',EDITED:'已剪輯',
+  OUTSOURCED:'外包剪輯中',AWAITING:'等節目方上架',PUBLISHED:'已上架'};
+var ALT_TIME='__ALT__';
 
 function programSeed(){
   return [
@@ -256,54 +279,45 @@ function programSeed(){
 function bookSeed(){
   return [
     {id:'BK-DEMO-002',title:'《風的名字》',author:'陳予恩老師',publisher:'見山出版（虛構）',
-     pubMonth:'2026-11',topic:'文學',status:'CONFIRMED',
-     summary:'一本關於離開與回來的散文集。',
+     pubMonth:'2026-11',topic:'文學',status:'CONFIRMED',summary:'一本關於離開與回來的散文集。',
      interview:'2026 年 10 月下旬',air:'2026 年 11 月 10 日前',
      deps:[{who:'《午後書桌》',level:'INTEREST'}]},
     {id:'BK-DEMO-003',title:'《把日子過成句子》',author:'何知微老師',publisher:'小徑文化（虛構）',
-     pubMonth:'2027-01',topic:'自我成長',status:'PLANNING',
-     summary:'用寫字重新整理生活的練習。',
+     pubMonth:'2027-01',topic:'自我成長',status:'PLANNING',summary:'用寫字重新整理生活的練習。',
      interview:'2026 年 12 月',air:'2027 年 1 月中',deps:[]},
     {id:'BK-DEMO-004',title:'《我們與噪音的距離》',author:'邱楷書老師',publisher:'遠方學堂出版（虛構）',
-     pubMonth:'2026-12',topic:'心理',status:'PLANNING',
-     summary:'談城市生活裡的聽覺疲勞。',
-     interview:'2026 年 11 月',air:'2026 年 12 月中',
-     deps:[{who:'《慢慢說》',level:'REQUESTED'}]}
+     pubMonth:'2026-12',topic:'心理',status:'PLANNING',summary:'談城市生活裡的聽覺疲勞。',
+     interview:'2026 年 11 月',air:'2026 年 12 月中',deps:[{who:'《慢慢說》',level:'REQUESTED'}]}
   ];
+}
+function materialSeed(){
+  return [{id:'M1',name:'公關書（實體樣書）',level:'REQUIRED',received:false},
+          {id:'M2',name:'書封與作者照片',level:'SUGGESTED',received:false},
+          {id:'M3',name:'新聞稿／書籍介紹',level:'SUGGESTED',received:false}];
 }
 
 /* ─────────── 狀態 ─────────── */
 var DEMO;
 function resetDemo(){
   DEMO={
-    /* ── 訪談邀約 ── */
     handedOver:false, owner:'',
     request:{interview:STORY.interviewWindow, air:STORY.airWindow, from:''},
+    wish:[],
     programs:programSeed(), picked:[],
     approval:{needed:false,done:false,why:''},
-    shortlistSent:false, replies:{}, caseMade:false,
-    producer:'', inHouseEdit:null, times:[], confirmedTime:'',
-    production:'NOT_STARTED', airingUrl:'',
-    handoffMade:false, handoffStatus:'', handoffDue:'',
-    materials:[
-      {id:'M1',name:'公關書（實體樣書）',level:'REQUIRED',received:false},
-      {id:'M2',name:'書封與作者照片',level:'SUGGESTED',received:false},
-      {id:'M3',name:'新聞稿／書籍介紹',level:'SUGGESTED',received:false}
-    ],
+    listSent:false, theirConfirm:false,
+    replies:{}, episodes:[],
     closed:false, trail:[], unmasked:false,
-    /* ── 新書預告 ── */
-    books:bookSeed(), myBook:null, changeKind:'', changeDetail:'', notified:false,
-    /* ⚠️ 表單值一定要放狀態裡。放 DOM 的話，say() 一重繪就全部被洗掉（實測踩到）。 */
+    books:bookSeed(), myBook:null,
     bookDraft:{title:'',author:'',pub:'',month:'',interview:'',air:'',summary:''},
-    /* ── 走過哪些軌道 ── */
+    changeKind:'', changeDetail:'', notified:false,
     doneTracks:{}
   };
 }
 resetDemo();
 
-var PHASE='landing';   /* landing → entry → run → final */
-var TRACK='';          /* invite | preview | board */
-var STAGE=0, MSG=null;
+var PHASE='landing';
+var TRACK='', STAGE=0, MSG=null, PEEK='';
 
 /* ─────────── DOM ─────────── */
 function el(t,x,c){var e=document.createElement(t);
@@ -322,9 +336,9 @@ function say(kind,title,detail,list){
     list.forEach(function(x){ul.appendChild(el('li',x));}); m.appendChild(ul);}
   MSG=m; render();
 }
-function rec(title,pairs){
+function rec(label,pairs){
   var w=el('div',null,'rec');
-  w.appendChild(el('div',title,'rh'));
+  w.appendChild(el('div',label,'rl'));
   var dl=document.createElement('dl');
   pairs.forEach(function(p){
     dl.appendChild(el('dt',p[0]));
@@ -358,24 +372,35 @@ function tbl(cols,rows,host){
     });
     tb.appendChild(tr);
   });
-  t.appendChild(tb); w.appendChild(t);
-  if(host) host.appendChild(w);
-  return w;
+  t.appendChild(tb); w.appendChild(t); if(host) host.appendChild(w); return w;
 }
-function pickedPrograms(){
-  return DEMO.programs.filter(function(p){ return DEMO.picked.indexOf(p.id)>=0; });
+function prog(id){ return DEMO.programs.filter(function(p){return p.id===id;})[0]; }
+function pickedPrograms(){ return DEMO.programs.filter(function(p){return DEMO.picked.indexOf(p.id)>=0;}); }
+function acceptedIds(){ return DEMO.picked.filter(function(id){return DEMO.replies[id]==='ACCEPT';}); }
+function syncEpisodes(){
+  var ids=acceptedIds();
+  DEMO.episodes=DEMO.episodes.filter(function(e){ return ids.indexOf(e.progId)>=0; });
+  ids.forEach(function(id){
+    if(!DEMO.episodes.some(function(e){return e.progId===id;})){
+      DEMO.episodes.push({progId:id,name:prog(id).name,
+        producer:'',inHouse:null,times:[],confirmed:'',
+        production:'NOT_STARTED',url:'',
+        hoMade:false,hoStatus:'',hoDue:'',
+        materials:materialSeed()});
+    }
+  });
 }
 
-/* ═══════════════ 軌道一：新書訪談邀約（8 階段）═══════════════ */
+/* ═══════════════ 軌道一：新書訪談邀約 ═══════════════ */
 var INVITE=[
 {
-  key:'intake', name:'建立需求與指定承辦',
+  key:'intake', name:'建立需求與指定承辦', section:'requests',
   intro:function(){
     var a=[];
     if(DEMO.request.from) a.push('這一筆是從「即將出版新書」轉過來的：'+DEMO.request.from
       +'。書名、檔期、聯絡窗口都已經帶過來，⛔ 不用重打。');
     a.push('資料都已經幫你填好了，你只要確認內容、按下接手。');
-    a.push('接手之後，需求方會收到「已經有人在處理」的通知，也才看得到聯絡方式。');
+    a.push('接手之後，需求方會收到「已經有人在處理」的通知，你也才看得到聯絡方式。');
     return a; },
   ask:'請確認下面的需求內容，然後按「建立需求並由我接手」。',
   body:function(host){
@@ -391,21 +416,20 @@ var INVITE=[
       c.appendChild(btn('查看','link',function(){
         DEMO.unmasked=true; trail('查看了需求方的聯絡方式');
         say('ok','已經看到聯絡方式了','這次查看留下了紀錄。換頁或重新載入之後會自動遮回去。'); }));
-    } else {
-      c.appendChild(el('span','***','mask'));
-      c.appendChild(el('div','接手之後才看得到','note'));
-    }
+    } else { c.appendChild(el('span','***','mask'));
+      c.appendChild(el('div','接手之後才看得到','note')); }
+    var wish=DEMO.wish.length
+      ? DEMO.wish.map(function(id){return prog(id).name;}).join('、')+'（僅供評估，不代表保證安排）'
+      : '對方沒有特別指定';
     host.appendChild(rec('需求內容（已幫你填好）',[
       ['作者',STORY.author],['書名',STORY.book],['出版社',STORY.publisher],
       ['需求方聯絡方式',c],
       ['希望訪問的檔期',DEMO.request.interview],
       ['希望上架的檔期',DEMO.request.air],
-      ['需求方偏好的節目','《慢慢說》（僅供評估，不代表保證安排）'],
-      ['目前狀態',DEMO.handedOver?'已接手，處理中':'尚未建立']
-    ]));
+      ['對方想上的節目',wish],
+      ['目前狀態',DEMO.handedOver?'已接手，處理中':'尚未建立']]));
     host.appendChild(el('p','訪問和上架是兩個不同的檔期：訪問要提前，上架通常要卡新書上市日。','note'));
-    if(DEMO.handedOver) host.appendChild(rec('承辦',[
-      ['承辦人',DEMO.owner],
+    if(DEMO.handedOver) host.appendChild(rec('承辦',[['承辦人',DEMO.owner],
       ['需求方會收到','「您的訪談需求已由 '+DEMO.owner+' 接手，我們會在確認方向後與您聯繫。」']]));
   },
   primary:function(){
@@ -418,47 +442,56 @@ var INVITE=[
   done:function(){ return DEMO.handedOver; }
 },
 {
-  key:'recommend', name:'推薦適合的節目',
+  key:'recommend', name:'審核想上的節目並補推薦', section:'requests',
   intro:function(){ return [
-    '節目是由你來推薦的，不是讓作者許願——因為作者指定的節目常常要付宣傳費。',
-    '下面是可以挑的節目。每一個都寫了為什麼推薦，以及會不會牽涉到費用。']; },
-  ask:'請挑至少兩個節目加入推薦，然後按「加入推薦節目」。',
+    '對方（出版社或老師）已經先勾了想上的節目。你要做的是審核那份清單，'
+      +'再補上你覺得更適合的。',
+    '⚠️ 對方想上的不一定都做得成——有些要付宣傳費，有些主題不合。'
+      +'決定權在你，但最後兩邊都要確認同一份名單。']; },
+  ask:'請確認要放進名單的節目（對方想上的已經先幫你勾起來），然後按「送出這份名單」。',
   body:function(host){
+    if(DEMO.wish.length){
+      host.appendChild(el('h3','對方想上的節目'));
+      host.appendChild(el('p',DEMO.wish.map(function(id){return prog(id).name;}).join('、')
+        +'——下面已經先幫你勾起來，你可以取消。','note'));
+    }
     DEMO.programs.forEach(function(p){
-      var picked=DEMO.picked.indexOf(p.id)>=0;
+      var on=DEMO.picked.indexOf(p.id)>=0, wished=DEMO.wish.indexOf(p.id)>=0;
       var b=el('button',null,'opt'); b.type='button';
-      b.setAttribute('aria-pressed',String(picked));
-      b.appendChild(el('div',p.name+'　'+p.topic,'on'));
+      b.setAttribute('aria-pressed',String(on));
+      b.appendChild(el('div',p.name+'　'+p.topic+(wished?'　◆ 對方想上':''),'on'));
       b.appendChild(el('div','推薦原因：'+p.reason,'oc'));
       b.appendChild(el('div',FEE_LABEL[p.fee]+(p.amount?'　預估 '+p.amount+' 元':''),'of'));
-      b.appendChild(el('div',picked?'✓ 已加入推薦':'點一下加入推薦','pick'));
+      b.appendChild(el('div',on?'✓ 已放進名單':'點一下放進名單','pick'));
       b.onclick=function(){
         var i=DEMO.picked.indexOf(p.id);
         if(i>=0) DEMO.picked.splice(i,1); else DEMO.picked.push(p.id);
         MSG=null; render(); };
       host.appendChild(b);
     });
-    var m=pickedPrograms().filter(function(p){ return p.fee!=='NONE'; });
-    if(m.length) host.appendChild(el('p','⚠️ 你挑的節目裡有 '+m.length
+    var m=pickedPrograms().filter(function(p){return p.fee!=='NONE';});
+    if(m.length) host.appendChild(el('p','⚠️ 名單裡有 '+m.length
       +' 個可能要付宣傳費，下一步會需要主管確認。','note'));
   },
   primary:function(){
     var n=DEMO.picked.length;
-    return btn(n?('加入推薦節目（已挑 '+n+' 個）'):'加入推薦節目','act go',function(){
-      if(DEMO.picked.length<2){ say('bad','請至少挑兩個節目',
-        '多推薦幾個，需求方比較有得選，也不會一個婉拒就卡住。'); return; }
+    return btn(n?('送出這份名單（'+n+' 個節目）'):'送出這份名單','act go',function(){
+      if(DEMO.picked.length<2){ say('bad','名單至少要兩個節目',
+        '多幾個對方比較有得選，也不會一個婉拒就卡住。'); return; }
       var names=pickedPrograms().map(function(p){return p.name;});
-      trail('加入推薦節目：'+names.join('、'));
+      var dropped=DEMO.wish.filter(function(id){return DEMO.picked.indexOf(id)<0;});
+      trail('名單定稿：'+names.join('、')
+        +(dropped.length?('；不安排 '+dropped.map(function(id){return prog(id).name;}).join('、')):''));
       var fee=pickedPrograms().filter(function(p){return p.fee!=='NONE';});
       DEMO.approval.needed=fee.length>0;
-      DEMO.approval.why=fee.length?('推薦名單裡有 '+fee.map(function(p){return p.name;}).join('、')
-        +' 可能要付宣傳費'):'這次推薦的節目都不用付費，屬於一般邀約';
-      say('ok','推薦節目已加入','共 '+names.length+' 個：'+names.join('、')); });
+      DEMO.approval.why=fee.length?('名單裡有 '+fee.map(function(p){return p.name;}).join('、')
+        +' 可能要付宣傳費'):'名單裡的節目都不用付費，屬於一般邀約';
+      say('ok','名單已定稿','共 '+names.length+' 個：'+names.join('、')); });
   },
   done:function(){ return DEMO.picked.length>=2; }
 },
 {
-  key:'approval', name:'處理費用或例外審核',
+  key:'approval', name:'處理費用或例外審核', section:'requests',
   intro:function(){
     if(DEMO.approval.needed) return ['這一筆需要主管確認。',
       '原因：'+DEMO.approval.why+'。付費宣傳超出一般邀約範圍，所以要先讓主管知道。'];
@@ -482,36 +515,52 @@ var INVITE=[
   done:function(){ return DEMO.approval.done; }
 },
 {
-  key:'confirm', name:'給需求方確認推薦節目',
+  key:'confirm', name:'雙方確認節目名單', section:'requests',
   intro:function(){ return [
-    '推薦名單要先讓'+STORY.publisher+'和老師確認過，你才去跟節目提案。',
-    '系統會產生一個一次性的確認連結給對方。']; },
-  ask:'請按「寄出推薦節目清單」。',
+    '名單要兩邊都點頭才算數：你這邊送出，對方（出版社與老師）回覆確認。',
+    '⚠️ 只有一邊同意不算——之後才不會出現「我沒答應要上這個節目」。']; },
+  ask:function(){ return !DEMO.listSent?'請按「寄出名單請對方確認」。'
+    :(!DEMO.theirConfirm?'對方回覆之後，按「對方已回覆：確認」把結果記下來。':'兩邊都確認了，可以往下走。'); },
   body:function(host){
-    host.appendChild(el('h3','需求方會看到的推薦節目清單'));
+    host.appendChild(el('h3','要請對方確認的名單'));
     pickedPrograms().forEach(function(p){
-      host.appendChild(rec(p.name,[['推薦原因',p.reason],
+      host.appendChild(rec(p.name+(DEMO.wish.indexOf(p.id)>=0?'　◆ 對方想上':'　◆ 我們推薦'),[
+        ['推薦原因',p.reason],
         ['費用',FEE_LABEL[p.fee]+(p.amount?'　預估 '+p.amount+' 元':'')]])); });
+    var dropped=DEMO.wish.filter(function(id){return DEMO.picked.indexOf(id)<0;});
+    if(dropped.length){
+      host.appendChild(el('h3','對方想上、但這次不安排'));
+      tbl(['節目','為什麼不安排'],dropped.map(function(id){
+        var p=prog(id);
+        return [p.name,p.fee!=='NONE'?('要付宣傳費（'+FEE_LABEL[p.fee]+'），需要對方自行評估預算')
+          :'主題與這本書的方向不夠貼近']; }),host);
+      host.appendChild(el('p','這一段也會一起給對方看，免得他以為我們漏掉了。','note'));
+    }
     host.appendChild(rec('這次要對的檔期',[
       ['希望訪問的檔期',DEMO.request.interview],['希望上架的檔期',DEMO.request.air]]));
-    if(DEMO.shortlistSent){
-      host.appendChild(rec('確認連結',[['狀態','有效（一次性）'],['到期','14 個日曆日後'],
-        ['需求方狀態','待需求方確認']]));
-      host.appendChild(el('p','這裡不會顯示可以點的真實連結。要傳給對方時請向系統管理者拿。','note'));
-    }
+    var state=document.createElement('span');
+    state.appendChild(chip(DEMO.listSent?'我方已送出':'我方還沒送出',DEMO.listSent?'ok':'wait'));
+    state.appendChild(document.createTextNode(' '));
+    state.appendChild(chip(DEMO.theirConfirm?'對方已確認':'等對方回覆',DEMO.theirConfirm?'ok':'wait'));
+    host.appendChild(rec('雙方確認狀態',[['目前',state],
+      ['連結','一次性，14 個日曆日後到期。⛔ 這裡不顯示真實連結。']]));
   },
   primary:function(){
-    if(DEMO.shortlistSent) return null;
-    return btn('寄出推薦節目清單','act go',function(){
-      DEMO.shortlistSent=true; trail('寄出推薦節目清單給需求方確認');
-      say('ok','已寄出，等需求方確認','之後如果改名單，這個連結會自動失效。'); });
+    if(!DEMO.listSent) return btn('寄出名單請對方確認','act go',function(){
+      DEMO.listSent=true; trail('寄出節目名單請對方確認');
+      say('ok','已寄出，等對方確認','之後如果改名單，這個連結會自動失效。'); });
+    if(!DEMO.theirConfirm) return btn('對方已回覆：確認','act go',function(){
+      DEMO.theirConfirm=true; trail('對方回覆：確認這份節目名單');
+      say('ok','兩邊都確認了','接下來才去跟節目提案。'); });
+    return null;
   },
-  done:function(){ return DEMO.shortlistSent; }
+  done:function(){ return DEMO.listSent&&DEMO.theirConfirm; }
 },
 {
-  key:'replies', name:'記錄節目邀約回覆',
+  key:'replies', name:'記錄節目邀約回覆', section:'requests',
   intro:function(){ return ['節目方和主持人不會登入這個系統。',
-    '你在外面（Email、訊息、電話）收到回覆之後，回來把結果記下來就好。']; },
+    '你在外面（Email、訊息、電話）收到回覆之後，回來把結果記下來就好。',
+    '⚠️ 每個答應的節目都會變成一集，後面的製作方、時間、素材都是各自分開追蹤。']; },
   ask:'請幫每個節目選一個回覆結果，然後按「記錄節目回覆」。',
   body:function(host){
     pickedPrograms().forEach(function(p){
@@ -526,172 +575,191 @@ var INVITE=[
       var blank=rows.filter(function(p){return !DEMO.replies[p.id];});
       if(blank.length){ say('bad','還有 '+blank.length+' 個節目沒選',
         blank.map(function(p){return p.name;}).join('、')+'。還沒回覆的請選「還在等回覆」。'); return; }
-      var acc=rows.filter(function(p){return DEMO.replies[p.id]==='ACCEPT';});
-      if(!acc.length){ say('bad','至少要有一個節目接受',
-        '沒有節目答應的話，這個案子就沒有可以往下做的對象。請把其中一個改成「接受」。'); return; }
+      if(!acceptedIds().length){ say('bad','至少要有一個節目接受',
+        '沒有節目答應的話，這個案子就沒有可以往下做的對象。'); return; }
       trail('記錄節目回覆：'+rows.map(function(p){ return p.name+'＝'+
         ({ACCEPT:'接受',REJECT:'婉拒',WAIT:'還在等'})[DEMO.replies[p.id]]; }).join('、'));
-      DEMO.caseMade=true;
-      say('ok','回覆已記錄，案件成立','由 '+acc.map(function(p){return p.name;}).join('、')+' 往下做。'); });
+      syncEpisodes();
+      say('ok','回覆已記錄','答應的有 '+DEMO.episodes.length+' 個節目，各自成為一集。'); });
   },
-  done:function(){ return DEMO.caseMade; }
+  done:function(){ return DEMO.episodes.length>0; }
 },
 {
-  key:'schedule', name:'確認製作方與訪談時間',
+  key:'schedule', name:'逐節目確認製作方與訪談時間', section:'requests',
   intro:function(){ return [
-    '先決定這一集是公司自己做，還是節目方自己做。如果是公司做，還要決定剪輯要不要發外包。',
-    '排時間的時候，一次給對方三個時段會比一次給一個快很多。老師不用自己登入填表。']; },
-  ask:'請選製作方（公司製作的話再決定剪輯發不發外包）、填最多三個可訪談時間，再選一個確認的時段。',
+    '⚠️ 不是每一集都由公司做——要一個節目一個節目分開決定。',
+    '公司做的話，還要決定剪輯是自己剪還是發外包。時間也是各談各的。',
+    '一次給對方三個時段會比一次給一個快很多。真的都喬不攏，可以先選「另外確認」。']; },
+  ask:'請幫每一集選製作方、填時間，再選一個確認的時段（或先選「另外確認」）。',
   body:function(host){
-    var s=sel([['','（還沒選）'],['COMPANY','公司製作'],['COUNTERPARTY','節目方製作']]);
-    s.value=DEMO.producer;
-    s.onchange=function(){ DEMO.producer=s.value;
-      if(s.value!=='COMPANY') DEMO.inHouseEdit=null; MSG=null; render(); };
-    host.appendChild(fld('f_producer','這一集由誰做？',s));
-
-    if(DEMO.producer==='COMPANY'){
-      var w=el('div',null,'chkline');
-      var cb=document.createElement('input'); cb.type='checkbox'; cb.id='f_inhouse';
-      cb.checked=DEMO.inHouseEdit===true;
-      cb.onchange=function(){ DEMO.inHouseEdit=cb.checked; MSG=null; render(); };
-      var lb=el('label','剪輯發公司內部做'); lb.setAttribute('for','f_inhouse');
-      w.appendChild(cb); w.appendChild(lb); host.appendChild(w);
-      host.appendChild(el('p',DEMO.inHouseEdit===false
-        ? '⚠️ 不打勾＝剪輯要發外包。後面會多一段「建立外包交辦單」，走外包製作案的流程。'
-        : '不是每個節目都在公司內部剪輯。打勾＝自己剪；不打勾＝發外包。','note'));
-    }
-
-    host.appendChild(el('h3','提出可訪談時間（最多三個）'));
     var D=['2026-11-18 14:00','2026-11-20 10:00','2026-11-25 15:00'];
-    for(var i=0;i<3;i++){(function(i){
-      var inp=document.createElement('input'); inp.type='text';
-      inp.value=DEMO.times[i]||''; inp.placeholder=D[i];
-      inp.oninput=function(){ DEMO.times[i]=inp.value; };
-      host.appendChild(fld('f_t'+i,'時間 '+(i+1),inp));
-    })(i);}
-    var bar=el('div',null,'actions');
-    bar.appendChild(btn('帶入三個範例時間','act small',function(){
-      DEMO.times=D.slice(); MSG=null; render(); }));
-    host.appendChild(bar);
+    DEMO.episodes.forEach(function(e,idx){
+      var box=el('div',null,'ep');
+      box.appendChild(el('div',e.name,'en'));
+      var cs=el('div',null,'es');
+      cs.appendChild(chip(e.producer?(e.producer==='COMPANY'
+        ?('公司製作'+(e.inHouse===null?'':(e.inHouse?'・剪輯自己做':'・剪輯發外包')))
+        :'節目方自己處理'):'還沒決定製作方',e.producer?'now':'wait'));
+      cs.appendChild(chip(e.confirmed===ALT_TIME?'時間另外確認'
+        :(e.confirmed||'還沒定時間'),e.confirmed?(e.confirmed===ALT_TIME?'prop':'ok'):'wait'));
+      box.appendChild(cs);
 
-    var filled=DEMO.times.filter(function(t){return t&&t.trim();});
-    if(filled.length){
-      var cs=sel([['','（還沒選）']].concat(filled.map(function(t){return [t,t];})));
-      cs.value=DEMO.confirmedTime;
-      cs.onchange=function(){ DEMO.confirmedTime=cs.value; MSG=null; render(); };
-      host.appendChild(fld('f_confirmed','對方最後選了哪一個？',cs));
-    }
+      var s=sel([['','（還沒選）'],['COMPANY','公司統一發包（我們處理）'],
+        ['COUNTERPARTY','訪談節目自己處理']]);
+      s.value=e.producer;
+      s.onchange=function(){ e.producer=s.value;
+        if(s.value!=='COMPANY') e.inHouse=null; MSG=null; render(); };
+      box.appendChild(fld('p_'+idx,'這一集由誰做？',s));
+
+      if(e.producer==='COMPANY'){
+        var w=el('div',null,'chkline');
+        var cb=document.createElement('input'); cb.type='checkbox'; cb.id='ih_'+idx;
+        cb.checked=e.inHouse===true;
+        cb.onchange=function(){ e.inHouse=cb.checked; MSG=null; render(); };
+        var lb=el('label','剪輯發公司內部做'); lb.setAttribute('for','ih_'+idx);
+        w.appendChild(cb); w.appendChild(lb); box.appendChild(w);
+        box.appendChild(el('p',e.inHouse===false
+          ?'⚠️ 不打勾＝剪輯要發外包。後面會多一段「建立外包交辦單」。'
+          :'打勾＝自己剪；不打勾＝發外包。','note'));
+      }
+
+      for(var i=0;i<3;i++){(function(i){
+        var inp=document.createElement('input'); inp.type='text';
+        inp.value=e.times[i]||''; inp.placeholder=D[i];
+        inp.oninput=function(){ e.times[i]=inp.value; };
+        box.appendChild(fld('t_'+idx+'_'+i,'可訪談時間 '+(i+1),inp));
+      })(i);}
+      var bar=el('div',null,'actions');
+      bar.appendChild(btn('帶入三個範例時間','act small',function(){
+        e.times=D.slice(); MSG=null; render(); }));
+      box.appendChild(bar);
+
+      var filled=e.times.filter(function(t){return t&&t.trim();});
+      var opts=[['','（還沒選）']].concat(filled.map(function(t){return [t,t];}));
+      opts.push([ALT_TIME,'都不能配合，之後另外確認']);
+      var cs2=sel(opts); cs2.value=e.confirmed;
+      cs2.onchange=function(){ e.confirmed=cs2.value; MSG=null; render(); };
+      box.appendChild(fld('c_'+idx,'對方最後選了哪一個？',cs2));
+      if(e.confirmed===ALT_TIME)
+        box.appendChild(el('p','⚠️ 選了「另外確認」還是可以往下走，但結案前一定要補上真正的時間。','note'));
+      host.appendChild(box);
+    });
   },
   primary:function(){
     return btn('確認製作方與時間','act go',function(){
-      if(!DEMO.producer){ say('bad','請先選製作方',''); return; }
-      if(DEMO.producer==='COMPANY'&&DEMO.inHouseEdit===null){
-        say('bad','請決定剪輯發不發公司內部','打勾＝自己剪；不打勾＝發外包。'); return; }
-      var filled=DEMO.times.filter(function(t){return t&&t.trim();});
-      if(!filled.length){ say('bad','請至少填一個可訪談時間','可以按「帶入三個範例時間」。'); return; }
-      if(!DEMO.confirmedTime){ say('bad','請選一個最後確認的時段',''); return; }
-      var who=DEMO.producer==='COMPANY'?'公司製作':'節目方製作';
-      var edit=DEMO.producer==='COMPANY'?(DEMO.inHouseEdit?'（剪輯自己做）':'（剪輯發外包）'):'';
-      trail('確認製作方：'+who+edit);
-      trail('提出 '+filled.length+' 個可訪談時間，對方確認 '+DEMO.confirmedTime);
-      say('ok','製作方與時間都確認了',who+edit+'　錄音時間 '+DEMO.confirmedTime); });
+      var bad=DEMO.episodes.filter(function(e){
+        return !e.producer || (e.producer==='COMPANY'&&e.inHouse===null) || !e.confirmed; });
+      if(bad.length){ say('bad','還有 '+bad.length+' 集沒填完',
+        '每一集都要選製作方、填時間、選一個確認的時段：',
+        bad.map(function(e){ return e.name+'——'
+          +(!e.producer?'還沒選製作方'
+            :(e.producer==='COMPANY'&&e.inHouse===null?'還沒決定剪輯發不發外包':'還沒選時間')); })); return; }
+      DEMO.episodes.forEach(function(e){
+        trail(e.name+'：'+(e.producer==='COMPANY'
+          ?('公司統一發包'+(e.inHouse?'（剪輯自己做）':'（剪輯發外包）')):'訪談節目自己處理')
+          +'，時間 '+(e.confirmed===ALT_TIME?'另外確認':e.confirmed)); });
+      say('ok','每一集的製作方與時間都記下來了',
+        DEMO.episodes.map(function(e){ return e.name+'＝'
+          +(e.producer==='COMPANY'?'公司':'節目方'); }).join('、')); });
   },
-  done:function(){ return !!(DEMO.producer&&DEMO.confirmedTime
-    &&(DEMO.producer!=='COMPANY'||DEMO.inHouseEdit!==null)); }
+  done:function(){ return DEMO.episodes.length>0 && !DEMO.episodes.filter(function(e){
+    return !e.producer||(e.producer==='COMPANY'&&e.inHouse===null)||!e.confirmed; }).length; }
 },
 {
-  key:'produce', name:'追蹤錄音、上架與素材',
-  intro:function(){
-    var a=['接下來就是把節目做出來，同時把該收的東西收齊。'];
-    if(DEMO.producer==='COMPANY'&&DEMO.inHouseEdit===false)
-      a.push('這一集的剪輯發外包，所以錄完之後要先建立外包交辦單，等對方做完才能上架。');
-    a.push('素材只有標成「本案必要」的才會擋結案，其他是建議提供。');
-    return a; },
-  ask:'請把製作推到「已上架」，並確認公關書已收到。',
+  key:'produce', name:'逐節目追蹤錄音、上架與素材', section:'requests',
+  intro:function(){ return [
+    '每一集各走各的進度，素材也是各收各的——同一本書要寄好幾份公關書出去。',
+    '素材只有標成「本案必要」的才會擋結案，其他是建議提供。']; },
+  ask:'請把每一集推到「已上架」，並確認各自的公關書都收到了。',
   body:function(host){
-    var COMPANY=DEMO.producer==='COMPANY', OUT=COMPANY&&DEMO.inHouseEdit===false;
-    var P=DEMO.production;
-    var L={NOT_STARTED:'還沒開始',RECORDED:'已錄音',EDITED:'已剪輯',
-      OUTSOURCED:'外包剪輯中',AWAITING:'等節目方上架',PUBLISHED:'已上架'};
-    host.appendChild(rec('製作進度',[
-      ['目前',L[P]],
-      ['製作方',COMPANY?('公司製作'+(OUT?'（剪輯發外包）':'（剪輯自己做）')):'節目方製作'],
-      ['上架連結',DEMO.airingUrl]]));
+    DEMO.episodes.forEach(function(e,idx){
+      var OUT=e.producer==='COMPANY'&&e.inHouse===false;
+      var box=el('div',null,'ep');
+      box.appendChild(el('div',e.name,'en'));
+      var cs=el('div',null,'es');
+      cs.appendChild(chip(PROD[e.production],e.production==='PUBLISHED'?'ok':'wait'));
+      cs.appendChild(chip(e.producer==='COMPANY'
+        ?('公司'+(OUT?'・外包剪輯':'・自己剪')):'節目方自己處理','now'));
+      if(e.url) cs.appendChild(chip('已登錄上架連結','ok'));
+      box.appendChild(cs);
 
-    if(OUT&&DEMO.handoffMade){
-      host.appendChild(rec('外包交辦單',[
+      if(OUT&&e.hoMade) box.appendChild(rec('外包交辦單',[
         ['交辦對象','外包製作案系統'],['交辦用途','剪輯'],
-        ['期望完成日',DEMO.handoffDue],
-        ['目前狀態',HANDOFF[DEMO.handoffStatus]||'—']]));
-      host.appendChild(el('p','這裡只送出交辦單並追蹤進度，⛔ 不會去讀寫外包系統裡面的資料。','note'));
-    }
+        ['期望完成日',e.hoDue],['目前狀態',HANDOFF[e.hoStatus]||'—']]));
 
-    var bar=el('div',null,'actions');
-    if(P==='NOT_STARTED') bar.appendChild(btn('標記已錄音','act',function(){
-      DEMO.production='RECORDED'; trail('標記已錄音'); MSG=null; render(); }));
-    else if(P==='RECORDED'){
-      if(OUT){
-        var inp=document.createElement('input'); inp.type='text';
-        inp.value=DEMO.handoffDue; inp.placeholder='2026-12-01';
-        inp.oninput=function(){ DEMO.handoffDue=inp.value; };
-        host.appendChild(fld('f_due','期望完成日',inp));
-        bar.appendChild(btn('建立外包交辦單','act',function(){
-          if(!String(DEMO.handoffDue||'').trim()){ say('bad','請填期望完成日',''); return; }
-          DEMO.handoffMade=true; DEMO.handoffStatus='PENDING'; DEMO.production='OUTSOURCED';
-          trail('建立外包交辦單（剪輯），期望完成 '+DEMO.handoffDue);
-          say('ok','外包交辦單已送出','接下來會看到對方的處理進度。'); }));
-      } else if(COMPANY) bar.appendChild(btn('標記已剪輯','act',function(){
-        DEMO.production='EDITED'; trail('標記已剪輯'); MSG=null; render(); }));
-      else bar.appendChild(btn('交給節目方上架','act',function(){
-        DEMO.production='AWAITING'; trail('交給節目方上架'); MSG=null; render(); }));
-    }
-    else if(P==='OUTSOURCED'){
-      var NEXT={PENDING:'ACKNOWLEDGED',ACKNOWLEDGED:'IN_PROGRESS',IN_PROGRESS:'FULFILLED'};
-      var nx=NEXT[DEMO.handoffStatus];
-      if(nx) bar.appendChild(btn('外包回報：'+HANDOFF[nx],'act',function(){
-        DEMO.handoffStatus=nx; trail('外包交辦進度：'+HANDOFF[nx]);
-        if(nx==='FULFILLED') DEMO.production='EDITED';
-        MSG=null; render(); }));
-    }
-    else if(P==='EDITED'||P==='AWAITING'){
-      var i2=document.createElement('input'); i2.type='text';
-      i2.value=DEMO.airingUrl; i2.placeholder='https://example.invalid/ep-12';
-      i2.oninput=function(){ DEMO.airingUrl=i2.value; };
-      host.appendChild(fld('f_url','上架連結',i2));
-      bar.appendChild(btn('標記已上架','act',function(){
-        if(!String(DEMO.airingUrl||'').trim()){ say('bad','請填上架連結',''); return; }
-        DEMO.production='PUBLISHED'; trail('標記已上架'); MSG=null; render(); }));
-    }
-    if(bar.childNodes.length) host.appendChild(bar);
-    if(P==='PUBLISHED') host.appendChild(el('p','製作已經走到終點了。','note'));
+      var bar=el('div',null,'actions'), P=e.production;
+      if(P==='NOT_STARTED') bar.appendChild(btn('標記已錄音','act small',function(){
+        e.production='RECORDED'; trail(e.name+'：標記已錄音'); MSG=null; render(); }));
+      else if(P==='RECORDED'){
+        if(OUT){
+          var inp=document.createElement('input'); inp.type='text';
+          inp.value=e.hoDue; inp.placeholder='2026-12-01';
+          inp.oninput=function(){ e.hoDue=inp.value; };
+          box.appendChild(fld('d_'+idx,'期望完成日',inp));
+          bar.appendChild(btn('建立外包交辦單','act small',function(){
+            if(!String(e.hoDue||'').trim()){ say('bad','請填期望完成日',''); return; }
+            e.hoMade=true; e.hoStatus='PENDING'; e.production='OUTSOURCED';
+            trail(e.name+'：建立外包交辦單（剪輯），期望完成 '+e.hoDue); MSG=null; render(); }));
+        } else if(e.producer==='COMPANY') bar.appendChild(btn('標記已剪輯','act small',function(){
+          e.production='EDITED'; trail(e.name+'：標記已剪輯'); MSG=null; render(); }));
+        else bar.appendChild(btn('交給節目方上架','act small',function(){
+          e.production='AWAITING'; trail(e.name+'：交給節目方上架'); MSG=null; render(); }));
+      }
+      else if(P==='OUTSOURCED'){
+        var NX={PENDING:'ACKNOWLEDGED',ACKNOWLEDGED:'IN_PROGRESS',IN_PROGRESS:'FULFILLED'};
+        var nx=NX[e.hoStatus];
+        if(nx) bar.appendChild(btn('外包回報：'+HANDOFF[nx],'act small',function(){
+          e.hoStatus=nx; trail(e.name+'：外包交辦進度 '+HANDOFF[nx]);
+          if(nx==='FULFILLED') e.production='EDITED'; MSG=null; render(); }));
+      }
+      else if(P==='EDITED'||P==='AWAITING'){
+        var i2=document.createElement('input'); i2.type='text';
+        i2.value=e.url; i2.placeholder='https://example.invalid/ep-'+(idx+1);
+        i2.oninput=function(){ e.url=i2.value; };
+        box.appendChild(fld('u_'+idx,'上架連結',i2));
+        bar.appendChild(btn('標記已上架','act small',function(){
+          if(!String(e.url||'').trim()){ say('bad','請填上架連結',''); return; }
+          e.production='PUBLISHED'; trail(e.name+'：標記已上架'); MSG=null; render(); }));
+      }
+      if(bar.childNodes.length) box.appendChild(bar);
 
-    host.appendChild(el('h3','素材'));
-    DEMO.materials.forEach(function(m){
-      var line=el('div',null,'matline');
-      line.appendChild(el('span',m.name,'mn'));
-      line.appendChild(chip(m.level==='REQUIRED'?'本案必要':'建議提供',m.level==='REQUIRED'?'now':'wait'));
-      line.appendChild(chip(m.received?'已收到':'還沒收到',m.received?'ok':''));
-      line.appendChild(btn(m.received?'改成還沒收到':'標記已收到','act small',function(){
-        m.received=!m.received; trail((m.received?'收到':'取消收到')+m.name); MSG=null; render(); }));
-      line.appendChild(btn(m.level==='REQUIRED'?'改成建議提供':'改成本案必要','link',function(){
-        m.level=m.level==='REQUIRED'?'SUGGESTED':'REQUIRED'; MSG=null; render(); }));
-      host.appendChild(line);
+      box.appendChild(el('h3','這一集要收的素材'));
+      e.materials.forEach(function(m){
+        var line=el('div',null,'matline');
+        line.appendChild(el('span',m.name,'mn'));
+        line.appendChild(chip(m.level==='REQUIRED'?'本案必要':'建議提供',
+          m.level==='REQUIRED'?'now':'wait'));
+        line.appendChild(chip(m.received?'已收到':'還沒收到',m.received?'ok':''));
+        line.appendChild(btn(m.received?'改成還沒收到':'標記已收到','act small',function(){
+          m.received=!m.received;
+          trail(e.name+'：'+(m.received?'收到':'取消收到')+m.name); MSG=null; render(); }));
+        line.appendChild(btn(m.level==='REQUIRED'?'改成建議提供':'改成本案必要','link',function(){
+          m.level=m.level==='REQUIRED'?'SUGGESTED':'REQUIRED'; MSG=null; render(); }));
+        box.appendChild(line);
+      });
+      host.appendChild(box);
     });
     host.appendChild(el('p','只有「本案必要」而且還沒收到的項目會擋結案。','note'));
   },
   primary:function(){
     return btn('這一段做完了','act go',function(){
-      if(DEMO.production!=='PUBLISHED'){ say('bad','製作還沒到「已上架」','請先用上面的按鈕把製作推完。'); return; }
-      var miss=DEMO.materials.filter(function(m){return m.level==='REQUIRED'&&!m.received;});
-      if(miss.length){ say('bad','還有必要素材沒收到','這些會擋結案：',
-        miss.map(function(m){return m.name;})); return; }
-      say('ok','錄音、上架與素材都完成了','可以進到最後一步結案。'); });
+      var bad=[];
+      DEMO.episodes.forEach(function(e){
+        if(e.production!=='PUBLISHED') bad.push(e.name+'——製作還沒到「已上架」');
+        var miss=e.materials.filter(function(m){return m.level==='REQUIRED'&&!m.received;});
+        if(miss.length) bad.push(e.name+'——'+miss.map(function(m){return m.name;}).join('、')+' 還沒收到');
+      });
+      if(bad.length){ say('bad','還有 '+bad.length+' 件事沒完成','把下面這些補完再按一次：',bad); return; }
+      say('ok','每一集都上架了，素材也收齊了','可以進到最後一步結案。'); });
   },
-  done:function(){ return DEMO.production==='PUBLISHED'
-    && !DEMO.materials.filter(function(m){return m.level==='REQUIRED'&&!m.received;}).length; }
+  done:function(){
+    return DEMO.episodes.length>0 && DEMO.episodes.every(function(e){
+      return e.production==='PUBLISHED' &&
+        !e.materials.filter(function(m){return m.level==='REQUIRED'&&!m.received;}).length; });
+  }
 },
 {
-  key:'close', name:'完成案件並查看歷程',
+  key:'close', name:'完成案件並查看歷程', section:'trail',
   intro:function(){ return ['最後一步是結案。系統會先幫你檢查該做的事有沒有做完，沒過就會告訴你缺什麼。']; },
   ask:'請按「完成案件」。',
   body:function(host){
@@ -702,7 +770,7 @@ var INVITE=[
     if(DEMO.closed){
       host.appendChild(el('h3','這件事的完整歷程'));
       tbl(['時間','是誰','做了什麼'],DEMO.trail.map(function(e){return [e.at,e.who,e.what];}),host);
-      host.appendChild(el('p','每一個動作、每一次查看聯絡方式都留在這裡。出事的時候這一頁就是依據。','note'));
+      host.appendChild(el('p','每一個動作、每一次查看聯絡方式都留在這裡。','note'));
     }
   },
   primary:function(){
@@ -718,30 +786,39 @@ var INVITE=[
 }];
 
 function closureChecks(){
-  var acc=pickedPrograms().filter(function(p){return DEMO.replies[p.id]==='ACCEPT';});
-  var need=DEMO.materials.filter(function(m){return m.level==='REQUIRED';});
-  var got=need.filter(function(m){return m.received;});
-  var out=DEMO.producer==='COMPANY'&&DEMO.inHouseEdit===false;
+  var eps=DEMO.episodes;
+  var noTime=eps.filter(function(e){return e.confirmed===ALT_TIME||!e.confirmed;});
+  var notPub=eps.filter(function(e){return e.production!=='PUBLISHED';});
+  var missMat=[]; eps.forEach(function(e){
+    e.materials.filter(function(m){return m.level==='REQUIRED'&&!m.received;})
+      .forEach(function(m){ missMat.push(e.name+'的'+m.name); }); });
+  var outstanding=eps.filter(function(e){
+    return e.producer==='COMPANY'&&e.inHouse===false&&e.hoStatus!=='FULFILLED'; });
   var c=[
-    {label:'需求方確認過推薦名單',pass:DEMO.shortlistSent,
-     detail:DEMO.shortlistSent?'已寄出確認':'還沒寄出推薦節目清單'},
-    {label:'邀約結果已確定',pass:acc.length>0,
-     detail:acc.length?('已接受：'+acc.map(function(p){return p.name;}).join('、')):'還沒有節目接受'},
+    {label:'雙方都確認過節目名單',pass:DEMO.listSent&&DEMO.theirConfirm,
+     detail:DEMO.listSent?(DEMO.theirConfirm?'兩邊都確認了':'還在等對方回覆'):'還沒寄出名單'},
+    {label:'邀約結果已確定',pass:eps.length>0,
+     detail:eps.length?('接受的有 '+eps.map(function(e){return e.name;}).join('、')):'還沒有節目接受'},
     {label:'費用或例外已處理',pass:DEMO.approval.done,
      detail:DEMO.approval.done?(DEMO.approval.needed?'主管已確認':'不需要審核'):'還沒處理'},
-    {label:'訪談時間已確認',pass:!!DEMO.confirmedTime,detail:DEMO.confirmedTime||'還沒確認時間'},
-    {label:'錄音與上架結果已確定',pass:DEMO.production==='PUBLISHED',
-     detail:DEMO.production==='PUBLISHED'?'已上架':'製作還沒完成'},
-    {label:'本案必要素材已收齊',pass:need.length>0&&got.length===need.length,
-     detail:need.length?(got.length===need.length?'已收齊':'還有 '+(need.length-got.length)+' 項沒收到')
-                       :'目前沒有標成本案必要的素材'}
+    {label:'每一集的訪談時間都定案',pass:eps.length>0&&!noTime.length,
+     detail:noTime.length?(noTime.map(function(e){return e.name;}).join('、')+' 還在另外確認時間')
+       :'都定好了'},
+    {label:'每一集都已上架或不予上架',pass:eps.length>0&&!notPub.length,
+     detail:notPub.length?(notPub.map(function(e){return e.name+'（'+PROD[e.production]+'）';}).join('、'))
+       :'都上架了'},
+    {label:'每一集的必要素材都收齊',pass:eps.length>0&&!missMat.length,
+     detail:missMat.length?('還缺：'+missMat.join('、')):'都收齊了'}
   ];
-  if(out) c.splice(5,0,{label:'外包剪輯已完成',pass:DEMO.handoffStatus==='FULFILLED',
-    detail:DEMO.handoffMade?('交辦單狀態：'+HANDOFF[DEMO.handoffStatus]):'還沒建立外包交辦單'});
+  if(eps.some(function(e){return e.producer==='COMPANY'&&e.inHouse===false;}))
+    c.splice(5,0,{label:'外包剪輯都已完成',pass:!outstanding.length,
+      detail:outstanding.length?(outstanding.map(function(e){
+        return e.name+'（'+(e.hoMade?HANDOFF[e.hoStatus]:'還沒建交辦單')+'）'; }).join('、'))
+        :'外包的都完成了'});
   return c;
 }
 
-/* ═══════════════ 軌道二：新書預告登記（4 步）═══════════════ */
+/* ═══════════════ 軌道二：新書預告登記 ═══════════════ */
 var PREVIEW=[
 {
   key:'p_form', name:'登記即將出版的新書',
@@ -762,16 +839,14 @@ var PREVIEW=[
       ['b_air','air','希望上架的檔期',STORY.airWindow]];
     F.forEach(function(f){
       var i=document.createElement('input'); i.type='text'; i.placeholder=f[3];
-      i.value=D[f[1]]||'';
-      i.oninput=function(){ D[f[1]]=i.value; };
+      i.value=D[f[1]]||''; i.oninput=function(){ D[f[1]]=i.value; };
       host.appendChild(fld(f[0],f[2],i)); });
     var t=document.createElement('textarea'); t.placeholder=STORY.summary;
     t.value=D.summary||''; t.oninput=function(){ D.summary=t.value; };
     host.appendChild(fld('b_summary','簡介（兩三句就好）',t));
     var bar=el('div',null,'actions');
     bar.appendChild(btn('一鍵帶入範例','act small',function(){
-      F.forEach(function(f){ D[f[1]]=f[3]; });
-      D.summary=STORY.summary;
+      F.forEach(function(f){ D[f[1]]=f[3]; }); D.summary=STORY.summary;
       say('ok','已帶入範例','往下捲按「登記這本新書」。'); }));
     host.appendChild(bar);
     host.appendChild(el('p','⛔ 不用登入。出版社行銷、編輯或老師本人拿到連結就能填。','note'));
@@ -790,9 +865,43 @@ var PREVIEW=[
               {who:'《午後書桌》',level:'SCHEDULED',when:'2026-11-20 10:00'}]};
       DEMO.books.unshift(DEMO.myBook);
       trail('登記新書預告：'+DEMO.myBook.title);
-      say('ok','已經登記了','經紀人和節目端會在「即將出版新書」看到這一本。'); });
+      say('ok','已經登記了','下一階段可以勾選作者想上哪些節目。'); });
   },
   done:function(){ return !!DEMO.myBook; }
+},
+{
+  key:'p_wish', name:'勾選作者想上哪些節目',
+  intro:function(){ return [
+    '你可以先勾作者想上的節目。這只是「想上」，⛔ 不代表就會安排——',
+    '經紀人會審核這份清單，也會補上他覺得更適合的，最後兩邊一起確認同一份名單。',
+    '⚠️ 有些節目要付宣傳費，勾之前先看一下。']; },
+  ask:'請勾至少一個想上的節目，然後按「送出想上的節目」。',
+  body:function(host){
+    DEMO.programs.forEach(function(p){
+      var on=DEMO.wish.indexOf(p.id)>=0;
+      var b=el('button',null,'opt'); b.type='button';
+      b.setAttribute('aria-pressed',String(on));
+      b.appendChild(el('div',p.name+'　'+p.topic,'on'));
+      b.appendChild(el('div',p.reason,'oc'));
+      b.appendChild(el('div',FEE_LABEL[p.fee]+(p.amount?'　預估 '+p.amount+' 元':''),'of'));
+      b.appendChild(el('div',on?'✓ 想上這個':'點一下加入','pick'));
+      b.onclick=function(){
+        var i=DEMO.wish.indexOf(p.id);
+        if(i>=0) DEMO.wish.splice(i,1); else DEMO.wish.push(p.id);
+        MSG=null; render(); };
+      host.appendChild(b);
+    });
+  },
+  primary:function(){
+    var n=DEMO.wish.length;
+    return btn(n?('送出想上的節目（'+n+' 個）'):'送出想上的節目','act go',function(){
+      if(!DEMO.wish.length){ say('bad','至少勾一個','勾了之後經紀人才知道你們的想法。'); return; }
+      trail('對方勾選想上的節目：'+DEMO.wish.map(function(id){return prog(id).name;}).join('、'));
+      DEMO.wish.forEach(function(id){ if(DEMO.picked.indexOf(id)<0) DEMO.picked.push(id); });
+      say('ok','已送出，等經紀人審核',
+        '這份清單會出現在「新書訪談邀約」的第 2 階段，由經紀人審核並補推薦。'); });
+  },
+  done:function(){ return DEMO.wish.length>0; }
 },
 {
   key:'p_wait', name:'已經有人在等這本書',
@@ -889,7 +998,7 @@ var PREVIEW=[
   done:function(){ return DEMO.notified; }
 }];
 
-/* ═══════════════ 軌道三：即將出版新書（一頁）═══════════════ */
+/* ═══════════════ 軌道三：即將出版新書 ═══════════════ */
 function renderBoard(host){
   host.appendChild(el('h2','即將出版新書'));
   host.appendChild(el('p','這裡看得到哪些老師即將出書。節目缺來賓的時候，'
@@ -913,7 +1022,7 @@ function renderBoard(host){
       DEMO.request.interview=b.interview; DEMO.request.air=b.air;
       DEMO.request.from=b.title+'（'+b.author+'）';
       trail('從新書預告轉成訪談需求：'+b.title);
-      TRACK='invite'; STAGE=0; MSG=null; render(); focusTop();
+      TRACK='invite'; STAGE=0; PHASE='run'; MSG=null; render(); focusTop();
       say('ok','已經帶到訪談需求了','書名、檔期、聯絡窗口都從預告帶過來，⛔ 不用重打一次。'); }));
     box.appendChild(bar);
     host.appendChild(box);
@@ -924,44 +1033,73 @@ function renderBoard(host){
 var TRACKS={
   invite:{name:'新書訪談邀約',steps:INVITE,
     desc:'替新書作者建立訪談需求、推薦適合的節目，並追蹤邀約與訪談進度。',
-    brief:{
-      who:'公司內部負責新書宣傳與訪談邀約的企劃。',
+    brief:{who:'公司內部負責新書宣傳與訪談邀約的企劃。',
       sit:STORY.author+'剛出版'+STORY.book+'。'+STORY.publisher+'的編輯'+STORY.editor
         +'把資料寄給了公司，現在由你接手。',
-      goal:'替老師建立訪談需求，推薦適合的節目，記錄邀約回覆，'
-        +'安排訪談與所需素材，最後完成案件。',
-      scale:'8 個階段，大約 10 分鐘。資料都幫你填好了，多數步驟按一下就完成。'}},
+      goal:'審核對方想上的節目、補上你的推薦，跟對方一起確認名單，'
+        +'再逐節目安排製作與訪談，最後完成案件。',
+      scale:'8 個階段，大約 12 分鐘。資料都幫你填好了。'}},
   preview:{name:'新書預告登記',steps:PREVIEW,
-    desc:'出版社或老師先登記即將出版的新書與希望檔期，讓經紀人和節目端提前知道。',
-    brief:{
-      who:'⚠️ 這一段你換一個身分：'+STORY.publisher+'的行銷或編輯。',
+    desc:'出版社或老師先登記即將出版的新書、勾選想上的節目，讓經紀人提前知道。',
+    brief:{who:'⚠️ 這一段你換一個身分：'+STORY.publisher+'的行銷或編輯。',
       sit:'書還沒出，但已經在排了。你想先讓公司這邊知道，不用等到出版前才一個一個聯絡。',
-      goal:'先把書登記起來，讓經紀人和節目端提前看到；'
+      goal:'登記新書、勾選作者想上哪些節目；'
         +'之後如果上市延後或這本書不出了，通知已經在等的人。',
-      scale:'4 個階段，大約 5 分鐘。'}},
+      scale:'5 個階段，大約 6 分鐘。'}},
   board:{name:'即將出版新書',steps:null,
     desc:'看有哪些老師即將出書，直接把適合的轉成訪談需求。',
-    brief:{
-      who:'回到公司內部企劃的身分。',
+    brief:{who:'回到公司內部企劃的身分。',
       sit:'有節目跟你說最近缺來賓，問有沒有剛出書、適合上節目的老師。',
-      goal:'從即將出版的新書裡挑一本適合的，一鍵轉成訪談需求——'
-        +'書名、檔期、聯絡窗口都會直接帶過去，⛔ 不用重打。',
+      goal:'從即將出版的新書裡挑一本適合的，一鍵轉成訪談需求。',
       scale:'一頁就看完，大約 2 分鐘。'}}
 };
 
+/* ═══════════════ 頂端四個入口（自由看一下）═══════════════ */
+var NAV=[['home','工作總覽'],['requests','需求清單'],['masters','主檔'],['trail','誰做了什麼']];
+function renderPeek(host){
+  if(PEEK==='home'){
+    host.appendChild(el('h2','工作總覽'));
+    var f=el('div',null,'figs');
+    [['等你審核的需求',DEMO.handedOver?0:1],
+     ['等節目回覆的邀約',(DEMO.picked.length&&!DEMO.episodes.length)?DEMO.picked.length:0],
+     ['我最近做過的事',DEMO.trail.length]].forEach(function(x){
+      var d=el('div',null,'fig');
+      d.appendChild(el('div',String(x[1]),'n')); d.appendChild(el('div',x[0],'l')); f.appendChild(d); });
+    host.appendChild(f);
+    host.appendChild(el('p','你可以查閱全部的操作紀錄。','note'));
+  } else if(PEEK==='requests'){
+    host.appendChild(el('h2','需求清單'));
+    tbl(['編號','方向','狀態','書','需求方聯絡'],[
+      ['REQ-DEMO-004','作者端發起',DEMO.closed?'已結案':(DEMO.handedOver?'執行中':'已收件'),
+       STORY.book,'***'],
+      ['REQ-DEMO-002','節目端發起','名單研擬','《週三讀什麼》','***'],
+      ['REQ-DEMO-003','作者端發起','已結案','《一個人的午餐》','***']],host);
+    host.appendChild(el('p','聯絡方式預設遮罩，要看的時候按該欄的「查看」，每次都會留下紀錄。','note'));
+  } else if(PEEK==='masters'){
+    host.appendChild(el('h2','主檔'));
+    tbl(['編號','顯示名','主要 Email','啟用'],[
+      ['PER-DEMO-001','***','***','啟用'],
+      ['PER-DEMO-002','***','***','啟用'],
+      ['PER-DEMO-003','***','***','停用']],host);
+    host.appendChild(el('p','個資預設遮起來。按「查看」一次只解一筆一欄，每次都會留下紀錄。','note'));
+  } else {
+    host.appendChild(el('h2','誰做了什麼'));
+    if(!DEMO.trail.length) host.appendChild(el('p','還沒有任何操作紀錄。','note'));
+    else tbl(['時間','是誰','做了什麼'],
+      DEMO.trail.map(function(e){return [e.at,e.who,e.what];}),host);
+  }
+}
+
 /* ═══════════════ 回饋 ═══════════════ */
-var FB_KEY='book_interview_feedback_stage3';
-/* ⚠️ 改版時換過幾次儲存 key，舊的那幾份現在的頁面讀不到也清不掉，
-      會一直留在測試者的瀏覽器裡。開頁就清掉——它們對誰都沒有用了。 */
+var FB_KEY='book_interview_feedback_stage4';
 var LEGACY_KEYS=['book_interview_ui_feedback_v1','book_interview_ui_feedback_scenario',
-                 'book_interview_feedback_stage2','book_interview_demo_state',
-                 'book_interview_ui_demo'];
+  'book_interview_feedback_stage2','book_interview_feedback_stage3',
+  'book_interview_demo_state','book_interview_ui_demo'];
 function clearLegacy(){ try{ LEGACY_KEYS.forEach(function(k){ localStorage.removeItem(k); }); }catch(e){} }
-function fbCount(){ var d=fbLoad();
-  return (d.notes?Object.keys(d.notes).length:0)+(d.final?1:0); }
 function fbLoad(){ try{var s=localStorage.getItem(FB_KEY); return s?JSON.parse(s):{notes:{},final:null};}
   catch(e){ return {notes:{},final:null}; } }
 function fbSave(o){ try{ localStorage.setItem(FB_KEY,JSON.stringify(o)); return true; }catch(e){ return false; } }
+function fbCount(){ var d=fbLoad(); return (d.notes?Object.keys(d.notes).length:0)+(d.final?1:0); }
 function noteKey(){ var t=TRACKS[TRACK]; return TRACK+':'+(t.steps?t.steps[STAGE].key:'board'); }
 function noteName(){ var t=TRACKS[TRACK];
   return t.steps?(t.name+' '+(STAGE+1)+'. '+t.steps[STAGE].name):t.name; }
@@ -977,13 +1115,12 @@ function stepNote(host){
   bar.appendChild(btn('存成草稿','act small',function(){
     var d2=fbLoad(); d2.notes=d2.notes||{};
     var v=String(ta.value||'').trim();
-    if(!v) delete d2.notes[k];
-    else d2.notes[k]={stage:nm,text:v,at:stamp(),draft:true};
+    if(!v) delete d2.notes[k]; else d2.notes[k]={stage:nm,text:v,at:stamp(),draft:true};
     if(!fbSave(d2)) alert('你的瀏覽器不允許儲存（可能是無痕視窗）。請先把文字自己複製下來。');
     var s=document.getElementById('savedmark');
     if(s) s.textContent=v?'已存成草稿（走完全部才算完成測試）':'已清除這一步的草稿'; }));
   box.appendChild(bar);
-  box.appendChild(el('div',null,'saved')).id='savedmark';
+  var mark=el('div',null,'saved'); mark.id='savedmark'; box.appendChild(mark);
   host.appendChild(box);
 }
 
@@ -991,7 +1128,7 @@ function renderFinal(host){
   var d=fbLoad(), prev=d.final||{}, saved=!!d.final;
   host.appendChild(el('h2','最後四題'));
   if(MSG) host.appendChild(MSG);
-  host.appendChild(el('p','你已經走完主要流程。請回答這四題，然後把回饋下載傳給 Winnie。','sub'));
+  host.appendChild(el('p','你已經走完主要流程。請回答這四題，然後把回饋傳給 Winnie。','sub'));
   var box=el('div',null,'final'), F={};
   function row(id,label,node,val){
     var r=el('div',null,'row');
@@ -1016,8 +1153,8 @@ function renderFinal(host){
   bar.appendChild(btn(saved?'重新存一次':'存下最後四題','act'+(saved?'':' go'),function(){
     var d2=fbLoad();
     d2.final={q1:F.q1.value,q2:F.q2.value,q3:F.q3.value,q4:F.q4.value,who:F.who.value,at:stamp()};
-    if(!fbSave(d2)) alert('你的瀏覽器不允許儲存（可能是無痕視窗）。請先按「下載」把內容存下來。');
-    say('ok','最後四題已存下','接著按「下載 Markdown」把檔案傳給 Winnie。'); }));
+    if(!fbSave(d2)) alert('你的瀏覽器不允許儲存（可能是無痕視窗）。請先按「複製」把內容存下來。');
+    say('ok','最後四題已存下','接著按「複製我的回饋」貼給 Winnie。'); }));
   box.appendChild(bar);
   host.appendChild(box);
 
@@ -1047,14 +1184,13 @@ function renderFinal(host){
       try{ localStorage.removeItem(FB_KEY); }catch(e){}
       clearLegacy(); showOut(''); render(); } }));
   host.appendChild(b3);
-  host.appendChild(el('p','目前這台電腦存了 '+fbCount()+' 則意見（只在你的瀏覽器裡，'
-    +'⛔ 不會自己傳出去）。','note'));
+  host.appendChild(el('p','目前這台電腦存了 '+fbCount()+' 則意見（只在你的瀏覽器裡，⛔ 不會自己傳出去）。','note'));
   var o=document.createElement('div'); o.id='fbout'; host.appendChild(o);
 
   var back=el('div',null,'actions');
   back.appendChild(btn('← 回入口試別的功能','act',function(){
     PHASE='entry'; TRACK=''; MSG=null; render(); focusTop(); }));
-  back.appendChild(btn('重新開始','act',doReset));
+  back.appendChild(btn('重新開始','act small',doReset));
   host.appendChild(back);
 }
 
@@ -1095,12 +1231,10 @@ function showOut(t){
 
 /* ═══════════════ 渲染 ═══════════════ */
 function doReset(){
-  var d=fbLoad();
-  var n=(d.notes?Object.keys(d.notes).length:0)+(d.final?1:0);
-  var wipe=false;
+  var n=fbCount(), wipe=false;
   if(n>0) wipe=confirm('要一起清掉你填的回饋嗎？\n\n'
-    +'按「確定」＝連回饋一起清掉（無法復原，建議先下載）。\n按「取消」＝只重置，回饋保留。');
-  resetDemo(); PHASE='landing'; TRACK=''; STAGE=0; MSG=null;
+    +'按「確定」＝連回饋一起清掉（無法復原，建議先複製）。\n按「取消」＝只重置，回饋保留。');
+  resetDemo(); PHASE='landing'; TRACK=''; STAGE=0; PEEK=''; MSG=null;
   clearLegacy();
   if(wipe){ try{ localStorage.removeItem(FB_KEY); }catch(e){} }
   render();
@@ -1113,7 +1247,7 @@ function render(){
 
   if(PHASE==='landing'){
     lede.textContent='給公司同事試用的示意稿。';
-    var h=el('div',null,'hero');
+    var h=el('div',null,'brief');
     h.appendChild(el('h2','這是什麼'));
     h.appendChild(el('p','這是「新書訪談邀約」的操作示意稿，給公司同事試用、留回饋用。'));
     h.appendChild(el('p','下一頁可以選三個功能。'
@@ -1122,8 +1256,8 @@ function render(){
     [['先知道一','這是示意稿，不是真的系統。'
       +'本案例中的人物、書名、出版社、節目與聯絡資料全部為虛構。'],
      ['先知道二','按什麼都不會壞。沒有連任何資料庫，隨時可以按「重新開始」回到原樣。'],
-     ['先知道三','回饋不會自動上傳。填完要自己下載，把檔案傳給 Winnie。'],
-     ['大概要多久','三個功能全部走完 15–20 分鐘。資料都幫你填好了，多數步驟按一下就完成。']]
+     ['先知道三','回饋不會自動上傳。填完要自己複製，貼給 Winnie。'],
+     ['大概要多久','三個功能全部走完 15–20 分鐘。資料都幫你填好了。']]
      .forEach(function(x){ dl.appendChild(el('dt',x[0])); dl.appendChild(el('dd',x[1])); });
     h.appendChild(dl); st.appendChild(h);
     var bar=el('div',null,'actions');
@@ -1159,7 +1293,7 @@ function render(){
   if(PHASE==='brief'){
     var TB=TRACKS[TRACK], br=TB.brief;
     lede.textContent='接下來要做的是：'+TB.name+'。';
-    var hb=el('div',null,'hero');
+    var hb=el('div',null,'brief');
     hb.appendChild(el('h2',TB.name));
     hb.appendChild(el('p',br.sit));
     var dlb=document.createElement('dl');
@@ -1175,16 +1309,35 @@ function render(){
     return;
   }
 
-  if(PHASE==='final'){
-    lede.textContent='你是公司內部負責新書宣傳與訪談邀約的企劃。';
-    renderFinal(st); return;
-  }
+  if(PHASE==='final'){ lede.textContent='把回饋傳回來。'; renderFinal(st); return; }
 
   var T=TRACKS[TRACK];
   lede.textContent=T.brief.who;
 
+  /* 頂端四個入口——只有訪談邀約這條線有，跟實機一樣 */
+  if(TRACK==='invite'){
+    var nav=document.createElement('nav'); nav.setAttribute('aria-label','系統主導覽');
+    var here=PEEK||(T.steps?T.steps[STAGE].section:'requests');
+    NAV.forEach(function(n){
+      var b=btn(n[1],null,function(){ PEEK=(PEEK===n[0]?'':n[0]); MSG=null; render(); focusTop(); });
+      if(here===n[0]) b.setAttribute('aria-current','page');
+      nav.appendChild(b);
+    });
+    st.appendChild(nav);
+    var nr=document.createElement('hr'); nr.className='navrule'; st.appendChild(nr);
+  }
+
+  if(PEEK){
+    st.appendChild(el('p','你正在自由看一下這一頁。任務還停在原來的地方。','note'));
+    renderPeek(st);
+    var pb=el('div',null,'actions');
+    pb.appendChild(btn('← 回到第 '+(STAGE+1)+' 階段','act go',function(){
+      PEEK=''; MSG=null; render(); focusTop(); }));
+    st.appendChild(pb);
+    return;
+  }
+
   if(!T.steps){
-    var p0=el('div',null,'prog'); p0.appendChild(el('span',T.name,'n')); st.appendChild(p0);
     if(MSG) st.appendChild(MSG);
     renderBoard(st);
     DEMO.doneTracks.board=true;
@@ -1203,7 +1356,6 @@ function render(){
   var bar0=el('div',null,'bar'); var fill=document.createElement('i');
   fill.style.width=Math.round((STAGE+1)/TOTAL*100)+'%';
   bar0.appendChild(fill); pr.appendChild(bar0);
-  pr.appendChild(el('span',s.name,'n'));
   st.appendChild(pr);
 
   var task=el('div',null,'task');
@@ -1237,7 +1389,7 @@ function render(){
   if(STAGE>0) actions.appendChild(btn('← 上一階段','act small',function(){
     STAGE--; DEMO.unmasked=false; MSG=null; render(); focusTop(); }));
   actions.appendChild(btn('← 回入口','act small',function(){
-    PHASE='entry'; TRACK=''; MSG=null; render(); focusTop(); }));
+    PHASE='entry'; TRACK=''; PEEK=''; MSG=null; render(); focusTop(); }));
   actions.appendChild(btn('重新開始','act small',doReset));
   st.appendChild(actions);
   stepNote(st);
@@ -1251,58 +1403,60 @@ function buildNotes(){
   n.appendChild(el('h4','一、證據邊界'));
   var u0=document.createElement('ul');
   ['「現行系統已具備」＝ 目前部署的版本裡真的有這個畫面或動作。',
-   '「第二階段提案」＝ 依 Ivy（總經紀人）2026-09-04 回饋與 Owner 後續補充提出的調整，⛔ 尚未修改正式系統。',
+   '「第二階段提案」＝ 依 Ivy（總經紀人）回饋與 Owner 後續補充提出的調整，⛔ 尚未修改正式系統。',
    '⛔ 本輪未修改產品 runtime、Apps Script、資料表、設定或角色名冊，也未建立版本或部署。',
    '這份預覽通過，⛔ 不等於正式系統已經改好。'
   ].forEach(function(t){var li=document.createElement('li');li.textContent=t;u0.appendChild(li);});
   n.appendChild(u0);
 
-  n.appendChild(el('h4','二、三個入口對應的業務情境'));
-  tbl(['入口','對應情境','現況'],[
-    ['新書訪談邀約','① 經紀人替老師建檔（內部代填）','現行已有，整併成 8 階段'],
-    ['（未在入口出現）','② 老師／出版社自己送件','現行已有 17 題公開表單，目前關著'],
-    ['新書預告登記 ＋ 即將出版新書','③ 節目缺來賓，從即將出書的老師裡找','🆕 全新，尚未進正式系統']
-  ],n);
-
-  n.appendChild(el('h4','三、本輪新增的四件事'));
+  n.appendChild(el('h4','二、本輪新增與修正'));
   tbl(['項目','做了什麼','正式系統現況'],[
-    ['檔期拆兩欄','希望訪問的檔期／希望上架的檔期，需求、預告、確認清單三處同步',
-     '現行只有一欄，要新增資料欄位'],
-    ['新書預告登記','出版社或老師不用登入即可登記；可回頭更新狀態',
-     '⛔ 全新，正式系統沒有這個入口'],
-    ['預告變動通知','延後或不出版時，依「對方進行到哪」分四級發不同通知',
-     '⛔ 全新；四級＝表達意願／已轉需求／已排定時間／已錄音'],
-    ['剪輯外包分流','公司製作時多一個「剪輯發公司內部做」勾選；不打勾就走外包交辦',
-     '⭐ 資料結構已存在（交辦對象／用途／期望完成日／五態），缺的是這個勾選與串接']
+    ['製作方逐節目','⭐ 不再是整案一個製作方。每個答應的節目各自決定「公司統一發包」或「訪談節目自己處理」；公司做的再決定剪輯內部或外包。',
+     '現行是每案一個製作方欄位，要改成逐節目'],
+    ['訪談時間逐節目','每一集各自提三個時段、各自確認。多一個「都不能配合，之後另外確認」。',
+     '現行排程綁在案件層'],
+    ['錄音上架素材逐節目','每一集各自的製作進度、外包交辦單與素材清單（同一本書要寄好幾份公關書）。',
+     '現行素材綁在案件層'],
+    ['勾選想上的節目','預告登記多一階段：出版社／作者先勾想上的節目，帶進邀約流程的第 2 階段。',
+     '⛔ 全新'],
+    ['雙方確認名單','第 4 階段改成「我方送出」＋「對方回覆確認」兩個都要，並列出對方想上但這次不安排的節目與原因。',
+     '現行只有單向的確認連結'],
+    ['版面','⭐ 回到實機那一版：頂端四個入口的導覽列、細線分隔、少色塊。',
+     '—']
   ],n);
 
-  n.appendChild(el('h4','四、外包交辦的邊界'));
+  n.appendChild(el('h4','三、⏸ 先保留、這一版不顯示'));
+  var u3=document.createElement('ul');
+  ['⏸ 訪談時間與公司日曆預約系統串接：Owner 表示後續可能會做，'
+    +'這一版只在框架裡保留位置，⛔ 介面上不顯示。真的要做的時候，'
+    +'排時間那一段會從手填時段改成從日曆挑可用時段，並回寫預約；'
+    +'「另外確認」這個狀態也會是日曆找不到共同時段時的落腳點。'
+  ].forEach(function(t){var li=document.createElement('li');li.textContent=t;u3.appendChild(li);});
+  n.appendChild(u3);
+
+  n.appendChild(el('h4','四、結案檢查（會隨情況增減）'));
+  var u4=document.createElement('ul');
+  ['雙方都確認過節目名單','邀約結果已確定','費用或例外已處理',
+   '每一集的訪談時間都定案（選了「另外確認」會擋住）',
+   '每一集都已上架或不予上架','每一集的必要素材都收齊',
+   '⭐ 有節目走外包剪輯時，會多一項「外包剪輯都已完成」'
+  ].forEach(function(t){var li=document.createElement('li');li.textContent=t;u4.appendChild(li);});
+  n.appendChild(u4);
+
+  n.appendChild(el('h4','五、外包交辦的邊界'));
   n.appendChild(el('p','現行設計是只存不透明的外部編號，⛔ 不讀寫外包系統裡面的資料。'
-    +'所以這裡做到「送出交辦單、追蹤狀態」為止，⛔ 不是把外包系統搬進來。'
-    +'交辦狀態：待處理 → 對方已收到 → 處理中 → 已完成（另有已取消）。'
-    +'外包剪輯未完成時，結案檢查會多一項擋住。'));
-
-  n.appendChild(el('h4','五、預告變動通知的分級'));
-  tbl(['對方進行到哪','延後時的通知','不出版時的通知'],[
-    ['表達訪問意願','檔期要重新對過','先前的邀約請暫停'],
-    ['已轉成訪談需求','檔期要重新對過','先前的邀約請暫停'],
-    ['已排定訪談時間','訪問可照舊，但上架要往後挪，時間要重新確認','已排定的訪談需取消或改談別的主題'],
-    ['已經錄音','同上，另需處理已錄內容','同上，另需處理已錄內容']
-  ],n);
+    +'所以這裡做到「送出交辦單、追蹤狀態」為止：待處理 → 對方已收到 → 處理中 → 已完成。'
+    +'⭐ 這組欄位正式系統已經存在（交辦對象／用途／期望完成日／狀態），缺的是勾選與串接。'));
 
   n.appendChild(el('h4','六、⛔ 尚未進入正式系統的項目'));
   var u1=document.createElement('ul');
-  ['承辦人指派與需求方通知（需要角色治理與通知機制）',
-   '兩個檔期欄位（訪問／上架）',
-   '新書預告登記入口與即將出版新書一覽',
-   '預告變動的四級通知',
-   '公司節目名錄的實際串接（目前是虛構清單）',
-   '宣傳費欄位與付費審核',
-   '一次提出三個時段的排程',
-   '素材分級「本案必要／建議提供」',
-   '剪輯外包的勾選與交辦串接',
-   '按鈕文案改名（現行仍是「加入候選節目」「推薦名單」）',
-   '個資查看綁定承辦情境'
+  ['承辦人指派與需求方通知','兩個檔期欄位（訪問／上架）',
+   '新書預告登記入口與即將出版新書一覽','預告變動的四級通知',
+   '出版社勾選想上的節目 → 經紀人審核 → 雙方確認名單',
+   '製作方／時間／素材逐節目拆分','訪談時間的「另外確認」狀態',
+   '公司節目名錄的實際串接（目前是虛構清單）','宣傳費欄位與付費審核',
+   '一次提出三個時段的排程','素材分級「本案必要／建議提供」',
+   '剪輯外包的勾選與交辦串接','按鈕文案改名','個資查看綁定承辦情境'
   ].forEach(function(t){var li=document.createElement('li');li.textContent=t;u1.appendChild(li);});
   n.appendChild(u1);
 
@@ -1310,10 +1464,11 @@ function buildNotes(){
   var u2=document.createElement('ul');
   ['單一落地入口；入口頁三個功能，建議從「新書訪談邀約」開始。',
    '每個階段只有一個主要任務與一個主要按鈕。',
-   '每一步只留一個選填欄位「這一步哪裡看不懂？」，步驟名稱自動帶入，⛔ 不讓人手選。',
+   '頂端四個入口可以自由看一下，任務會停在原地，按「回到第 N 階段」回來。',
+   '每一步只留一個選填欄位「這一步哪裡看不懂？」，步驟名稱自動帶入。',
    '中途輸入標示為草稿；最後四題在走完主要流程之後才出現。',
-   '⛔ 沒有嚴重度欄位。',
    '完全沒有對外呼叫；只有回饋寫入瀏覽器本機儲存，永不上傳。',
+   '開頁會清掉改版時換 key 留下的舊測試資料。',
    '一律 textContent，⛔ 不使用 innerHTML。',
    '字級最小 13px、輸入欄 16px。'
   ].forEach(function(t){var li=document.createElement('li');li.textContent=t;u2.appendChild(li);});
