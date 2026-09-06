@@ -9,7 +9,7 @@
 /* ══════════════════════════════════════════════════════════════
    ⭐ 版面回到實機那一版：頂端四個入口的導覽列、細線分隔、少色塊。
       色彩與字體逐項對齊 DESIGN.md Report 模式。
-   ⭐ 所有看得到的字 ≥13px、輸入欄 ≥16px，全部走 token。
+   ⭐ 所有看得到的字 ≥14px、輸入欄 ≥17px，全部走 token。
    ⛔ 無外部資源、⛔ 無卡片陰影、⛔ 無圓角、⛔ 無裝飾性元件。
    ══════════════════════════════════════════════════════════════ */
 :root{
@@ -19,8 +19,8 @@
   --accent:#B5451F;
   --serif:'Noto Serif TC','Songti TC',Georgia,'Times New Roman',serif;
   --sans:'Noto Sans TC','PingFang TC','Helvetica Neue',Arial,sans-serif;
-  --font-xs:13px; --font-sm:14px; --font-base:15px; --font-md:16px;
-  --font-lg:18px; --font-xl:22px; --font-display:28px;
+  --font-xs:14px; --font-sm:15px; --font-base:16px; --font-md:17px;
+  --font-lg:19px; --font-xl:24px; --font-display:30px;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -69,7 +69,7 @@ nav button[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accen
 .brief dd{margin:0;font-size:var(--font-base)}
 
 .tile{display:block;width:100%;text-align:left;cursor:pointer;font-family:inherit;color:inherit;
-  border:0;border-top:1px solid var(--line);background:none;padding:18px 0}
+  font-size:var(--font-base);border:0;border-top:1px solid var(--line);background:none;padding:18px 0}
 .tile:last-of-type{border-bottom:1px solid var(--line)}
 .tile:hover .tn,.tile:focus-visible .tn{color:var(--accent)}
 .tile .tn{font-size:var(--font-lg);font-weight:700;margin:0 0 6px}
@@ -82,6 +82,26 @@ nav button[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accen
 .prog .n{font-family:var(--sans);font-size:var(--font-xs);letter-spacing:.1em;color:var(--taupe)}
 .prog .bar{flex:1;min-width:110px;height:2px;background:var(--line);position:relative}
 .prog .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);display:block}
+
+.steps{display:flex;flex-wrap:wrap;gap:5px 16px;margin:0 0 20px;
+  font-family:var(--sans);font-size:var(--font-xs);line-height:1.6}
+.steps span,.steps button{font:inherit;background:none;border:0;padding:0 0 2px;
+  color:var(--taupe);border-bottom:1px solid transparent;text-align:left}
+.steps button{cursor:pointer;color:var(--body)}
+.steps button:hover,.steps button:focus-visible{color:var(--ink);border-bottom-color:var(--line)}
+.steps .cur{color:var(--ink);font-weight:600;border-bottom-color:var(--accent)}
+
+.route{display:flex;align-items:baseline;gap:12px;margin:0 0 4px}
+.route .num{font-family:Georgia,'Songti TC',serif;font-size:var(--font-xl);
+  color:var(--line);line-height:1;flex:none;font-variant-numeric:tabular-nums}
+.tile[data-next="1"] .num{color:var(--accent)}
+.tile .tnext{font-family:var(--sans);font-size:var(--font-xs);color:var(--accent);
+  margin:8px 0 0;font-weight:600}
+.tile .twait{font-family:var(--sans);font-size:var(--font-xs);color:var(--taupe);margin:8px 0 0}
+
+.recap ol{margin:14px 0 0;padding-left:22px;font-family:var(--sans);font-size:var(--font-sm)}
+.recap ol li{margin:0 0 5px;color:var(--body)}
+.recap ol li b{color:var(--ink);font-weight:600}
 
 .task{border-bottom:1px solid var(--line);padding:0 0 18px;margin:0 0 20px}
 .task h2{font-size:var(--font-xl);margin:0 0 6px}
@@ -106,7 +126,7 @@ nav button[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accen
 
 /* ── 可選項目（是按鈕，保留邊框當可點提示）── */
 .opt{display:block;width:100%;text-align:left;font-family:inherit;color:inherit;cursor:pointer;
-  border:1px solid var(--line);background:none;padding:13px 15px;margin:0 0 8px}
+  font-size:var(--font-base);border:1px solid var(--line);background:none;padding:13px 15px;margin:0 0 8px}
 .opt:hover,.opt:focus-visible{border-color:var(--ink)}
 .opt[aria-pressed="true"]{border-color:var(--accent)}
 .opt .on{font-size:var(--font-md);font-weight:700;margin:0 0 4px}
@@ -302,8 +322,8 @@ function resetDemo(){
   DEMO={
     handedOver:false, owner:'',
     request:{interview:STORY.interviewWindow, air:STORY.airWindow, from:''},
-    wish:[],
-    programs:programSeed(), picked:[],
+    wish:['P1','P5'], preSeeded:true,
+    programs:programSeed(), picked:['P1','P5'],
     approval:{needed:false,done:false,why:''},
     listSent:false, theirConfirm:false,
     replies:{}, episodes:[],
@@ -1054,6 +1074,27 @@ var TRACKS={
       scale:'一頁就看完，大約 2 分鐘。'}}
 };
 
+/* ═══════════════ 建議路線與小結 ═══════════════ */
+var ORDER=['invite','preview','board'], CIRC=['①','②','③'];
+function nextTrack(){
+  for(var i=0;i<ORDER.length;i++){ if(!DEMO.doneTracks[ORDER[i]]) return ORDER[i]; }
+  return null;
+}
+var RECAP={
+  invite:['接手需求，需求方收到「已經有人在處理」的通知',
+    '審核對方想上的節目，補上你自己的推薦',
+    '跟對方兩邊一起確認同一份名單，才往下走',
+    '一個節目一個節目決定製作方與訪談時間',
+    '逐節目追蹤錄音、上架與各自的素材',
+    '通過結案檢查，完成案件並看到完整歷程'],
+  preview:['用出版社的身分登記即將出版的新書',
+    '勾選作者想上哪些節目，送給經紀人審核',
+    '看到已經有節目在等這本書',
+    '書況有變時，依對方進行到哪發不同的通知'],
+  board:['從即將出版的新書裡挑一本適合的',
+    '一鍵轉成訪談需求，書名、檔期、窗口都不用重打']
+};
+
 /* ═══════════════ 頂端四個入口（自由看一下）═══════════════ */
 var NAV=[['home','工作總覽'],['requests','需求清單'],['masters','主檔'],['trail','誰做了什麼']];
 function renderPeek(host){
@@ -1271,12 +1312,18 @@ function render(){
     lede.textContent='請選擇你要進入的功能。';
     st.appendChild(el('h2','入口情境示意'));
     st.appendChild(el('p','此頁為公司功能入口示意。建議從「新書訪談邀約」開始。','note'));
-    ['invite','preview','board'].forEach(function(k){
+    var nx0=nextTrack();
+    ORDER.forEach(function(k,i){
       var t=TRACKS[k], b=el('button',null,'tile'); b.type='button';
-      b.appendChild(el('div',t.name,'tn'));
+      if(k===nx0) b.setAttribute('data-next','1');
+      var head=el('div',null,'route');
+      head.appendChild(el('div',CIRC[i],'num'));
+      head.appendChild(el('div',t.name,'tn'));
+      b.appendChild(head);
       b.appendChild(el('div',t.desc,'td'));
-      if(DEMO.doneTracks[k]) b.appendChild(el('div','✓ 已經走過','tdone'));
-      else b.appendChild(el('div','點這裡進入 →','tgo'));
+      if(DEMO.doneTracks[k]) b.appendChild(el('div','✓ 已經走過，可以再走一次','tdone'));
+      else if(k===nx0) b.appendChild(el('div','建議接下來走這個 →','tnext'));
+      else b.appendChild(el('div','建議先走 '+CIRC[ORDER.indexOf(nx0)]+'，這個之後再走','twait'));
       b.onclick=function(){ TRACK=k; STAGE=0; PHASE='brief'; MSG=null; render(); focusTop(); };
       st.appendChild(b);
     });
@@ -1306,6 +1353,33 @@ function render(){
     bb.appendChild(btn('← 回入口','act small',function(){
       PHASE='entry'; TRACK=''; MSG=null; render(); focusTop(); }));
     st.appendChild(bb);
+    return;
+  }
+
+  if(PHASE==='recap'){
+    var TR=TRACKS[TRACK];
+    lede.textContent='這一條走完了。';
+    var hr0=el('div',null,'brief recap');
+    hr0.appendChild(el('h2','✓ 你剛剛完成了：'+TR.name));
+    hr0.appendChild(el('p','走過的每一步都留下了紀錄。你在這一條裡做了這些事：'));
+    var ol=document.createElement('ol');
+    RECAP[TRACK].forEach(function(x){ var li=document.createElement('li'); li.textContent=x; ol.appendChild(li); });
+    hr0.appendChild(ol);
+    st.appendChild(hr0);
+    var nx=nextTrack(), bar2=el('div',null,'actions');
+    if(nx) bar2.appendChild(btn('接著走 '+CIRC[ORDER.indexOf(nx)]+' '+TRACKS[nx].name+' →','act go',function(){
+      TRACK=nx; STAGE=0; PHASE='brief'; MSG=null; render(); focusTop(); }));
+    else bar2.appendChild(btn('三個都走完了，前往最後四題 →','act go',function(){
+      PHASE='final'; MSG=null; render(); focusTop(); }));
+    bar2.appendChild(btn('← 回入口','act small',function(){
+      PHASE='entry'; TRACK=''; PEEK=''; MSG=null; render(); focusTop(); }));
+    if(nx&&DEMO.doneTracks.invite) bar2.appendChild(btn('先去填最後四題','link',function(){
+      PHASE='final'; MSG=null; render(); focusTop(); }));
+    st.appendChild(bar2);
+    st.appendChild(el('p',nx?('剩下 '+ORDER.filter(function(k){return !DEMO.doneTracks[k];}).length
+      +' 個功能沒走過。三個都走過再填最後四題，回饋會比較完整。')
+      :'三個功能都走過了，最後四題等你。','note'));
+    stepNote(st);
     return;
   }
 
@@ -1342,7 +1416,9 @@ function render(){
     renderBoard(st);
     DEMO.doneTracks.board=true;
     var a0=el('div',null,'actions');
-    a0.appendChild(btn('← 回入口','act',function(){
+    a0.appendChild(btn('這一條走完了 →','act go',function(){
+      PHASE='recap'; MSG=null; render(); focusTop(); }));
+    a0.appendChild(btn('← 回入口','act small',function(){
       PHASE='entry'; TRACK=''; MSG=null; render(); focusTop(); }));
     a0.appendChild(btn('重新開始','act small',doReset));
     st.appendChild(a0);
@@ -1357,6 +1433,16 @@ function render(){
   fill.style.width=Math.round((STAGE+1)/TOTAL*100)+'%';
   bar0.appendChild(fill); pr.appendChild(bar0);
   st.appendChild(pr);
+
+  var stepbar=el('div',null,'steps');
+  T.steps.forEach(function(x,i){
+    var lbl=(i+1)+'. '+x.name;
+    if(i<STAGE) stepbar.appendChild(btn('✓ '+lbl,null,function(){
+      STAGE=i; DEMO.unmasked=false; MSG=null; render(); focusTop(); }));
+    else if(i===STAGE) stepbar.appendChild(el('span',lbl,'cur'));
+    else stepbar.appendChild(el('span',lbl));
+  });
+  st.appendChild(stepbar);
 
   var task=el('div',null,'task');
   task.appendChild(el('h2',s.name));
@@ -1380,10 +1466,8 @@ function render(){
       STAGE++; DEMO.unmasked=false; MSG=null; render(); focusTop(); }));
     else {
       DEMO.doneTracks[TRACK]=true;
-      actions.appendChild(btn(TRACK==='invite'?'前往最後四題 →':'← 回入口試別的功能',
-        'act go',function(){
-          if(TRACK==='invite') PHASE='final'; else { PHASE='entry'; TRACK=''; }
-          MSG=null; render(); focusTop(); }));
+      actions.appendChild(btn('這一條走完了 →','act go',function(){
+        PHASE='recap'; MSG=null; render(); focusTop(); }));
     }
   }
   if(STAGE>0) actions.appendChild(btn('← 上一階段','act small',function(){
@@ -1470,7 +1554,8 @@ function buildNotes(){
    '完全沒有對外呼叫；只有回饋寫入瀏覽器本機儲存，永不上傳。',
    '開頁會清掉改版時換 key 留下的舊測試資料。',
    '一律 textContent，⛔ 不使用 innerHTML。',
-   '字級最小 13px、輸入欄 16px。'
+   '建議路線 ①②③ 排好，走完一條給小結再接下一條；階段清單全程看得見、走過的可以點回去。',
+   '字級最小 14px、輸入欄 17px，整組等比放大。'
   ].forEach(function(t){var li=document.createElement('li');li.textContent=t;u2.appendChild(li);});
   n.appendChild(u2);
 }
