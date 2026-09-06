@@ -322,8 +322,9 @@ function resetDemo(){
   DEMO={
     handedOver:false, owner:'',
     request:{interview:STORY.interviewWindow, air:STORY.airWindow, from:''},
-    wish:['P1','P5'], preSeeded:true,
-    programs:programSeed(), picked:['P1','P5'],
+    theirWish:['P1','P5'],
+    wish:[],
+    programs:programSeed(), picked:[],
     approval:{needed:false,done:false,why:''},
     listSent:false, theirConfirm:false,
     replies:{}, episodes:[],
@@ -438,8 +439,8 @@ var INVITE=[
         say('ok','已經看到聯絡方式了','這次查看留下了紀錄。換頁或重新載入之後會自動遮回去。'); }));
     } else { c.appendChild(el('span','***','mask'));
       c.appendChild(el('div','接手之後才看得到','note')); }
-    var wish=DEMO.wish.length
-      ? DEMO.wish.map(function(id){return prog(id).name;}).join('、')+'（僅供評估，不代表保證安排）'
+    var wish=DEMO.theirWish.length
+      ? DEMO.theirWish.map(function(id){return prog(id).name;}).join('、')+'（僅供評估，不代表保證安排）'
       : '對方沒有特別指定';
     host.appendChild(rec('需求內容（已幫你填好）',[
       ['作者',STORY.author],['書名',STORY.book],['出版社',STORY.publisher],
@@ -464,19 +465,19 @@ var INVITE=[
 {
   key:'recommend', name:'審核想上的節目並補推薦', section:'requests',
   intro:function(){ return [
-    '對方（出版社或老師）已經先勾了想上的節目。你要做的是審核那份清單，'
-      +'再補上你覺得更適合的。',
+    '對方（出版社或老師）在來文裡提到想上的節目，下面用「◆ 對方想上」標出來了。'
+      +'要不要放進名單，由你決定；你也可以補上覺得更適合的。',
     '⚠️ 對方想上的不一定都做得成——有些要付宣傳費，有些主題不合。'
       +'決定權在你，但最後兩邊都要確認同一份名單。']; },
-  ask:'請確認要放進名單的節目（對方想上的已經先幫你勾起來），然後按「送出這份名單」。',
+  ask:'請自己點選要放進名單的節目（至少兩個），然後按「送出這份名單」。',
   body:function(host){
-    if(DEMO.wish.length){
-      host.appendChild(el('h3','對方想上的節目'));
-      host.appendChild(el('p',DEMO.wish.map(function(id){return prog(id).name;}).join('、')
-        +'——下面已經先幫你勾起來，你可以取消。','note'));
+    if(DEMO.theirWish.length){
+      host.appendChild(el('h3','對方在來文裡提到的節目'));
+      host.appendChild(el('p',DEMO.theirWish.map(function(id){return prog(id).name;}).join('、')
+        +'——⛔ 還沒有放進名單，要不要放由你決定。','note'));
     }
     DEMO.programs.forEach(function(p){
-      var on=DEMO.picked.indexOf(p.id)>=0, wished=DEMO.wish.indexOf(p.id)>=0;
+      var on=DEMO.picked.indexOf(p.id)>=0, wished=DEMO.theirWish.indexOf(p.id)>=0;
       var b=el('button',null,'opt'); b.type='button';
       b.setAttribute('aria-pressed',String(on));
       b.appendChild(el('div',p.name+'　'+p.topic+(wished?'　◆ 對方想上':''),'on'));
@@ -499,7 +500,7 @@ var INVITE=[
       if(DEMO.picked.length<2){ say('bad','名單至少要兩個節目',
         '多幾個對方比較有得選，也不會一個婉拒就卡住。'); return; }
       var names=pickedPrograms().map(function(p){return p.name;});
-      var dropped=DEMO.wish.filter(function(id){return DEMO.picked.indexOf(id)<0;});
+      var dropped=DEMO.theirWish.filter(function(id){return DEMO.picked.indexOf(id)<0;});
       trail('名單定稿：'+names.join('、')
         +(dropped.length?('；不安排 '+dropped.map(function(id){return prog(id).name;}).join('、')):''));
       var fee=pickedPrograms().filter(function(p){return p.fee!=='NONE';});
@@ -544,10 +545,10 @@ var INVITE=[
   body:function(host){
     host.appendChild(el('h3','要請對方確認的名單'));
     pickedPrograms().forEach(function(p){
-      host.appendChild(rec(p.name+(DEMO.wish.indexOf(p.id)>=0?'　◆ 對方想上':'　◆ 我們推薦'),[
+      host.appendChild(rec(p.name+(DEMO.theirWish.indexOf(p.id)>=0?'　◆ 對方想上':'　◆ 我們推薦'),[
         ['推薦原因',p.reason],
         ['費用',FEE_LABEL[p.fee]+(p.amount?'　預估 '+p.amount+' 元':'')]])); });
-    var dropped=DEMO.wish.filter(function(id){return DEMO.picked.indexOf(id)<0;});
+    var dropped=DEMO.theirWish.filter(function(id){return DEMO.picked.indexOf(id)<0;});
     if(dropped.length){
       host.appendChild(el('h3','對方想上、但這次不安排'));
       tbl(['節目','為什麼不安排'],dropped.map(function(id){
@@ -917,7 +918,7 @@ var PREVIEW=[
     return btn(n?('送出想上的節目（'+n+' 個）'):'送出想上的節目','act go',function(){
       if(!DEMO.wish.length){ say('bad','至少勾一個','勾了之後經紀人才知道你們的想法。'); return; }
       trail('對方勾選想上的節目：'+DEMO.wish.map(function(id){return prog(id).name;}).join('、'));
-      DEMO.wish.forEach(function(id){ if(DEMO.picked.indexOf(id)<0) DEMO.picked.push(id); });
+      DEMO.theirWish=DEMO.wish.slice();
       say('ok','已送出，等經紀人審核',
         '這份清單會出現在「新書訪談邀約」的第 2 階段，由經紀人審核並補推薦。'); });
   },
@@ -1023,6 +1024,8 @@ function renderBoard(host){
   host.appendChild(el('h2','即將出版新書'));
   host.appendChild(el('p','這裡看得到哪些老師即將出書。節目缺來賓的時候，'
     +'經紀人直接從這裡挑，把適合的一鍵轉成訪談需求。','sub'));
+  host.appendChild(el('p','⚠️ 下面幾本是內建的示範資料（含「幾個節目在等」），'
+    +'⛔ 不是別人測試留下的紀錄。','note'));
   DEMO.books.slice().sort(function(a,b){
     return String(a.pubMonth).localeCompare(String(b.pubMonth)); }).forEach(function(b){
     var box=el('div',null,'book');
@@ -1297,14 +1300,28 @@ function render(){
     [['先知道一','這是示意稿，不是真的系統。'
       +'本案例中的人物、書名、出版社、節目與聯絡資料全部為虛構。'],
      ['先知道二','按什麼都不會壞。沒有連任何資料庫，隨時可以按「重新開始」回到原樣。'],
-     ['先知道三','回饋不會自動上傳。填完要自己複製，貼給 Winnie。'],
+     ['先知道三','⭐ 每次打開都是全新的一輪。你在畫面上看到的既有資料都是內建的示範資料，'
+      +'⛔ 不是別人測試留下的操作紀錄。'],
+     ['先知道四','回饋不會自動上傳。填完要自己複製，貼給 Winnie。'],
      ['大概要多久','三個功能全部走完 15–20 分鐘。資料都幫你填好了。']]
      .forEach(function(x){ dl.appendChild(el('dt',x[0])); dl.appendChild(el('dd',x[1])); });
     h.appendChild(dl); st.appendChild(h);
+    if(MSG) st.appendChild(MSG);
     var bar=el('div',null,'actions');
     bar.appendChild(btn('開始情境測試','act go',function(){
       PHASE='entry'; MSG=null; render(); focusTop(); }));
     st.appendChild(bar);
+    /* 這台電腦上如果留著上一次填的回饋，明講並讓人一鍵清掉 */
+    var n0=fbCount();
+    if(n0>0){
+      var w0=el('div',null,'actions');
+      w0.appendChild(el('span','這台電腦上存著 '+n0+' 則之前填過的回饋（只在這個瀏覽器裡）。','note'));
+      w0.appendChild(btn('清掉，從乾淨的開始','link',function(){
+        if(confirm('這會刪掉這台電腦上存的回饋，沒辦法復原。確定嗎？')){
+          try{ localStorage.removeItem(FB_KEY); }catch(e){}
+          clearLegacy(); say('ok','已經清乾淨了','現在按「開始情境測試」就是全新的一輪。'); } }));
+      st.appendChild(w0);
+    }
     return;
   }
 
