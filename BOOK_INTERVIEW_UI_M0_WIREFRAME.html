@@ -166,6 +166,10 @@ textarea{min-height:68px;resize:vertical}
 .msg ul{margin:8px 0 0;padding-left:20px}
 
 .note{font-family:var(--sans);font-size:var(--font-sm);color:var(--taupe);margin:10px 0 14px}
+ul.todo{margin:0 0 6px;padding-left:22px;font-family:var(--sans);font-size:var(--font-sm);color:var(--ink)}
+ul.todo li{margin:0 0 4px}
+.done{font-family:var(--sans);font-size:var(--font-md);font-weight:600;color:var(--ink);
+  border-top:1px solid var(--line);padding:14px 0 0;margin:18px 0 0}
 .mask{font-family:var(--sans);letter-spacing:.14em;color:var(--taupe)}
 
 .figs{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line);
@@ -326,6 +330,7 @@ function resetDemo(){
     wish:[],
     programs:programSeed(), picked:[],
     approval:{needed:false,done:false,why:''},
+    listFinal:false, scheduleDone:false, produceDone:false,
     listSent:false, theirConfirm:false,
     replies:{}, episodes:[],
     closed:false, trail:[], unmasked:false,
@@ -404,7 +409,7 @@ function syncEpisodes(){
   ids.forEach(function(id){
     if(!DEMO.episodes.some(function(e){return e.progId===id;})){
       DEMO.episodes.push({progId:id,name:prog(id).name,
-        producer:'',inHouse:null,times:[],confirmed:'',
+        producer:'',inHouse:null,times:[],confirmed:'',timeLog:[],
         production:'NOT_STARTED',url:'',
         hoMade:false,hoStatus:'',hoDue:'',
         materials:materialSeed()});
@@ -487,7 +492,7 @@ var INVITE=[
       b.onclick=function(){
         var i=DEMO.picked.indexOf(p.id);
         if(i>=0) DEMO.picked.splice(i,1); else DEMO.picked.push(p.id);
-        MSG=null; render(); };
+        DEMO.listFinal=false; MSG=null; render(); };
       host.appendChild(b);
     });
     var m=pickedPrograms().filter(function(p){return p.fee!=='NONE';});
@@ -507,9 +512,10 @@ var INVITE=[
       DEMO.approval.needed=fee.length>0;
       DEMO.approval.why=fee.length?('名單裡有 '+fee.map(function(p){return p.name;}).join('、')
         +' 可能要付宣傳費'):'名單裡的節目都不用付費，屬於一般邀約';
+      DEMO.listFinal=true;
       say('ok','名單已定稿','共 '+names.length+' 個：'+names.join('、')); });
   },
-  done:function(){ return DEMO.picked.length>=2; }
+  done:function(){ return DEMO.listFinal&&DEMO.picked.length>=2; }
 },
 {
   key:'approval', name:'處理費用或例外審核', section:'requests',
@@ -610,7 +616,8 @@ var INVITE=[
   intro:function(){ return [
     '⚠️ 不是每一集都由公司做——要一個節目一個節目分開決定。',
     '公司做的話，還要決定剪輯是自己剪還是發外包。時間也是各談各的。',
-    '一次給對方三個時段會比一次給一個快很多。真的都喬不攏，可以先選「另外確認」。']; },
+    '一次給對方三個時段會比一次給一個快很多。真的都喬不攏，可以先選「另外確認」。',
+    '時間常常會來回改。改了就再按一次「確認製作方與時間」，系統會記成第幾次確認。']; },
   ask:'請幫每一集選製作方、填時間，再選一個確認的時段（或先選「另外確認」）。',
   body:function(host){
     var D=['2026-11-18 14:00','2026-11-20 10:00','2026-11-25 15:00'];
@@ -629,14 +636,14 @@ var INVITE=[
         ['COUNTERPARTY','訪談節目自己處理']]);
       s.value=e.producer;
       s.onchange=function(){ e.producer=s.value;
-        if(s.value!=='COMPANY') e.inHouse=null; MSG=null; render(); };
+        if(s.value!=='COMPANY') e.inHouse=null; DEMO.scheduleDone=false; MSG=null; render(); };
       box.appendChild(fld('p_'+idx,'這一集由誰做？',s));
 
       if(e.producer==='COMPANY'){
         var w=el('div',null,'chkline');
         var cb=document.createElement('input'); cb.type='checkbox'; cb.id='ih_'+idx;
         cb.checked=e.inHouse===true;
-        cb.onchange=function(){ e.inHouse=cb.checked; MSG=null; render(); };
+        cb.onchange=function(){ e.inHouse=cb.checked; DEMO.scheduleDone=false; MSG=null; render(); };
         var lb=el('label','剪輯發公司內部做'); lb.setAttribute('for','ih_'+idx);
         w.appendChild(cb); w.appendChild(lb); box.appendChild(w);
         box.appendChild(el('p',e.inHouse===false
@@ -644,25 +651,42 @@ var INVITE=[
           :'打勾＝自己剪；不打勾＝發外包。','note'));
       }
 
+      function confirmOpts(){
+        var filled=e.times.filter(function(t){return t&&t.trim();});
+        var o=[['',filled.length?'（還沒選）':'（請先填上面的可訪談時間）']]
+          .concat(filled.map(function(t){return [t,t];}));
+        o.push([ALT_TIME,'都不能配合，之後另外確認']); return o;
+      }
+      function refreshConfirm(){
+        var c=document.getElementById('c_'+idx); if(!c) return;
+        var keep=e.confirmed; clear(c);
+        confirmOpts().forEach(function(x){var op=document.createElement('option');
+          op.value=x[0]; op.textContent=x[1]; c.appendChild(op);});
+        c.value=[...c.options].some(function(op){return op.value===keep;})?keep:'';
+        if(c.value!==keep){ e.confirmed=''; }
+      }
       for(var i=0;i<3;i++){(function(i){
         var inp=document.createElement('input'); inp.type='text';
         inp.value=e.times[i]||''; inp.placeholder=D[i];
-        inp.oninput=function(){ e.times[i]=inp.value; };
+        inp.oninput=function(){ e.times[i]=inp.value; DEMO.scheduleDone=false; refreshConfirm(); };
         box.appendChild(fld('t_'+idx+'_'+i,'可訪談時間 '+(i+1),inp));
       })(i);}
       var bar=el('div',null,'actions');
       bar.appendChild(btn('帶入三個範例時間','act small',function(){
-        e.times=D.slice(); MSG=null; render(); }));
+        e.times=D.slice(); DEMO.scheduleDone=false; MSG=null; render(); }));
       box.appendChild(bar);
 
-      var filled=e.times.filter(function(t){return t&&t.trim();});
-      var opts=[['','（還沒選）']].concat(filled.map(function(t){return [t,t];}));
-      opts.push([ALT_TIME,'都不能配合，之後另外確認']);
-      var cs2=sel(opts); cs2.value=e.confirmed;
-      cs2.onchange=function(){ e.confirmed=cs2.value; MSG=null; render(); };
+      var cs2=sel(confirmOpts()); cs2.value=e.confirmed;
+      cs2.onchange=function(){ e.confirmed=cs2.value; DEMO.scheduleDone=false; MSG=null; render(); };
       box.appendChild(fld('c_'+idx,'對方最後選了哪一個？',cs2));
       if(e.confirmed===ALT_TIME)
         box.appendChild(el('p','⚠️ 選了「另外確認」還是可以往下走，但結案前一定要補上真正的時間。','note'));
+      if(e.timeLog.length){
+        box.appendChild(el('h3','時間調整紀錄'));
+        tbl(['第幾次','確認的時間','記錄時間'],e.timeLog.map(function(l,i){
+          return ['第 '+(i+1)+' 次', l.time===ALT_TIME?'另外確認':l.time, l.at]; }),box);
+        if(e.timeLog.length>=2) box.appendChild(el('p','來回改了 '+e.timeLog.length+' 次。','note'));
+      }
       host.appendChild(box);
     });
   },
@@ -675,15 +699,22 @@ var INVITE=[
         bad.map(function(e){ return e.name+'——'
           +(!e.producer?'還沒選製作方'
             :(e.producer==='COMPANY'&&e.inHouse===null?'還沒決定剪輯發不發外包':'還沒選時間')); })); return; }
+      var changed=[];
       DEMO.episodes.forEach(function(e){
+        var last=e.timeLog.length?e.timeLog[e.timeLog.length-1].time:null;
+        if(last===e.confirmed) return;           /* 沒改的集不重複記 */
+        e.timeLog.push({time:e.confirmed,at:stamp()});
+        if(last!==null) changed.push(e.name+'（第 '+e.timeLog.length+' 次）');
         trail(e.name+'：'+(e.producer==='COMPANY'
           ?('公司統一發包'+(e.inHouse?'（剪輯自己做）':'（剪輯發外包）')):'訪談節目自己處理')
-          +'，時間 '+(e.confirmed===ALT_TIME?'另外確認':e.confirmed)); });
-      say('ok','每一集的製作方與時間都記下來了',
+          +'，時間 '+(e.confirmed===ALT_TIME?'另外確認':e.confirmed)
+          +(e.timeLog.length>1?'（第 '+e.timeLog.length+' 次確認）':'')); });
+      DEMO.scheduleDone=true;
+      say('ok',changed.length?('時間改好了：'+changed.join('、')):'每一集的製作方與時間都記下來了',
         DEMO.episodes.map(function(e){ return e.name+'＝'
           +(e.producer==='COMPANY'?'公司':'節目方'); }).join('、')); });
   },
-  done:function(){ return DEMO.episodes.length>0 && !DEMO.episodes.filter(function(e){
+  done:function(){ return DEMO.scheduleDone && DEMO.episodes.length>0 && !DEMO.episodes.filter(function(e){
     return !e.producer||(e.producer==='COMPANY'&&e.inHouse===null)||!e.confirmed; }).length; }
 },
 {
@@ -703,6 +734,13 @@ var INVITE=[
         ?('公司'+(OUT?'・外包剪輯':'・自己剪')):'節目方自己處理','now'));
       if(e.url) cs.appendChild(chip('已登錄上架連結','ok'));
       box.appendChild(cs);
+      var tl=document.createElement('span');
+      tl.appendChild(el('span',e.confirmed===ALT_TIME?'另外確認中':(e.confirmed||'—')));
+      if(e.timeLog.length>1) tl.appendChild(el('span','（第 '+e.timeLog.length+' 次確認）','note'));
+      tl.appendChild(document.createTextNode(' '));
+      tl.appendChild(btn('改時間','link',function(){
+        STAGE=5; DEMO.unmasked=false; MSG=null; render(); focusTop(); }));
+      box.appendChild(rec('訪談時間',[['目前',tl]]));
 
       if(OUT&&e.hoMade) box.appendChild(rec('外包交辦單',[
         ['交辦對象','外包製作案系統'],['交辦用途','剪輯'],
@@ -761,6 +799,13 @@ var INVITE=[
       host.appendChild(box);
     });
     host.appendChild(el('p','只有「本案必要」而且還沒收到的項目會擋結案。','note'));
+    var todo=produceTodo();
+    host.appendChild(el('h3',todo.length?'要往下一階段，還差這些':'這一段的事都做完了'));
+    if(todo.length){
+      var ul=document.createElement('ul'); ul.className='todo';
+      todo.forEach(function(t){ ul.appendChild(el('li',t)); }); host.appendChild(ul);
+      host.appendChild(el('p','⚠️ 做完上面這些，再按「這一段做完了」，「下一階段」才會出現。','note'));
+    } else host.appendChild(el('p','按「這一段做完了」，就可以進到最後一步。','note'));
   },
   primary:function(){
     return btn('這一段做完了','act go',function(){
@@ -771,13 +816,10 @@ var INVITE=[
         if(miss.length) bad.push(e.name+'——'+miss.map(function(m){return m.name;}).join('、')+' 還沒收到');
       });
       if(bad.length){ say('bad','還有 '+bad.length+' 件事沒完成','把下面這些補完再按一次：',bad); return; }
+      DEMO.produceDone=true;
       say('ok','每一集都上架了，素材也收齊了','可以進到最後一步結案。'); });
   },
-  done:function(){
-    return DEMO.episodes.length>0 && DEMO.episodes.every(function(e){
-      return e.production==='PUBLISHED' &&
-        !e.materials.filter(function(m){return m.level==='REQUIRED'&&!m.received;}).length; });
-  }
+  done:function(){ return DEMO.produceDone && !produceTodo().length; }
 },
 {
   key:'close', name:'完成案件並查看歷程', section:'trail',
@@ -806,6 +848,15 @@ var INVITE=[
   done:function(){ return DEMO.closed; }
 }];
 
+function produceTodo(){
+  var bad=[];
+  DEMO.episodes.forEach(function(e){
+    if(e.production!=='PUBLISHED') bad.push(e.name+'——製作還沒到「已上架」（目前：'+PROD[e.production]+'）');
+    var miss=e.materials.filter(function(m){return m.level==='REQUIRED'&&!m.received;});
+    if(miss.length) bad.push(e.name+'——'+miss.map(function(m){return m.name;}).join('、')+' 還沒收到');
+  });
+  return bad;
+}
 function closureChecks(){
   var eps=DEMO.episodes;
   var noTime=eps.filter(function(e){return e.confirmed===ALT_TIME||!e.confirmed;});
@@ -1475,11 +1526,12 @@ function render(){
   if(MSG) st.appendChild(MSG);
   var box=document.createElement('div'); s.body(box); st.appendChild(box);
 
-  var p=s.primary();
+  var p=s.primary(), fin=s.done();
   var actions=el('div',null,'actions');
-  if(p) actions.appendChild(p);
-  if(s.done()){
-    if(STAGE<TOTAL-1) actions.appendChild(btn('下一階段 →','act'+(p?'':' go'),function(){
+  if(fin&&STAGE<TOTAL-1) st.appendChild(el('p','✓ 這一階段完成了。按「下一階段 →」繼續。','done'));
+  if(p){ if(fin) p.classList.remove('go'); actions.appendChild(p); }
+  if(fin){
+    if(STAGE<TOTAL-1) actions.appendChild(btn('下一階段 →','act go',function(){
       STAGE++; DEMO.unmasked=false; MSG=null; render(); focusTop(); }));
     else {
       DEMO.doneTracks[TRACK]=true;
