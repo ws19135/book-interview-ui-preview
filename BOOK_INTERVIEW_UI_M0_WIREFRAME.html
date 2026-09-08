@@ -409,6 +409,7 @@ function syncEpisodes(){
   ids.forEach(function(id){
     if(!DEMO.episodes.some(function(e){return e.progId===id;})){
       DEMO.episodes.push({progId:id,name:prog(id).name,
+        deep:prog(id).fee!=='NONE', calendarSent:false,
         producer:'',inHouse:null,times:[],confirmed:'',timeLog:[],
         production:'NOT_STARTED',url:'',
         hoMade:false,hoStatus:'',hoDue:'',
@@ -520,10 +521,11 @@ var INVITE=[
 {
   key:'approval', name:'處理費用或例外審核', section:'requests',
   intro:function(){
+    var rule='⭐ 付不付費也決定後面追到哪：付費上節目會一路追到上架；一般互訪約好時間、發了行事曆就交出去，⛔ 不追錄音和上架。';
     if(DEMO.approval.needed) return ['這一筆需要主管確認。',
-      '原因：'+DEMO.approval.why+'。付費宣傳超出一般邀約範圍，所以要先讓主管知道。'];
+      '原因：'+DEMO.approval.why+'。付費宣傳超出一般邀約範圍，所以要先讓主管知道。',rule];
     return ['這一筆不需要主管確認。',
-      '原因：'+DEMO.approval.why+'。一般邀約由你直接往下走就可以。']; },
+      '原因：'+DEMO.approval.why+'。一般邀約由你直接往下走就可以。',rule]; },
   ask:function(){ return DEMO.approval.needed?'請按「送出主管確認」。':'不用送審，直接按「繼續」。'; },
   body:function(host){
     tbl(['節目','費用','預估金額'],pickedPrograms().map(function(p){
@@ -625,11 +627,13 @@ var INVITE=[
       var box=el('div',null,'ep');
       box.appendChild(el('div',e.name,'en'));
       var cs=el('div',null,'es');
+      cs.appendChild(chip(e.deep?'付費上節目・追到上架':'一般互訪・約好就交出去',e.deep?'prop':'now'));
       cs.appendChild(chip(e.producer?(e.producer==='COMPANY'
         ?('公司製作'+(e.inHouse===null?'':(e.inHouse?'・剪輯自己做':'・剪輯發外包')))
         :'節目方自己處理'):'還沒決定製作方',e.producer?'now':'wait'));
       cs.appendChild(chip(e.confirmed===ALT_TIME?'時間另外確認'
         :(e.confirmed||'還沒定時間'),e.confirmed?(e.confirmed===ALT_TIME?'prop':'ok'):'wait'));
+      if(!e.deep) cs.appendChild(chip(e.calendarSent?'行事曆已發':'行事曆還沒發',e.calendarSent?'ok':'wait'));
       box.appendChild(cs);
 
       var s=sel([['','（還沒選）'],['COMPANY','公司統一發包（我們處理）'],
@@ -681,6 +685,17 @@ var INVITE=[
       box.appendChild(fld('c_'+idx,'對方最後選了哪一個？',cs2));
       if(e.confirmed===ALT_TIME)
         box.appendChild(el('p','⚠️ 選了「另外確認」還是可以往下走，但結案前一定要補上真正的時間。','note'));
+      if(!e.deep){
+        if(e.confirmed&&e.confirmed!==ALT_TIME){
+          var wc=el('div',null,'chkline');
+          var cc=document.createElement('input'); cc.type='checkbox'; cc.id='cal_'+idx;
+          cc.checked=e.calendarSent;
+          cc.onchange=function(){ e.calendarSent=cc.checked;
+            trail(e.name+'：'+(cc.checked?'已發行事曆給雙方':'取消行事曆已發')); MSG=null; render(); };
+          var lc=el('label','已發行事曆給雙方（一般互訪到這裡就交出去）'); lc.setAttribute('for','cal_'+idx);
+          wc.appendChild(cc); wc.appendChild(lc); box.appendChild(wc);
+        } else box.appendChild(el('p','一般互訪：時間定了之後，發行事曆給雙方就算完成。','note'));
+      }
       if(e.timeLog.length){
         box.appendChild(el('h3','時間調整紀錄'));
         tbl(['第幾次','確認的時間','記錄時間'],e.timeLog.map(function(l,i){
@@ -721,18 +736,22 @@ var INVITE=[
   key:'produce', name:'逐節目追蹤錄音、上架與素材', section:'requests',
   intro:function(){ return [
     '每一集各走各的進度，素材也是各收各的——同一本書要寄好幾份公關書出去。',
+    '⭐ 付費上節目才追到上架；一般互訪約好時間、發了行事曆就交出去了，這裡只剩素材要確認。',
     '素材只有標成「本案必要」的才會擋結案，其他是建議提供。']; },
-  ask:'請把每一集推到「已上架」，並確認各自的公關書都收到了。',
+  ask:'付費上節目的集請推到「已上架」；一般互訪的集確認行事曆已發；每一集的公關書都要收到。',
   body:function(host){
     DEMO.episodes.forEach(function(e,idx){
       var OUT=e.producer==='COMPANY'&&e.inHouse===false;
       var box=el('div',null,'ep');
       box.appendChild(el('div',e.name,'en'));
       var cs=el('div',null,'es');
-      cs.appendChild(chip(PROD[e.production],e.production==='PUBLISHED'?'ok':'wait'));
-      cs.appendChild(chip(e.producer==='COMPANY'
-        ?('公司'+(OUT?'・外包剪輯':'・自己剪')):'節目方自己處理','now'));
-      if(e.url) cs.appendChild(chip('已登錄上架連結','ok'));
+      cs.appendChild(chip(e.deep?'付費上節目・追到上架':'一般互訪・約好就交出去',e.deep?'prop':'now'));
+      if(e.deep){
+        cs.appendChild(chip(PROD[e.production],e.production==='PUBLISHED'?'ok':'wait'));
+        cs.appendChild(chip(e.producer==='COMPANY'
+          ?('公司'+(OUT?'・外包剪輯':'・自己剪')):'節目方自己處理','now'));
+        if(e.url) cs.appendChild(chip('已登錄上架連結','ok'));
+      } else cs.appendChild(chip(e.calendarSent?'行事曆已發，已交出去':'行事曆還沒發',e.calendarSent?'ok':'wait'));
       box.appendChild(cs);
       var tl=document.createElement('span');
       tl.appendChild(el('span',e.confirmed===ALT_TIME?'另外確認中':(e.confirmed||'—')));
@@ -747,6 +766,14 @@ var INVITE=[
         ['期望完成日',e.hoDue],['目前狀態',HANDOFF[e.hoStatus]||'—']]));
 
       var bar=el('div',null,'actions'), P=e.production;
+      if(!e.deep){
+        if(!e.calendarSent && e.confirmed && e.confirmed!==ALT_TIME)
+          bar.appendChild(btn('已發行事曆給雙方','act small',function(){
+            e.calendarSent=true; trail(e.name+'：已發行事曆給雙方'); MSG=null; render(); }));
+        else if(!e.calendarSent) bar.appendChild(el('span','時間還沒定，⛔ 還不能發行事曆。','note'));
+        else bar.appendChild(el('span','這一集到這裡就交出去了，⛔ 不追錄音和上架。','note'));
+        P='__SKIP__';
+      }
       if(P==='NOT_STARTED') bar.appendChild(btn('標記已錄音','act small',function(){
         e.production='RECORDED'; trail(e.name+'：標記已錄音'); MSG=null; render(); }));
       else if(P==='RECORDED'){
@@ -809,15 +836,10 @@ var INVITE=[
   },
   primary:function(){
     return btn('這一段做完了','act go',function(){
-      var bad=[];
-      DEMO.episodes.forEach(function(e){
-        if(e.production!=='PUBLISHED') bad.push(e.name+'——製作還沒到「已上架」');
-        var miss=e.materials.filter(function(m){return m.level==='REQUIRED'&&!m.received;});
-        if(miss.length) bad.push(e.name+'——'+miss.map(function(m){return m.name;}).join('、')+' 還沒收到');
-      });
+      var bad=produceTodo();
       if(bad.length){ say('bad','還有 '+bad.length+' 件事沒完成','把下面這些補完再按一次：',bad); return; }
       DEMO.produceDone=true;
-      say('ok','每一集都上架了，素材也收齊了','可以進到最後一步結案。'); });
+      say('ok','每一集都追到該追的地方了，素材也收齊了','可以進到最後一步結案。'); });
   },
   done:function(){ return DEMO.produceDone && !produceTodo().length; }
 },
@@ -851,7 +873,8 @@ var INVITE=[
 function produceTodo(){
   var bad=[];
   DEMO.episodes.forEach(function(e){
-    if(e.production!=='PUBLISHED') bad.push(e.name+'——製作還沒到「已上架」（目前：'+PROD[e.production]+'）');
+    if(!e.deep){ if(!e.calendarSent) bad.push(e.name+'——一般互訪，還沒發行事曆給雙方'); }
+    else if(e.production!=='PUBLISHED') bad.push(e.name+'——製作還沒到「已上架」（目前：'+PROD[e.production]+'）');
     var miss=e.materials.filter(function(m){return m.level==='REQUIRED'&&!m.received;});
     if(miss.length) bad.push(e.name+'——'+miss.map(function(m){return m.name;}).join('、')+' 還沒收到');
   });
@@ -860,12 +883,12 @@ function produceTodo(){
 function closureChecks(){
   var eps=DEMO.episodes;
   var noTime=eps.filter(function(e){return e.confirmed===ALT_TIME||!e.confirmed;});
-  var notPub=eps.filter(function(e){return e.production!=='PUBLISHED';});
+  var notPub=eps.filter(function(e){return e.deep?e.production!=='PUBLISHED':!e.calendarSent;});
   var missMat=[]; eps.forEach(function(e){
     e.materials.filter(function(m){return m.level==='REQUIRED'&&!m.received;})
       .forEach(function(m){ missMat.push(e.name+'的'+m.name); }); });
   var outstanding=eps.filter(function(e){
-    return e.producer==='COMPANY'&&e.inHouse===false&&e.hoStatus!=='FULFILLED'; });
+    return e.deep&&e.producer==='COMPANY'&&e.inHouse===false&&e.hoStatus!=='FULFILLED'; });
   var c=[
     {label:'雙方都確認過節目名單',pass:DEMO.listSent&&DEMO.theirConfirm,
      detail:DEMO.listSent?(DEMO.theirConfirm?'兩邊都確認了':'還在等對方回覆'):'還沒寄出名單'},
@@ -876,13 +899,13 @@ function closureChecks(){
     {label:'每一集的訪談時間都定案',pass:eps.length>0&&!noTime.length,
      detail:noTime.length?(noTime.map(function(e){return e.name;}).join('、')+' 還在另外確認時間')
        :'都定好了'},
-    {label:'每一集都已上架或不予上架',pass:eps.length>0&&!notPub.length,
-     detail:notPub.length?(notPub.map(function(e){return e.name+'（'+PROD[e.production]+'）';}).join('、'))
-       :'都上架了'},
+    {label:'每一集都追到該追的地方',pass:eps.length>0&&!notPub.length,
+     detail:notPub.length?(notPub.map(function(e){return e.name+'（'+(e.deep?PROD[e.production]:'行事曆還沒發')+'）';}).join('、'))
+       :'付費的都上架了，一般互訪的都發了行事曆'},
     {label:'每一集的必要素材都收齊',pass:eps.length>0&&!missMat.length,
      detail:missMat.length?('還缺：'+missMat.join('、')):'都收齊了'}
   ];
-  if(eps.some(function(e){return e.producer==='COMPANY'&&e.inHouse===false;}))
+  if(eps.some(function(e){return e.deep&&e.producer==='COMPANY'&&e.inHouse===false;}))
     c.splice(5,0,{label:'外包剪輯都已完成',pass:!outstanding.length,
       detail:outstanding.length?(outstanding.map(function(e){
         return e.name+'（'+(e.hoMade?HANDOFF[e.hoStatus]:'還沒建交辦單')+'）'; }).join('、'))
@@ -1578,12 +1601,19 @@ function buildNotes(){
      '—']
   ],n);
 
+  n.appendChild(el('h4','二之一、追蹤深度依案件性質分流（2026-09-08 Owner 裁定選項 1）'));
+  n.appendChild(el('p','同事克萊指出：一般互訪只追到「約好時間、發行事曆」；付費上節目才追到上架。'
+    +'依 Owner 裁定，⭐ 用「是否付費宣傳」逐節目自動分流：節目費用欄非「不需要」⇒ 追到上架；'
+    +'否則約好時間、勾「已發行事曆」就交出去，階段 7 只剩素材，結案檢查也只看行事曆。'
+    +'⛔ 不多問承辦人一個問題，資料在階段 2／3 就有了。'));
+
   n.appendChild(el('h4','三、⏸ 先保留、這一版不顯示'));
   var u3=document.createElement('ul');
   ['⏸ 訪談時間與公司日曆預約系統串接：Owner 表示後續可能會做，'
     +'這一版只在框架裡保留位置，⛔ 介面上不顯示。真的要做的時候，'
     +'排時間那一段會從手填時段改成從日曆挑可用時段，並回寫預約；'
-    +'「另外確認」這個狀態也會是日曆找不到共同時段時的落腳點。'
+    +'「另外確認」這個狀態也會是日曆找不到共同時段時的落腳點；'
+    +'一般互訪的「已發行事曆」也會變成串接後自動完成的動作。'
   ].forEach(function(t){var li=document.createElement('li');li.textContent=t;u3.appendChild(li);});
   n.appendChild(u3);
 
