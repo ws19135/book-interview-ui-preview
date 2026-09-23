@@ -65,7 +65,7 @@
 
   .progress { display: grid; gap: 6px; }
   .bar { height: 8px; background: var(--paper); border: 1px solid var(--rule); }
-  .bar i { display: block; height: 100%; width: 0; background: var(--done); transition: width .25s ease; }
+  .bar i { display: block; height: 100%; width: 100%; background: var(--done); transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
   .progress p { font-size: 14px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 
   ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
@@ -508,7 +508,7 @@
     var n = doneCount();
     $('doneCount').textContent = n + ' / ' + TOTAL;
     $('progressText').textContent = '已完成 ' + n + ' / ' + TOTAL + ' 步';
-    $('barFill').style.width = (n / TOTAL * 100) + '%';
+    $('barFill').style.transform = 'scaleX(' + (n / TOTAL) + ')';
     $('finishNote').hidden = state.current < TOTAL;
   }
 
