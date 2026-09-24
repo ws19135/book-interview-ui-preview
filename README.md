@@ -1,19 +1,25 @@
-# 新書訪談邀約｜三入口流程驗收（build 020）
+# 新書訪談邀約｜流程驗收（build 021）
 
 👉 **最新版驗收頁：[https://ws19135.github.io/book-interview-ui-preview/](https://ws19135.github.io/book-interview-ui-preview/)**
-👉 **[同事指南與邀請文](COLLEAGUE_UI_REVIEW_GUIDE.md)**（約 45 分鐘）
+👉 **[同事指南](COLLEAGUE_UI_REVIEW_GUIDE.md)**（約 15～20 分鐘）｜**[邀請文](COLLEAGUE_INVITATION_MESSAGE.md)**
 
-- 一個虛構故事走完三個入口：② 新書預告登記 → ③ 即將出版新書 → ① 新書訪談邀約，最後一段是主管的「書況有變」情境。共 32 步。
-- 按鈕與提示文字依 build 020 的實際畫面逐字核對。
+- 一個虛構故事走完三個入口，收成 **11 個工作階段**：② 新書預告登記 → ③ 即將出版新書 → ① 新書訪談邀約；最後有一段「書況有變」延伸情境（需要主管帳號，可跳過）。
+- 每個階段內含實際的按鈕級操作（要做什麼／按哪裡／完成後應看到），按鈕與提示文字依 build 021 的實際畫面逐字核對。
+- 主流程畫面不出現工程術語；技術細節收在頁尾「設計與驗證備註」，預設收合。
 - 全部人物、書籍、出版社、節目及聯絡資料均為虛構（聯絡資料一律 `example.invalid`）。
-- 本頁不連正式系統、不寫公司資料；不需登入、不載入任何外部資源。
-- 回饋只存在同事自己瀏覽器的 localStorage，不會上傳；走完按「複製全部回覆」貼給 Winnie，也可下載 Markdown／JSON。
+- 本頁不連正式系統、不寫公司資料；不需登入、不載入任何外部資源、不做任何追蹤。
+- 每個階段可選填三個小問題（看得懂嗎／找得到下一步嗎／與實際工作是否相符）＋補充說明，全部選填、不擋往下。
+- 回饋只存在同事自己瀏覽器的 localStorage，不會上傳；走完按「複製所有回覆」貼給 Winnie，也可下載 Markdown／JSON。
 - 「重新開始」會先詢問：重設操作流程、保留回饋，或操作與回饋全部清除。
 
 | 檔案 | 用途 |
 |---|---|
 | `index.html` | **最新版同事驗收頁（唯一權威入口）** |
-| `COLLEAGUE_UI_REVIEW_GUIDE.md` | 同事指南＋可直接轉貼的邀請文 |
+| `COLLEAGUE_UI_REVIEW_GUIDE.md` | 同事指南（15～20 分鐘、只留卡住的地方） |
+| `COLLEAGUE_INVITATION_MESSAGE.md` | 可直接複製貼上的邀請文（尚未寄出） |
+| `FEEDBACK_REVIEW_TEMPLATE.md` | Winnie 彙整同事回覆用的模板 |
+| `FEEDBACK_TRIAGE_RULES.md` | 回饋分類規則（文案／入口／角色／流程／缺欄位／制度裁決／runtime 缺陷） |
+| `BUSINESS_FLOW_ACCEPTANCE_MATRIX.md` | 11 個業務階段 ↔ 系統入口 ①②③ 對照與覆蓋度 |
 | `archive/BOOK_INTERVIEW_UI_M0_WIREFRAME.html` | 舊版「情境操作體驗」概念稿（已過期） |
 | `archive/system-walkthrough-build019.html` | 舊版 build 019 操作驗收（已過期） |
 | `archive/COLLEAGUE_UI_REVIEW_GUIDE_M0.md` | 舊版試用說明（已過期） |

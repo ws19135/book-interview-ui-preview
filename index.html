@@ -8,7 +8,7 @@
 <meta name="referrer" content="no-referrer">
 <!-- 純靜態頁：禁止一切對外連線（不載字型、不送資料），回饋只存在這台電腦的瀏覽器 -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
-<title>新書訪談邀約｜三入口流程驗收</title>
+<title>新書訪談邀約｜流程驗收</title>
 <style>
   /* 淺色單一主題：跟正式系統同一個米色底、墨色字、磚紅重點（刻意不隨深色模式翻轉） */
   :root {
@@ -45,6 +45,8 @@
   .facts li::before { content: "・"; color: var(--accent); }
   .privacy { background: var(--accent-soft); border: 1px solid var(--accent); padding: 12px 14px; font-size: 15px; display: grid; gap: 4px; }
   .privacy b { color: var(--accent); }
+  .assume { background: var(--boss-soft); border: 1px solid var(--boss); padding: 12px 14px; font-size: 16px; }
+  .assume b { color: var(--boss); }
 
   .card { background: var(--paper); border: 1px solid var(--rule); padding: 16px; display: grid; gap: 12px; }
   .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
@@ -69,14 +71,11 @@
   .progress p { font-size: 14px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 
   ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-  .part-head { padding: 14px 0 2px; display: grid; gap: 2px; }
-  .part-head h3 { font-family: var(--serif); font-size: 20px; color: var(--accent); }
-  .part-head:first-child { padding-top: 0; }
   .step { background: var(--paper); border: 1px solid var(--rule); }
   .step-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; padding: 12px 16px; width: 100%; font: inherit; color: inherit; text-align: left; background: transparent; border: 0; cursor: pointer; }
   .step-head .no { font-family: var(--serif); font-weight: 700; font-size: 20px; color: var(--accent); min-width: 1.6em; font-variant-numeric: tabular-nums; }
   .step-head h3 { flex: 1 1 12em; }
-  .step-body { padding: 0 16px 16px; display: grid; gap: 12px; }
+  .step-body { padding: 0 16px 16px; display: grid; gap: 14px; }
   .step.upcoming { opacity: .55; }
   .step.upcoming .step-head { cursor: default; }
   .step.done .no { color: var(--done); }
@@ -88,20 +87,26 @@
   .chip { font-size: 13px; font-weight: 700; padding: 1px 8px; background: var(--accent-soft); color: var(--accent); }
   .chip.boss { background: var(--boss-soft); color: var(--boss); }
   .chip.auto { background: var(--auto-soft); color: var(--auto); }
-  .rows { display: grid; gap: 8px; font-size: 15px; }
-  .rows div { display: grid; grid-template-columns: 6.5em 1fr; gap: 8px; }
-  .rows span:first-child { color: var(--ink-soft); font-size: 14px; padding-top: 1px; }
+  .chip.sys { background: var(--ground); color: var(--ink-soft); letter-spacing: .04em; }
+
+  .op { display: grid; gap: 4px; }
+  .op .lab { font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+  .op .txt { font-size: 15px; overflow-wrap: anywhere; }
+  ol.sub { margin: 0; padding-left: 1.5em; display: grid; gap: 6px; font-size: 15px; }
+  ol.sub li { padding-left: 2px; overflow-wrap: anywhere; }
+  ul.seelist { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; font-size: 15px; }
+  ul.seelist li { overflow-wrap: anywhere; }
+  .see { background: #fff; padding: 8px 10px; border: 1px solid var(--rule); font-size: 15px; overflow-wrap: anywhere; }
   .ui { font-weight: 700; }
   .ui::before { content: "「"; } .ui::after { content: "」"; }
-  .see { background: #fff; padding: 2px 6px; border: 1px solid var(--rule); }
 
   details.fb { border: 1px dashed var(--rule); background: #fff; }
   details.fb summary { cursor: pointer; padding: 8px 12px; font-size: 15px; color: var(--accent); list-style-position: inside; }
   details.fb[open] summary { border-bottom: 1px dashed var(--rule); }
-  details.fb .inner { padding: 12px; display: grid; gap: 10px; }
+  details.fb .inner { padding: 12px; display: grid; gap: 12px; }
   .filled { font-size: 13px; color: var(--done); margin-left: 6px; }
   fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 16px; }
-  legend { font-size: 14px; color: var(--ink-soft); padding: 0; margin-bottom: 4px; }
+  legend { font-size: 14px; color: var(--ink-soft); padding: 0; margin-bottom: 4px; font-weight: 700; }
   fieldset label { font-size: 15px; display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
   input[type=radio] { width: 18px; height: 18px; accent-color: var(--accent); }
 
@@ -115,6 +120,12 @@
   button.btn.big { font-size: 17px; padding: 12px 22px; font-weight: 700; }
 
   .finish { background: var(--auto-soft); border: 1px solid var(--auto); padding: 12px 14px; font-size: 15px; }
+
+  .optional { background: var(--paper); border: 1px dashed var(--boss); }
+  .optional > summary { cursor: pointer; padding: 14px 16px; font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--boss); list-style-position: inside; }
+  .optional > .optbody { padding: 0 16px 16px; display: grid; gap: 14px; }
+  .optnote { font-size: 15px; color: var(--ink-soft); }
+
   .questions { display: grid; gap: 12px; }
   .q { background: var(--paper); border: 1px solid var(--rule); padding: 14px 16px; display: grid; gap: 8px; }
   .q label { font-weight: 700; font-size: 16px; }
@@ -135,9 +146,12 @@
   dialog .btns button { width: 100%; text-align: left; }
   dialog small { display: block; font-size: 13px; opacity: .85; font-weight: 400; }
 
-  footer { font-size: 13px; color: var(--ink-soft); display: grid; gap: 4px; }
+  footer { font-size: 13px; color: var(--ink-soft); display: grid; gap: 8px; }
+  details.notes { border: 1px solid var(--rule); background: var(--paper); }
+  details.notes summary { cursor: pointer; padding: 8px 12px; font-size: 14px; color: var(--ink-soft); list-style-position: inside; }
+  details.notes .inner { padding: 12px; display: grid; gap: 6px; font-size: 13px; line-height: 1.7; }
+
   @media (max-width: 480px) {
-    .rows div { grid-template-columns: 1fr; gap: 0; }
     .case dl { grid-template-columns: 1fr; gap: 0; }
     .case dt { margin-top: 6px; }
   }
@@ -147,21 +161,24 @@
 <body>
 <main class="wrap">
   <header style="display:grid;gap:12px">
-    <p class="eyebrow">SDH · build 020 流程</p>
-    <h1>新書訪談邀約｜三入口流程驗收</h1>
+    <p class="eyebrow">SDH · build 021 流程</p>
+    <h1>新書訪談邀約｜流程驗收</h1>
+    <div class="assume" role="note">
+      <p><b>請假設你正在協助一位老師的新書安排訪談。</b>你要從公司功能入口「新書訪談邀約」開始，把一本即將出版的新書，一路帶到談成一集、上架、結案。</p>
+    </div>
     <ul class="facts">
-      <li>一個虛構故事走完三個入口：② 新書預告登記 → ③ 即將出版新書 → ① 新書訪談邀約。</li>
-      <li>全部人物、書籍、出版社、節目及聯絡資料均為虛構。</li>
+      <li>全流程收成 11 個工作階段，每個階段裡再寫清楚要按哪些地方。</li>
+      <li>全部人物、書籍、出版社、節目及聯絡資料都是虛構的，請照抄、不要換成真人。</li>
       <li>這是操作說明，本頁不連正式系統、不會寫入公司資料。</li>
     </ul>
     <div class="card" style="gap:6px">
       <h2 style="font-size:18px">這次要確認什麼</h2>
-      <p class="howto">三個入口的流程設計，9 月已經請同事在「情境操作體驗」試用確認過。這次是系統正式做好之後，請你在 Winnie 提供的測試環境照著按一遍，確認<b>按鈕找得到、提示看得懂、順序跟實際工作一樣</b>。</p>
+      <p class="howto">流程設計 9 月已經請同事在「情境操作體驗」試用確認過。這次是系統正式做好之後，請你在 Winnie 提供的測試環境照著按一遍，確認<b>按鈕找得到、提示看得懂、順序跟實際工作一樣</b>。</p>
     </div>
-    <p class="lede">每一步都寫了要做什麼、按哪裡、完成後應看到什麼。卡住時再打開那一步的「這一步有問題」寫一句就好。大約 45 分鐘；最後一段主管情境沒有主管帳號可以跳過。</p>
+    <p class="lede">每個階段都寫了要做什麼、按哪裡、完成後應看到什麼。哪一段看不懂、找不到或跟實際不一樣，再打開那一段的「這一段給點意見」勾一下就好。大約 40 分鐘；最後有一段「書況有變」的延伸情境，需要主管帳號，沒有可以跳過。</p>
     <div class="privacy" role="note">
-      <p><b>你的回饋只存在這台電腦的瀏覽器，不會上傳到任何地方。</b></p>
-      <p>換電腦、用無痕視窗或清除瀏覽器資料，回饋就會不見。走完後請按最下方的「複製全部回覆」，直接貼給 Winnie。</p>
+      <p><b>你的回饋只存在這台電腦的瀏覽器，不會上傳到任何地方，也不會做任何追蹤。</b></p>
+      <p>換電腦、用無痕視窗或清除瀏覽器資料，回饋就會不見。走完後請按最下方的「複製所有回覆」，直接貼給 Winnie。</p>
     </div>
   </header>
 
@@ -174,11 +191,11 @@
       <div class="field" style="display:grid;gap:4px;font-size:14px;color:var(--ink-soft)">測試日期
         <span class="readonly" id="testDate">—</span>
       </div>
-      <div class="field" style="display:grid;gap:4px;font-size:14px;color:var(--ink-soft)">測試頁版本
-        <span class="readonly">build 020</span>
+      <div class="field" style="display:grid;gap:4px;font-size:14px;color:var(--ink-soft)">預覽版本
+        <span class="readonly">build 021</span>
       </div>
-      <div class="field" style="display:grid;gap:4px;font-size:14px;color:var(--ink-soft)">已完成步驟
-        <span class="readonly" id="doneCount">0 / 32</span>
+      <div class="field" style="display:grid;gap:4px;font-size:14px;color:var(--ink-soft)">已完成階段
+        <span class="readonly" id="doneCount">0 / 11</span>
       </div>
     </div>
     <p class="howto">不需要填 Email、電話或其他個人資料。</p>
@@ -187,7 +204,7 @@
   <section aria-labelledby="h-who">
     <h2 id="h-who">誰會操作</h2>
     <div class="who">
-      <div><p class="role" style="color:var(--accent)">企劃承辦</p><p>收到需求後負責到底：配對節目、提案、排時間、追素材、最後結案。大部分步驟由你操作。</p></div>
+      <div><p class="role" style="color:var(--accent)">企劃承辦</p><p>收到需求後負責到底：配對節目、提案、排時間、追素材、最後結案。大部分階段由你操作。</p></div>
       <div><p class="role" style="color:var(--boss)">主管</p><p>付費案件的核准、書確定不出版的標記、不出版通知的確認，由主管處理。送出申請的人不能自己核准。</p></div>
     </div>
     <p class="howto">要在哪個網址操作、用哪個 Google 帳號登入，Owner 會另外告訴你。請只在測試環境操作。</p>
@@ -195,10 +212,10 @@
 
   <section class="card case" aria-labelledby="h-case">
     <h2 id="h-case">這次的虛構故事</h2>
-    <p>晨光出版行銷王予安來訊：新書《慢慢來的勇氣》（作者林子晴）六月上市，想上「週末書房」和「深夜讀冊」。你先幫她做預告登記，再轉成正式的訪談需求，談成週末書房一集，由節目方製作、出版社付費。最後一段，另一本《海邊的圖書館》延期後又確定不出版。</p>
+    <p>晨光出版行銷王予安來訊：新書《慢慢來的勇氣》（作者林子晴老師）六月上市，想上「週末書房」和「深夜讀冊」。你先幫忙做預告登記，再轉成正式的訪談需求，談成週末書房一集，由節目方製作、出版社付費。最後一段延伸情境，另一本《海邊的圖書館》延期後又確定不出版。</p>
     <dl>
       <dt>出版社／登記者</dt><dd>晨光出版／王予安（marketing@example.invalid）</dd>
-      <dt>第一本書</dt><dd>《慢慢來的勇氣》，預計 2030-06 出版</dd>
+      <dt>第一本書</dt><dd>《慢慢來的勇氣》，作者林子晴，預計 2030-06 出版</dd>
       <dt>想上的節目</dt><dd>週末書房、深夜讀冊（這次只安排週末書房）</dd>
       <dt>候選時段</dt><dd>2030-06-15 14:30、2030-06-16 10:00（台北時間）</dd>
       <dt>談定金額</dt><dd>30000（只記金額，不記收款）</dd>
@@ -210,15 +227,24 @@
   </section>
 
   <section aria-labelledby="h-steps">
-    <h2 id="h-steps">照順序操作</h2>
-    <p class="howto">系統裡每個按鈕按下去會先展開小表單，填好後按<span class="ui">確認執行</span>才會真的送出；成功時畫面上方會跳出一句提示。在這一頁按「這一步完成了」，就會亮起下一步。</p>
+    <h2 id="h-steps">照順序走完 11 個階段</h2>
+    <p class="howto">系統裡每個按鈕按下去會先展開小表單，填好後按<span class="ui">確認執行</span>才會真的送出；成功時畫面上方會跳出一句提示。在這一頁按「這一段完成了」，就會亮起下一個階段。</p>
     <div class="progress" aria-live="polite">
       <div class="bar"><i id="barFill"></i></div>
-      <p id="progressText">已完成 0 / 32 步</p>
+      <p id="progressText">已完成 0 / 11 個階段</p>
     </div>
     <ol class="steps" id="steps"></ol>
-    <div class="finish" id="finishNote" hidden>全部步驟都走完了，謝謝你！請回答下面四個問題，再按「複製全部回覆」。</div>
+    <div class="finish" id="finishNote" hidden>11 個階段都走完了，謝謝你！下面的「書況有變」延伸情境需要主管帳號，可跳過。請回答四個問題，再按「複製所有回覆」。</div>
   </section>
+
+  <details class="optional" id="optExtra">
+    <summary>延伸情境：書況有變（需要主管帳號，可跳過）</summary>
+    <div class="optbody">
+      <p class="optnote">另一本《海邊的圖書館》延期後又確定不出版時怎麼處理。這一段有主管專屬操作，沒有主管帳號可以只看不做，或整段跳過，不影響上面 11 個階段的完成。</p>
+      <div id="optSteps"></div>
+      <div id="optFbSlot"></div>
+    </div>
+  </details>
 
   <section aria-labelledby="h-final">
     <h2 id="h-final">走完後的四個問題</h2>
@@ -228,9 +254,9 @@
 
   <section class="send" aria-labelledby="h-send">
     <h2 id="h-send">把回覆交給 Winnie</h2>
-    <p class="howto">按一次就會把基本資料、有填意見的步驟和四個問題整理好，直接貼到訊息裡給 Winnie。</p>
+    <p class="howto">按一次就會把基本資料、有填意見的階段和四個問題整理好，直接貼到訊息裡給 Winnie。</p>
     <div class="btns">
-      <button type="button" class="btn primary big" id="copyAll">複製全部回覆</button>
+      <button type="button" class="btn primary big" id="copyAll">複製所有回覆</button>
     </div>
     <p class="status" id="copyStatus" role="status" aria-live="polite"></p>
     <div id="manualCopy" hidden>
@@ -249,6 +275,14 @@
   <footer>
     <p>本頁只是操作說明，不會連到系統，也不會改動任何資料。</p>
     <p>舊版預覽（情境操作體驗、build 019 操作驗收）已移到 archive/，並標示過期。</p>
+    <details class="notes">
+      <summary>設計與驗證備註（技術細節，一般同事可略過）</summary>
+      <div class="inner">
+        <p>本頁為單一 HTML 靜態頁，內容安全政策（CSP）鎖 default-src 'none'、connect-src 'none'、form-action 'none'；不使用任何連線 API（fetch、XHR、WebSocket、beacon、事件串流、動態載入或 Apps Script 前端橋接），不載入任何外部字型、腳本或樣式。</p>
+        <p>回饋僅寫入本機 localStorage（key：bookInterviewAcceptance.build021），不寫 cookie／sessionStorage／IndexedDB，不做任何追蹤或上傳。複製走 clipboard API，失敗時退回可全選的 textarea；下載以 Blob + UTF-8 BOM 產生本機檔案。</p>
+        <p>階段中的按鈕、提示與狀態文字，依 build 021 的實際畫面逐字核對；「同一本書只能轉一次」「送出申請者不能自審」「不出版通知尚未啟用寄送」等限制由正式系統後端把關，本頁只複述、不重現後端邏輯。本預覽通過不等於正式系統已完成部署。</p>
+      </div>
+    </details>
   </footer>
 </main>
 
@@ -257,8 +291,8 @@
     <h2 id="h-reset">要重新開始嗎？</h2>
     <p class="howto">請選擇要不要保留你已經填好的回饋。</p>
     <div class="btns">
-      <button class="btn" value="keep">重設操作流程、保留回饋<small>步驟回到第 1 步；稱呼、步驟意見和四個問題都留著。</small></button>
-      <button class="btn primary" value="wipe">操作與回饋全部清除<small>清掉後無法復原，建議先按「複製全部回覆」或下載備份。</small></button>
+      <button class="btn" value="keep">重設操作流程、保留回饋<small>階段回到第 1 個；稱呼、階段意見和四個問題都留著。</small></button>
+      <button class="btn primary" value="wipe">操作與回饋全部清除<small>清掉後無法復原，建議先按「複製所有回覆」或下載備份。</small></button>
       <button class="btn quiet" value="cancel">取消，什麼都不動</button>
     </div>
   </form>
@@ -269,163 +303,195 @@
   'use strict';
 
   var PAGE_URL = 'https://ws19135.github.io/book-interview-ui-preview/';
-  var KEY = 'bookInterviewAcceptance.build020';
+  var BUILD = 'build 021';
+  var KEY = 'bookInterviewAcceptance.build021';
   var R1 = '<span class="chip">企劃承辦</span>';
   var R2 = '<span class="chip boss">主管</span>';
   var AUTO = '<span class="chip auto">系統自動</span>';
   function ui(s) { return '<span class="ui">' + s + '</span>'; }
+  function sys(s) { return '<span class="chip sys">' + s + '</span>'; }
 
-  /* 按鈕與提示文字依 build 020 畫面逐字核對 */
-  var PARTS = {
-    p2: { title: '入口② 新書預告登記', note: '先把即將出版的新書和「對方想上的節目」登記進系統。' },
-    p3: { title: '入口③ 即將出版新書', note: '依出版月份看全部新書，挑一本轉成正式的訪談需求。' },
-    p1: { title: '入口① 新書訪談邀約', note: '從轉出的需求開始，一路走到正常結案。' },
-    p4: { title: '主管情境：書況有變', note: '第二本書延期、確定不出版時怎麼處理。需要主管帳號，沒有主管帳號可以跳過。' }
-  };
+  /* 按鈕與提示文字依 build 021 畫面逐字核對；11 個工作階段 */
+  var STAGES = [
+    {
+      id: 'register', title: '登記即將出版的新書', role: R1, entry: '入口② · 主檔',
+      todo: '晨光出版來訊說《慢慢來的勇氣》六月要出。先用「新書訪談邀約」系統把這本即將出版的新書登記進來。',
+      where: [
+        '用 Owner 給的網址和帳號打開「新書訪談邀約」系統，登入後會停在' + ui('工作總覽') + '；上方入口除了' + ui('需求清單') + ui('主檔') + ui('稽核查閱') + '，還多了' + ui('新書預告登記') + '和' + ui('即將出版新書') + '。',
+        '預告登記要從選單挑出版社和節目，先建好主檔：上方選' + ui('主檔') + ' → ' + ui('建立或沿用主檔') + '。主檔選' + ui('出版社') + '、名稱填「晨光出版」；再做兩次，主檔選' + ui('節目') + '，名稱分別填「週末書房」「深夜讀冊」。',
+        '回到' + ui('新書預告登記') + ' → ' + ui('新增預告登記') + '。書籍選' + ui('新書') + '、書名填「慢慢來的勇氣」；預計出版月份選 2030-06；出版社選' + ui('晨光出版') + '；登記者身分選' + ui('出版社') + '，登記者姓名填「王予安」、聯絡方式填 marketing@example.invalid。'
+      ],
+      see: [
+        '上方看得到「新書預告登記」「即將出版新書」兩個入口。',
+        '主檔三次都看到「主檔已建立或沿用」；同名的資料會沿用既有那一筆，不會重複建立。',
+        '預告登記表單的書籍與登記者資料都填好了，準備進下一段填檔期和節目。'
+      ]
+    },
+    {
+      id: 'wish', title: '填訪問檔期、上架檔期及想上的節目', role: R1, entry: '入口②',
+      todo: '在同一張預告登記表上，填出版社希望的訪問、上架時間，勾選對方想上的節目，然後送出、查看等待清單。',
+      where: [
+        '希望訪問檔期填「2030 年 5 月中到 6 月初」、希望上架檔期填「2030 年 6 月下旬」。',
+        '「對方想上的節目」勾' + ui('週末書房') + ui('深夜讀冊') + '，按' + ui('送出登記') + '。',
+        '在清單點書名' + ui('慢慢來的勇氣') + '進書籍頁，往下看「等待清單」。'
+      ],
+      see: [
+        '提示「已建立預告登記」；清單多一列、狀態「等待中」。表單上寫著「勾選只代表對方想上，不代表一定安排。」',
+        '等待清單有一列：登記者身分「出版社」、登記者顯示成 ***（按「顯示」才看得到）、想上的節目「週末書房、深夜讀冊」、狀態「等待中」、進度「表達訪問意願」。'
+      ]
+    },
+    {
+      id: 'status', title: '查看或更新新書狀態', role: R1, entry: '入口② · ③',
+      todo: '出版社確認六月如期上市。把書標記確定出版，再從「即將出版新書」看它排進近期清單。',
+      where: [
+        '書籍頁按' + ui('標記確定出版') + '。',
+        '上方選' + ui('即將出版新書') + '，找到「2030-06」那一組。'
+      ],
+      see: [
+        '提示「已標記確定出版」；出版狀態變成「確定出版」。',
+        '「即將出版新書」依出版月份分組排序。《慢慢來的勇氣》那列顯示出版社「晨光出版」、預計出版月份「2030-06」、出版狀態「確定出版」、等待人數 1、對方想上的節目「週末書房、深夜讀冊」。'
+      ]
+    },
+    {
+      id: 'convert', title: '一鍵轉成正式訪談邀約', role: R1, entry: '入口③',
+      todo: '把這本書一鍵轉成正式的訪談需求，並確認同一本書不會被轉出第二筆。',
+      where: [
+        '在那一列按' + ui('轉成訪談需求') + '，看完對話框的說明後按' + ui('確認轉成訪談需求') + '。',
+        '回到' + ui('即將出版新書') + '，再看《慢慢來的勇氣》那一列。'
+      ],
+      see: [
+        '提示「已轉成訪談需求」，旁邊有「前往需求」。對話框寫著：對方想上的節目只會在需求中標「◆ 對方想上」，不會自動列入候選，也不會發出邀約。',
+        '回看那一列已顯示「已轉成訪談需求」和「查看需求」，已經沒有「轉成訪談需求」按鈕。'
+      ]
+    },
+    {
+      id: 'review', title: '接手並審核需求', role: R1, entry: '入口①',
+      todo: '打開轉出的需求，看它帶了哪些資料，接手負責，並審核決定受理。',
+      where: [
+        '按' + ui('查看需求') + '（或剛才的' + ui('前往需求') + '）。',
+        '按' + ui('接手') + '；接著按' + ui('審核') + ' → 結果選' + ui('接受') + '，原因寫一句即可。'
+      ],
+      see: [
+        '需求頁有「對方想上的節目」區塊：週末書房、深夜讀冊兩列都標「◆ 對方想上」，狀態「待評估」，並寫「僅供評估，不代表保證安排」；來源顯示「來源：新書預告登記（1 筆）」；希望訪問檔期、希望上架檔期分成兩欄。',
+        '先看到「已接手」，再看到「審核已登錄」；需求狀態變成「名單研擬」。'
+      ]
+    },
+    {
+      id: 'recommend', title: '推薦節目並確認名單', role: R1, entry: '入口①',
+      todo: '這次先安排週末書房、深夜讀冊不排；再跟出版社確認這份推薦名單。',
+      where: [
+        '按' + ui('加入候選節目') + '，節目編號填週末書房的編號。',
+        '在「對方想上的節目」區塊，深夜讀冊那列按' + ui('這次不安排') + '，原因寫一句。',
+        ui('推薦名單與確認連結') + ' → ' + ui('產生確認連結') + '。目前對方還不能在線上確認，用電話或訊息確認後，同一處按' + ui('人工推進') + '，原因寫下確認方式並勾選確認框。'
+      ],
+      see: [
+        '「候選節目已加入」、「已記錄這次不安排」。候選節目表只有你自己加的週末書房；系統沒有替你預先勾選或自動加入任何節目。',
+        '先看到「連結已產生」，再看到「已人工推進」；需求狀態變成「邀約中」。'
+      ]
+    },
+    {
+      id: 'invite', title: '記錄邀約回覆及建立案件', role: R1 + ' ' + AUTO, entry: '入口①',
+      todo: '向節目提出邀約、登錄回覆；節目接受後，系統會自動建立一筆訪談案件。',
+      where: [
+        '在「週末書房」那列按' + ui('提案') + '；節目答應後按' + ui('登錄回覆') + '，結果選' + ui('接受') + '。',
+        '需求頁下方找到' + ui('由此需求產生的訪談案件') + '，在那一列按' + ui('開啟') + '。'
+      ],
+      see: [
+        '「已提案」、「回覆已登錄」；需求狀態變成「執行中」。',
+        '系統自動產生一筆訪談案件（不用另外新增）；開啟後進到訪談案件頁，看得到週末書房和《慢慢來的勇氣》。接下來幾個階段都在這一頁操作。'
+      ]
+    },
+    {
+      id: 'produce', title: '決定製作方、準備訪綱及安排時間', role: R1, entry: '入口①',
+      todo: '在訪談案件頁決定由誰製作、標記訪綱完成、提出並確認訪談時間。',
+      where: [
+        ui('設定製作方') + ' → 選' + ui('對方製作') + '。',
+        ui('訪綱完成') + '。',
+        ui('排程') + ' → 動作選' + ui('提出候選時段（最多三個）') + '，時段 1 填 2030-06-15 14:30、時段 2 填 2030-06-16 10:00；再開一次' + ui('排程') + '，動作選' + ui('確認時間') + '，確認來源選' + ui('時段 1') + '。'
+      ],
+      see: [
+        '提示「製作方已設定」。',
+        '提示「訪綱已標記完成」；製作狀態變成「訪綱就緒」。',
+        '兩次都是「排程已更新」；確認時間顯示 2030-06-15 14:30（台北時間）。'
+      ]
+    },
+    {
+      id: 'approval', title: '處理付費或例外核准', role: R1 + ' ' + R2, entry: '入口①',
+      todo: '這次是出版社付費的合作，需要主管核准。送出申請的人不能自己核准。',
+      where: [
+        '企劃承辦按' + ui('談定金額') + ' → 合作模式選' + ui('出版社付費') + '，金額填 30000。',
+        '請主管用自己的帳號開啟同一個訪談案件，按' + ui('★主管核准／退回') + ' → 結果選' + ui('核准') + '，原因寫一句。'
+      ],
+      see: [
+        '承辦先看到「合作模式已登錄」，主管確認自動變成「待主管確認」。',
+        '主管送出後看到「主管確認已登錄」、「主管已核准」。'
+      ]
+    },
+    {
+      id: 'delivery', title: '記錄錄音、剪輯、上架與素材', role: R1, entry: '入口①',
+      todo: '訪談完成後，依序記錄錄音、移交對方剪輯上架，並確認素材寄出與收訖。',
+      where: [
+        ui('標記已錄音') + '。',
+        '對方製作的案件由節目方剪輯，按' + ui('移交對方（待對方上架）') + '。',
+        '節目上架後按' + ui('登錄對方上架連結') + ' → 連結填 https://example.invalid/weekend-bookroom/ep-0615。',
+        '在' + ui('素材完整性') + '找到「公關書（實體樣書）」那列（沒有的話先按' + ui('新增必要素材') + '）；按' + ui('更新交付') + '選' + ui('已寄出') + '，再按' + ui('更新收訖') + '選' + ui('已收到') + '。'
+      ],
+      see: [
+        '依序看到「已標記錄音」（製作狀態「已錄音」）、「已移交對方」（「待對方上架」）、「已登錄上架連結」（「已上架」）。',
+        '素材那列看到「交付已更新」、「收訖已更新」。'
+      ]
+    },
+    {
+      id: 'close', title: '完成案件、需求及操作歷程', role: R1 + ' ' + AUTO, entry: '入口①',
+      todo: '所有項目都完成後結案；需求會跟著自動結案；最後查閱操作歷程確認每一步都有紀錄。',
+      where: [
+        ui('一般結案') + '。（如果還有沒完成的項目，畫面會列出是哪幾項，補完再按一次。）',
+        '回到' + ui('需求清單') + '看這筆需求（不用按，需求會自動結案）。',
+        '上方選' + ui('稽核查閱') + '。'
+      ],
+      see: [
+        '提示「已結案」。',
+        '這筆需求的狀態已經自動變成「已結案」。',
+        '稽核查閱列表有「時間／操作者／動作／對象」四欄，剛剛的操作都在裡面，包含預告登記與轉成訪談需求。'
+      ]
+    }
+  ];
 
-  var STEPS = [
-    { id: 'entry', part: 'p2', title: '從入口開啟系統', role: R1,
-      todo: '用 Owner 給你的網址和帳號，打開「新書訪談邀約」系統。',
-      where: '登入後會停在' + ui('工作總覽') + '。上方入口除了' + ui('需求清單') + ui('主檔') + ui('稽核查閱') + '，還多了' + ui('新書預告登記') + '和' + ui('即將出版新書') + '。',
-      see: '上方看得到「新書預告登記」「即將出版新書」兩個新入口。' },
-    { id: 'master', part: 'p2', title: '先建好出版社和節目', role: R1,
-      todo: '預告登記要從選單選出版社和節目，所以先把它們建好。',
-      where: '上方選' + ui('主檔') + ' → ' + ui('建立或沿用主檔') + '。主檔選' + ui('出版社') + '、名稱填「晨光出版」；再做兩次，主檔選' + ui('節目') + '，名稱分別填「週末書房」「深夜讀冊」。',
-      see: '三次都看到「主檔已建立或沿用」。同名的資料會沿用既有那一筆，不會重複建立。' },
-    { id: 'register', part: 'p2', title: '新增預告登記', role: R1,
-      todo: '晨光出版來訊說《慢慢來的勇氣》六月要出，想上兩個節目。由你代為登記。',
-      where: ui('新書預告登記') + ' → ' + ui('新增預告登記') + '。書籍選' + ui('新書') + '、書名填「慢慢來的勇氣」；預計出版月份選 2030-06；出版社選' + ui('晨光出版') + '；登記者身分選' + ui('出版社') + '，登記者姓名填「王予安」、聯絡方式填 marketing@example.invalid；希望訪問檔期填「2030 年 5 月中到 6 月初」、希望上架檔期填「2030 年 6 月下旬」；對方想上的節目勾' + ui('週末書房') + ui('深夜讀冊') + '，最後按' + ui('送出登記') + '。',
-      see: '提示「已建立預告登記」；清單多一列，狀態「等待中」。表單上寫著「勾選只代表對方想上，不代表一定安排。」' },
-    { id: 'waiting', part: 'p2', title: '查看等待清單', role: R1,
-      todo: '確認這本書現在有誰在等、想上哪些節目。',
-      where: '在清單點書名' + ui('慢慢來的勇氣') + '，進到書籍頁，往下看「等待清單」。',
-      see: '等待清單有一列：登記者身分「出版社」、登記者顯示成 ***（按「顯示」才看得到）、想上的節目「週末書房、深夜讀冊」、狀態「等待中」、進度「表達訪問意願」。' },
-    { id: 'confirmPub', part: 'p2', title: '標記確定出版', role: R1,
-      todo: '出版社確認六月如期上市。',
-      where: '書籍頁按' + ui('標記確定出版') + '。',
-      see: '提示「已標記確定出版」；出版狀態變成「確定出版」。' },
-
-    { id: 'upcoming', part: 'p3', title: '查看即將出版新書', role: R1,
-      todo: '看看近期有哪些新書要出。',
-      where: '上方選' + ui('即將出版新書') + '，找到「2030-06」那一組。',
-      see: '書依出版月份分組排序。《慢慢來的勇氣》那列顯示出版社「晨光出版」、預計出版月份「2030-06」、出版狀態「確定出版」、等待人數 1、對方想上的節目「週末書房、深夜讀冊」。' },
-    { id: 'convert', part: 'p3', title: '轉成訪談需求', role: R1,
-      todo: '把這本書轉成正式的訪談需求。',
-      where: '在那一列按' + ui('轉成訪談需求') + '，看完對話框的說明後按' + ui('確認轉成訪談需求') + '。',
-      see: '提示「已轉成訪談需求」，旁邊有「前往需求」。對話框寫著：對方想上的節目只會在需求中標示「◆ 對方想上」，不會自動列入候選，也不會發出邀約。' },
-    { id: 'once', part: 'p3', title: '同一本書只能轉一次', role: R1,
-      todo: '確認不會不小心轉出第二筆需求。',
-      where: '回到' + ui('即將出版新書') + '，再看《慢慢來的勇氣》那一列。',
-      see: '那一列顯示「已轉成訪談需求」和「查看需求」，已經沒有「轉成訪談需求」按鈕。' },
-
-    { id: 'wished', part: 'p1', title: '打開轉出的需求', role: R1,
-      todo: '看轉出來的需求帶了哪些資料。',
-      where: '按' + ui('查看需求') + '（或剛才的' + ui('前往需求') + '）。',
-      see: '需求頁有「對方想上的節目」區塊：週末書房、深夜讀冊兩列都標「◆ 對方想上」，狀態「待評估」，並寫著「僅供評估，不代表保證安排」；來源顯示「來源：新書預告登記（1 筆）」。希望訪問檔期、希望上架檔期分成兩欄顯示。' },
-    { id: 'review', part: 'p1', title: '接手與審核', role: R1,
-      todo: '把這個需求接下來由你負責，並決定受理。',
-      where: '按' + ui('接手') + '；接著按' + ui('審核') + ' → 結果選' + ui('接受') + '，原因寫一句即可。',
-      see: '先看到「已接手」，再看到「審核已登錄」；需求狀態變成「名單研擬」。' },
-    { id: 'recommend', part: 'p1', title: '推薦節目', role: R1,
-      todo: '這次先安排週末書房；深夜讀冊這次不排。',
-      where: '按' + ui('加入候選節目') + '，節目編號填週末書房的編號。接著在「對方想上的節目」區塊，深夜讀冊那列按' + ui('這次不安排') + '，原因寫一句。',
-      see: '「候選節目已加入」、「已記錄這次不安排」。候選節目表只有你自己加的週末書房；系統沒有替你預先勾選或自動加入任何節目。' },
-    { id: 'confirm', part: 'p1', title: '確認名單', role: R1,
-      todo: '跟出版社確認這份推薦名單。',
-      where: ui('推薦名單與確認連結') + ' → ' + ui('產生確認連結') + '。目前對方還不能在線上確認，所以用電話或訊息確認後，同一處按' + ui('人工推進') + '，原因寫下確認方式，並勾選確認框。',
-      see: '先看到「連結已產生」，再看到「已人工推進」；需求狀態變成「邀約中」。' },
-    { id: 'invite', part: 'p1', title: '邀約與回覆', role: R1,
-      todo: '向節目提出邀約，登錄節目的回覆。',
-      where: '在「週末書房」那列按' + ui('提案') + '；節目答應後按' + ui('登錄回覆') + '，結果選' + ui('接受') + '。',
-      see: '「已提案」、「回覆已登錄」；需求狀態變成「執行中」。' },
-    { id: 'case', part: 'p1', title: '建立訪談案件', role: AUTO,
-      todo: '節目接受後，系統會自動建立一筆訪談案件，不用另外新增。',
-      where: '需求頁下方找到' + ui('由此需求產生的訪談案件') + '，在那一列按' + ui('開啟') + '。',
-      see: '進到訪談案件頁，看得到週末書房和《慢慢來的勇氣》。接下來幾步都在這一頁操作。' },
-    { id: 'producer', part: 'p1', title: '設定製作方', role: R1,
-      todo: '決定這集由誰負責後製與上架。',
-      where: ui('設定製作方') + ' → 選' + ui('對方製作') + '。',
-      see: '提示「製作方已設定」。' },
-    { id: 'outline', part: 'p1', title: '訪綱完成', role: R1,
-      todo: '訪綱準備好之後，在系統上標記。',
-      where: ui('訪綱完成') + '。',
-      see: '提示「訪綱已標記完成」；製作狀態變成「訪綱就緒」。' },
-    { id: 'schedule', part: 'p1', title: '提供／確認訪談時間', role: R1,
-      todo: '先提出候選時段，再確認最後的訪談時間。',
-      where: ui('排程') + ' → 動作選' + ui('提出候選時段（最多三個）') + '，時段 1 填 2030-06-15 14:30、時段 2 填 2030-06-16 10:00。再開一次' + ui('排程') + '，動作選' + ui('確認時間') + '，確認來源選' + ui('時段 1') + '。',
-      see: '兩次都是「排程已更新」；確認時間顯示 2030-06-15 14:30（台北時間）。' },
-    { id: 'approval', part: 'p1', title: '付費案件送主管核准', role: R1 + ' ' + R2,
-      todo: '這次是出版社付費的合作，需要主管核准。',
-      where: '企劃承辦按' + ui('談定金額') + ' → 合作模式選' + ui('出版社付費') + '，金額填 30000。接著請主管用自己的帳號開啟同一個訪談案件，按' + ui('★主管核准／退回') + ' → 結果選' + ui('核准') + '，原因寫一句。',
-      see: '承辦先看到「合作模式已登錄」，主管確認自動變成「待主管確認」；主管送出後看到「主管確認已登錄」、「主管已核准」。' },
-    { id: 'record', part: 'p1', title: '錄音', role: R1,
-      todo: '訪談錄完之後，在系統上標記。',
-      where: ui('標記已錄音') + '。',
-      see: '提示「已標記錄音」；製作狀態變成「已錄音」。' },
-    { id: 'handover', part: 'p1', title: '剪輯與移交對方', role: R1,
-      todo: '對方製作的案件，剪輯由節目方處理；你只要把後續交給對方。',
-      where: ui('移交對方（待對方上架）') + '。',
-      see: '提示「已移交對方」；製作狀態變成「待對方上架」。' },
-    { id: 'airing', part: 'p1', title: '上架', role: R1,
-      todo: '節目上架後，把上架連結登錄回系統。',
-      where: ui('登錄對方上架連結') + ' → 連結填 https://example.invalid/weekend-bookroom/ep-0615。',
-      see: '提示「已登錄上架連結」；製作狀態變成「已上架」。' },
-    { id: 'materials', part: 'p1', title: '素材確認', role: R1,
-      todo: '確認公關書已經寄出，而且節目方收到了。',
-      where: '在' + ui('素材完整性') + '找到「公關書（實體樣書）」那一列（沒有的話先按' + ui('新增必要素材') + '）。按' + ui('更新交付') + '選' + ui('已寄出') + '，再按' + ui('更新收訖') + '選' + ui('已收到') + '。',
-      see: '「交付已更新」、「收訖已更新」。' },
-    { id: 'close', part: 'p1', title: '正常結案', role: R1,
-      todo: '所有項目都完成後，把訪談案件結案。',
-      where: ui('一般結案') + '。',
-      see: '提示「已結案」。如果還有沒完成的項目，畫面會列出是哪幾項，補完再按一次。' },
-    { id: 'requestClose', part: 'p1', title: '需求隨最後案件完成而結案', role: AUTO,
-      todo: '需求底下最後一個訪談案件結案後，需求會跟著結案。',
-      where: '不用按。回到' + ui('需求清單') + '看這筆需求。',
-      see: '這筆需求的狀態已經變成「已結案」。' },
-    { id: 'audit', part: 'p1', title: '查閱操作歷程', role: R1,
-      todo: '確認剛剛每一步都有留下紀錄。',
-      where: '上方選' + ui('稽核查閱') + '。',
-      see: '列表有「時間／操作者／動作／對象」四欄，剛剛的操作都在裡面，包含預告登記與轉成訪談需求。' },
-
-    { id: 'book2', part: 'p4', title: '第二本書：登記並談成一個節目', role: R1,
-      todo: '晨光出版另一本《海邊的圖書館》預計九月出，想上週末書房。先把它走到節目接受邀約。',
-      where: '照第 3、7 步登記並轉成訪談需求（預計出版月份 2030-09、想上的節目只勾週末書房）；再照第 10～13 步接手、審核、加入週末書房、確認名單、提案，登錄回覆選' + ui('接受') + '。',
-      see: '需求狀態「執行中」，底下有一筆週末書房的訪談案件（還沒錄音）。' },
-    { id: 'delay', part: 'p4', title: '書延期', role: R1,
-      todo: '出版社說這本書要延到十一月。',
-      where: '打開《海邊的圖書館》的書籍頁，按' + ui('標記延期') + '，月份選 2030-11。',
-      see: '提示「已標記延期，請承辦人自行聯絡相關節目（系統不會寄信）」；書籍頁上方出現「此書已延期至 2030-11，請承辦人自行聯絡相關節目；系統不會寄信。」' },
-    { id: 'contact', part: 'p4', title: '登錄節目聯絡窗口', role: R1,
-      todo: '先把週末書房的聯絡窗口建好，之後才通知得到。',
-      where: '書籍頁「節目聯絡窗口」區塊，週末書房旁按' + ui('新增節目聯絡窗口') + '：窗口姓名填「陳主持」、聯絡 Email 填 host@example.invalid。',
-      see: '提示「已登錄節目聯絡窗口」；列表裡的 Email 顯示成 ***。' },
-    { id: 'notPublished', part: 'p4', title: '主管標記確定不出版', role: R2,
-      todo: '出版社通知這本書確定不出了。這是高風險操作，只有主管能做。',
-      where: '主管打開同一本書的書籍頁，在危險區按' + ui('標記確定不出版') + '，先看影響範圍，填原因，勾選確認框再送出。',
-      see: '提示「已標記確定不出版；請依下方清單處理受影響的訪談與通知」。系統不會自動取消案件，也不會自動寄信。' },
-    { id: 'cancel', part: 'p4', title: '取消還沒錄音的訪談', role: R1,
-      todo: '週末書房這集還沒錄，照一般流程取消。',
-      where: '書籍頁「不出版處理」表，週末書房那列按' + ui('一般取消') + '，寫原因並勾選確認。（已經錄音的訪談會改成「申請例外中止」，要另一位主管核准。）',
-      see: '提示「已取消」。' },
-    { id: 'preview', part: 'p4', title: '預覽不出版通知', role: R1,
-      todo: '先看系統要通知誰、信上寫什麼。',
-      where: '書籍頁「不出版通知」按' + ui('預覽不出版通知') + '，看完後按' + ui('建立預覽') + '。',
-      see: '「會通知」只有已接受邀約的週末書房（信箱顯示 ***），下方有信件主旨與內容；沒接受邀約、只是候選或想上的節目列在「不會通知」並寫出原因。提示「已建立通知預覽，請主管確認內容」。' },
-    { id: 'confirmNotice', part: 'p4', title: '主管確認通知內容', role: R2,
-      todo: '主管確認收件對象和信件內容。',
-      where: '主管按' + ui('確認通知內容') + '，在第二層對話框勾選' + ui('我已確認收件對象與信件內容') + '，再按' + ui('確認') + '。',
-      see: '提示「通知內容已確認，但正式寄送功能尚未啟用。」；「寄送通知」按鈕是灰的。畫面上不會出現「已寄出」。' }
+  /* 延伸情境（選配，需要主管帳號）——不計入 11 個階段的進度 */
+  var EXTRA = [
+    { role: R1, t: '第二本書：登記並談成一個節目',
+      d: '晨光出版另一本《海邊的圖書館》預計九月出，想上週末書房。照第 1、2、4、5、6、7 個階段登記並轉成訪談需求（預計出版月份 2030-09、想上的節目只勾週末書房），接手審核、加入週末書房、確認名單、提案，登錄回覆選' + ui('接受') + '。做到需求狀態「執行中」、底下有一筆週末書房的訪談案件（還沒錄音）。' },
+    { role: R1, t: '書延期',
+      d: '出版社說這本書要延到十一月。打開《海邊的圖書館》書籍頁，按' + ui('標記延期') + '、月份選 2030-11。應看到提示「已標記延期，請承辦人自行聯絡相關節目（系統不會寄信）」，書籍頁上方出現延期提示。' },
+    { role: R1, t: '登錄節目聯絡窗口',
+      d: '先把週末書房的聯絡窗口建好，之後才通知得到。書籍頁「節目聯絡窗口」區塊，週末書房旁按' + ui('新增節目聯絡窗口') + '：窗口姓名填「陳主持」、聯絡 Email 填 host@example.invalid。應看到提示「已登錄節目聯絡窗口」，列表裡的 Email 顯示成 ***。' },
+    { role: R2, t: '主管標記確定不出版',
+      d: '出版社通知這本書確定不出了。這是高風險操作，只有主管能做。主管打開同一本書書籍頁，在危險區按' + ui('標記確定不出版') + '，先看影響範圍、填原因、勾選確認框再送出。應看到提示「已標記確定不出版；請依下方清單處理受影響的訪談與通知」。系統不會自動取消案件，也不會自動寄信。' },
+    { role: R1, t: '取消還沒錄音的訪談',
+      d: '週末書房這集還沒錄，照一般流程取消。書籍頁「不出版處理」表，週末書房那列按' + ui('一般取消') + '，寫原因並勾選確認。（已經錄音的訪談會改成「申請例外中止」，要另一位主管核准。）應看到提示「已取消」。' },
+    { role: R1, t: '預覽不出版通知',
+      d: '先看系統要通知誰、信上寫什麼。書籍頁「不出版通知」按' + ui('預覽不出版通知') + '，看完後按' + ui('建立預覽') + '。「會通知」只有已接受邀約的週末書房（信箱顯示 ***），下方有信件主旨與內容；沒接受邀約、只是候選或想上的節目列在「不會通知」並寫原因。應看到提示「已建立通知預覽，請主管確認內容」。' },
+    { role: R2, t: '主管確認通知內容',
+      d: '主管按' + ui('確認通知內容') + '，在第二層對話框勾選' + ui('我已確認收件對象與信件內容') + '，再按' + ui('確認') + '。應看到提示「通知內容已確認，但正式寄送功能尚未啟用。」；「寄送通知」按鈕是灰的，畫面上不會出現「已寄出」。' }
   ];
 
   var QUESTIONS = [
     { id: 'q1', text: '整體流程是否符合實際工作？' },
-    { id: 'q2', text: '哪一步最難懂？' },
-    { id: 'q3', text: '有沒有找不到的按鈕或入口？' },
-    { id: 'q4', text: '還缺少什麼功能或資訊？' }
+    { id: 'q2', text: '最卡住的是哪一段？' },
+    { id: 'q3', text: '哪個入口或按鈕最難找？' },
+    { id: 'q4', text: '還需要增加、刪除或調整什麼？' }
   ];
-  var STATUS = [['clear', '看得懂'], ['unsure', '不確定'], ['lost', '看不懂／找不到']];
-  var STATUS_LABEL = { clear: '看得懂', unsure: '不確定', lost: '看不懂／找不到' };
-  var TOTAL = STEPS.length;
+
+  /* 每個階段三題 + 補充說明，全部選填、不擋往下 */
+  var FBQ = [
+    { key: 'read', label: '看得懂嗎' },
+    { key: 'next', label: '找得到下一步嗎' },
+    { key: 'match', label: '與實際工作是否相符' }
+  ];
+  var OPTS = [['yes', '是'], ['unsure', '不確定'], ['no', '否']];
+  var OPT_LABEL = { yes: '是', unsure: '不確定', no: '否' };
+
+  var TOTAL = STAGES.length;
 
   function today() {
     var d = new Date();
@@ -433,7 +499,7 @@
     return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
   }
   function blank() {
-    return { tester: '', testDate: today(), done: [], current: 0, steps: {}, final: {} };
+    return { tester: '', testDate: today(), done: [], current: 0, steps: {}, ext: {}, final: {} };
   }
 
   /* ── 只用這台電腦的瀏覽器儲存；存不了時照常運作，只是關掉就不見 ── */
@@ -454,24 +520,61 @@
   var state = load();
 
   function $(id) { return document.getElementById(id); }
-  function isDone(i) { return state.done.indexOf(STEPS[i].id) !== -1; }
-  function fb(id) { return state.steps[id] || (state.steps[id] = { status: '', note: '' }); }
-  function hasFb(id) { var f = state.steps[id]; return !!(f && (f.status || (f.note || '').trim())); }
+  function isDone(i) { return state.done.indexOf(STAGES[i].id) !== -1; }
+  function fbStore(id) {
+    if (id === 'ext') return state.ext || (state.ext = {});
+    return state.steps[id] || (state.steps[id] = {});
+  }
+  function hasFb(id) {
+    var f = (id === 'ext') ? state.ext : state.steps[id];
+    if (!f) return false;
+    var any = (f.note || '').trim() !== '';
+    FBQ.forEach(function (q) { if (f[q.key]) any = true; });
+    return any;
+  }
 
-  /* ── 步驟 ── */
+  function opBlock(lab, content) {
+    var wrap = document.createElement('div');
+    wrap.className = 'op';
+    var l = document.createElement('p');
+    l.className = 'lab'; l.textContent = lab;
+    wrap.appendChild(l);
+    if (Array.isArray(content)) {
+      var ol = document.createElement('ol');
+      ol.className = 'sub';
+      content.forEach(function (c) { var li = document.createElement('li'); li.innerHTML = c; ol.appendChild(li); });
+      wrap.appendChild(ol);
+    } else {
+      var p = document.createElement('p');
+      p.className = 'txt'; p.innerHTML = content;
+      wrap.appendChild(p);
+    }
+    return wrap;
+  }
+  function seeBlock(content) {
+    var wrap = document.createElement('div');
+    wrap.className = 'op';
+    var l = document.createElement('p');
+    l.className = 'lab'; l.textContent = '完成後應看到';
+    wrap.appendChild(l);
+    var box = document.createElement('div');
+    box.className = 'see';
+    if (Array.isArray(content)) {
+      var ul = document.createElement('ul');
+      ul.className = 'seelist';
+      content.forEach(function (c) { var li = document.createElement('li'); li.innerHTML = c; ul.appendChild(li); });
+      box.appendChild(ul);
+    } else { box.innerHTML = content; }
+    wrap.appendChild(box);
+    return wrap;
+  }
+
+  /* ── 階段 ── */
   var open = {};
   function renderSteps() {
     var ol = $('steps');
     ol.innerHTML = '';
-    var lastPart = '';
-    STEPS.forEach(function (s, i) {
-      if (s.part !== lastPart) {
-        lastPart = s.part;
-        var ph = document.createElement('li');
-        ph.className = 'part-head';
-        ph.innerHTML = '<h3>' + PARTS[s.part].title + '</h3><p class="howto">' + PARTS[s.part].note + '</p>';
-        ol.appendChild(ph);
-      }
+    STAGES.forEach(function (s, i) {
       var done = isDone(i), cur = i === state.current && state.current < TOTAL;
       var cls = cur ? 'current' : done ? 'done' : 'upcoming';
       var expanded = cur || (done && open[s.id]);
@@ -483,8 +586,8 @@
       head.type = 'button';
       head.className = 'step-head';
       head.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-      head.innerHTML = '<span class="no">' + (i + 1) + '</span><h3>' + s.title + '</h3>' + s.role +
-        (cur ? '<span class="now">現在這一步</span>' : '') +
+      head.innerHTML = '<span class="no">' + (i + 1) + '</span><h3>' + s.title + '</h3>' + s.role + sys(s.entry) +
+        (cur ? '<span class="now">現在這一段</span>' : '') +
         (hasFb(s.id) ? '<span class="filled">已填意見</span>' : '');
       if (done && !cur) head.addEventListener('click', function () { open[s.id] = !open[s.id]; renderSteps(); });
       if (!done && !cur) head.disabled = true;
@@ -493,16 +596,15 @@
       if (expanded) {
         var body = document.createElement('div');
         body.className = 'step-body';
-        body.innerHTML = '<div class="rows">' +
-          '<div><span>要做什麼</span><span>' + s.todo + '</span></div>' +
-          '<div><span>按哪裡</span><span>' + s.where + '</span></div>' +
-          '<div><span>完成後應看到</span><span class="see">' + s.see + '</span></div></div>';
-        body.appendChild(feedbackBox(s));
+        body.appendChild(opBlock('要做什麼', s.todo));
+        body.appendChild(opBlock('按哪裡', s.where));
+        body.appendChild(seeBlock(s.see));
+        body.appendChild(feedbackBox(s.id));
         var btns = document.createElement('div');
         btns.className = 'btns';
         if (cur) {
-          btns.appendChild(button(i === TOTAL - 1 ? '這一步完成了，全部走完' : '這一步完成了，下一步', 'btn primary', function () { complete(i); }));
-          if (i > 0) btns.appendChild(button('回上一步', 'btn quiet', function () { back(i); }));
+          btns.appendChild(button(i === TOTAL - 1 ? '這一段完成了，全部走完' : '這一段完成了，下一段', 'btn primary', function () { complete(i); }));
+          if (i > 0) btns.appendChild(button('回上一段', 'btn quiet', function () { back(i); }));
         }
         if (btns.childNodes.length) body.appendChild(btns);
         li.appendChild(body);
@@ -512,41 +614,48 @@
     renderProgress();
   }
 
-  function feedbackBox(s) {
-    var f = fb(s.id);
+  function feedbackBox(id) {
+    var f = fbStore(id);
     var d = document.createElement('details');
     d.className = 'fb';
-    if (f.status || (f.note || '').trim()) d.open = true;
+    if (hasFb(id)) d.open = true;
     var sum = document.createElement('summary');
-    sum.textContent = '這一步有問題（選填）';
+    sum.textContent = '這一段給點意見（選填）';
     d.appendChild(sum);
     var inner = document.createElement('div');
     inner.className = 'inner';
-    var fs = document.createElement('fieldset');
-    var lg = document.createElement('legend');
-    lg.textContent = '這一步你覺得';
-    fs.appendChild(lg);
-    STATUS.forEach(function (st) {
-      var lab = document.createElement('label');
-      var r = document.createElement('input');
-      r.type = 'radio'; r.name = 'st-' + s.id; r.value = st[0]; r.checked = f.status === st[0];
-      r.addEventListener('change', function () { fb(s.id).status = st[0]; save(); markFilled(s.id); });
-      lab.appendChild(r);
-      lab.appendChild(document.createTextNode(st[1]));
-      fs.appendChild(lab);
+
+    FBQ.forEach(function (q) {
+      var fs = document.createElement('fieldset');
+      var lg = document.createElement('legend');
+      lg.textContent = q.label;
+      fs.appendChild(lg);
+      OPTS.forEach(function (o) {
+        var lab = document.createElement('label');
+        var r = document.createElement('input');
+        r.type = 'radio'; r.name = 'fb-' + id + '-' + q.key; r.value = o[0]; r.checked = f[q.key] === o[0];
+        r.addEventListener('change', function () { fbStore(id)[q.key] = o[0]; save(); markFilled(id); });
+        lab.appendChild(r);
+        lab.appendChild(document.createTextNode(o[1]));
+        fs.appendChild(lab);
+      });
+      inner.appendChild(fs);
     });
-    inner.appendChild(fs);
+
     var tl = document.createElement('label');
     tl.className = 'field';
-    tl.textContent = '哪裡卡住了？（選填）';
+    tl.textContent = '補充說明（選填）';
     var ta = document.createElement('textarea');
     ta.value = f.note || '';
     ta.placeholder = '例：找不到「人工推進」在哪裡';
-    ta.addEventListener('input', function () { fb(s.id).note = ta.value; save(); markFilled(s.id); });
+    ta.addEventListener('input', function () { fbStore(id).note = ta.value; save(); markFilled(id); });
     tl.appendChild(ta);
     inner.appendChild(tl);
-    var clr = button('清除這一步的意見', 'btn quiet', function () {
-      delete state.steps[s.id]; save(); renderSteps();
+
+    var clr = button('清除這一段的意見', 'btn quiet', function () {
+      if (id === 'ext') state.ext = {}; else delete state.steps[id];
+      save();
+      if (id === 'ext') renderExtra(); else renderSteps();
     });
     inner.appendChild(clr);
     d.appendChild(inner);
@@ -566,28 +675,46 @@
     return b;
   }
   function complete(i) {
-    if (!isDone(i)) state.done.push(STEPS[i].id);
+    if (!isDone(i)) state.done.push(STAGES[i].id);
     state.current = i + 1;
     save(); renderSteps();
-    var next = state.current < TOTAL ? $('step-' + STEPS[state.current].id) : $('finishNote');
+    var next = state.current < TOTAL ? $('step-' + STAGES[state.current].id) : $('finishNote');
     if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   function back(i) {
-    var prev = STEPS[i - 1].id;
+    var prev = STAGES[i - 1].id;
     state.done = state.done.filter(function (x) { return x !== prev; });
     state.current = i - 1;
     save(); renderSteps();
     $('step-' + prev).scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   function doneCount() {
-    return STEPS.filter(function (s) { return state.done.indexOf(s.id) !== -1; }).length;
+    return STAGES.filter(function (s) { return state.done.indexOf(s.id) !== -1; }).length;
   }
   function renderProgress() {
     var n = doneCount();
     $('doneCount').textContent = n + ' / ' + TOTAL;
-    $('progressText').textContent = '已完成 ' + n + ' / ' + TOTAL + ' 步';
+    $('progressText').textContent = '已完成 ' + n + ' / ' + TOTAL + ' 個階段';
     $('barFill').style.transform = 'scaleX(' + (n / TOTAL) + ')';
     $('finishNote').hidden = state.current < TOTAL;
+  }
+
+  /* ── 延伸情境（選配） ── */
+  function renderExtra() {
+    var box = $('optSteps');
+    box.innerHTML = '';
+    var ol = document.createElement('ol');
+    ol.className = 'sub';
+    EXTRA.forEach(function (e) {
+      var li = document.createElement('li');
+      li.innerHTML = '<b>' + e.t + '</b> ' + e.role + '<br>' + e.d;
+      li.style.marginBottom = '4px';
+      ol.appendChild(li);
+    });
+    box.appendChild(ol);
+    var slot = $('optFbSlot');
+    slot.innerHTML = '';
+    slot.appendChild(feedbackBox('ext'));
   }
 
   /* ── 基本資料與最後四題 ── */
@@ -620,26 +747,37 @@
   function indent(text) {
     return text.trim().split(/\r?\n/).join('\n   ');
   }
+  function fbLines(id) {
+    var f = (id === 'ext') ? state.ext : state.steps[id];
+    var L = [];
+    FBQ.forEach(function (q) { if (f && f[q.key]) L.push(q.label + '：' + OPT_LABEL[f[q.key]]); });
+    if (f && (f.note || '').trim()) L.push('補充說明：' + f.note.trim());
+    return L;
+  }
   function buildMarkdown() {
     var L = [];
     L.push('# 新書訪談邀約｜同事驗收回饋', '');
     L.push('測試者：' + ((state.tester || '').trim() || '（未填）'));
     L.push('測試日期：' + state.testDate);
-    L.push('驗收版本：build 020');
-    L.push('完成進度：' + doneCount() + ' / ' + TOTAL);
+    L.push('預覽版本：' + BUILD);
+    L.push('完成進度：' + doneCount() + ' / ' + TOTAL + ' 個階段');
     L.push('驗收網址：' + pageUrl(), '');
-    L.push('## 有填意見的步驟');
+    L.push('## 有填意見的階段');
     var any = false;
-    STEPS.forEach(function (s, i) {
+    STAGES.forEach(function (s, i) {
       if (!hasFb(s.id)) return;
       any = true;
-      var f = state.steps[s.id];
-      L.push('### ' + (i + 1) + '. ' + PARTS[s.part].title + '／' + s.title);
-      if (f.status) L.push('狀態：' + STATUS_LABEL[f.status]);
-      if ((f.note || '').trim()) L.push('意見：' + f.note.trim());
+      L.push('### ' + (i + 1) + '. ' + s.title);
+      fbLines(s.id).forEach(function (x) { L.push(x); });
       L.push('');
     });
-    if (!any) L.push('（沒有填寫步驟意見）', '');
+    if (hasFb('ext')) {
+      any = true;
+      L.push('### 延伸情境：書況有變（選配）');
+      fbLines('ext').forEach(function (x) { L.push(x); });
+      L.push('');
+    }
+    if (!any) L.push('（沒有填寫階段意見）', '');
     L.push('## 走完後的總體回饋');
     QUESTIONS.forEach(function (q, i) {
       var a = (state.final[q.id] || '').trim();
@@ -649,18 +787,27 @@
     return L.join('\n') + '\n';
   }
   function buildJson() {
+    function fbObj(id) {
+      var f = (id === 'ext') ? (state.ext || {}) : (state.steps[id] || {});
+      return {
+        看得懂嗎: f.read ? OPT_LABEL[f.read] : '',
+        找得到下一步嗎: f.next ? OPT_LABEL[f.next] : '',
+        與實際工作是否相符: f.match ? OPT_LABEL[f.match] : '',
+        補充說明: (f.note || '').trim()
+      };
+    }
     return JSON.stringify({
-      page: '新書訪談邀約｜三入口流程驗收',
-      build: 'build 020',
+      page: '新書訪談邀約｜流程驗收',
+      build: BUILD,
       url: pageUrl(),
       tester: (state.tester || '').trim(),
       testDate: state.testDate,
       progress: { done: doneCount(), total: TOTAL },
-      steps: STEPS.map(function (s, i) {
-        var f = state.steps[s.id] || {};
-        return { no: i + 1, id: s.id, entry: PARTS[s.part].title, title: s.title, completed: state.done.indexOf(s.id) !== -1,
-                 status: f.status ? STATUS_LABEL[f.status] : '', note: (f.note || '').trim() };
+      stages: STAGES.map(function (s, i) {
+        return { no: i + 1, id: s.id, title: s.title, entry: s.entry,
+                 completed: state.done.indexOf(s.id) !== -1, feedback: fbObj(s.id) };
       }),
+      extraScenario: { title: '延伸情境：書況有變（選配）', feedback: fbObj('ext') },
       finalAnswers: QUESTIONS.map(function (q, i) {
         return { no: i + 1, question: q.text, answer: (state.final[q.id] || '').trim() };
       }),
@@ -713,7 +860,7 @@
   $('resetBtn').addEventListener('click', function () {
     if (typeof dlg.showModal === 'function') { dlg.returnValue = 'cancel'; dlg.showModal(); return; }
     /* 舊瀏覽器沒有對話框時，改用兩次確認 */
-    if (!window.confirm('要把操作流程重設回第 1 步嗎？（回饋會保留）')) return;
+    if (!window.confirm('要把操作流程重設回第 1 個階段嗎？（回饋會保留）')) return;
     var wipe = window.confirm('要連同回饋一起清除嗎？\n按「確定」＝全部清除（無法復原）\n按「取消」＝保留回饋');
     applyReset(wipe ? 'wipe' : 'keep');
   });
@@ -722,11 +869,11 @@
     if (choice === 'keep') {
       state.done = []; state.current = 0; open = {};
       save(); renderSteps();
-      setStatus('操作流程已回到第 1 步，你填的回饋都還在。', 'ok');
+      setStatus('操作流程已回到第 1 個階段，你填的回饋都還在。', 'ok');
     } else if (choice === 'wipe') {
       state = blank(); open = {};
       try { window.localStorage.removeItem(KEY); } catch (e) {}
-      save(); renderBasics(); renderSteps();
+      save(); renderBasics(); renderSteps(); renderExtra();
       $('manualCopy').hidden = true;
       setStatus('操作與回饋已全部清除。', 'ok');
     }
@@ -735,8 +882,9 @@
 
   renderBasics();
   renderSteps();
+  renderExtra();
   save();
-  if (!storageOk) setStatus('這個瀏覽器目前無法保存資料：關掉頁面回饋就會不見，請在離開前按「複製全部回覆」。', 'warn');
+  if (!storageOk) setStatus('這個瀏覽器目前無法保存資料：關掉頁面回饋就會不見，請在離開前按「複製所有回覆」。', 'warn');
 })();
 </script>
 </body>
